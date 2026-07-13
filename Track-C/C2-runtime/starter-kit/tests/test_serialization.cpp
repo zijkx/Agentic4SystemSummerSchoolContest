@@ -42,5 +42,25 @@ int main() {
     for (std::size_t index = 40; index < gemm.size(); ++index) {
         assert(gemm.bytes()[index] == 0);
     }
+
+    aec::ParameterBlock<AEC_DEVICE_MAX_PARAM_BYTES> axpy;
+    assert(axpy.put_u64(0, UINT64_C(0x0102030405060708)));
+    assert(axpy.put_u64(8, UINT64_C(0x1112131415161718)));
+    assert(axpy.put_u64(16, UINT64_C(0x2122232425262728)));
+    assert(axpy.put_f32(24, 1.0f));
+    assert(axpy.bytes()[24] == 0x00 && axpy.bytes()[25] == 0x00 &&
+           axpy.bytes()[26] == 0x80 && axpy.bytes()[27] == 0x3f);
+    for (std::size_t index = 28; index < axpy.size(); ++index) {
+        assert(axpy.bytes()[index] == 0);
+    }
+
+    aec::ParameterBlock<AEC_DEVICE_MAX_PARAM_BYTES> reduction;
+    assert(reduction.put_u64(0, 1));
+    assert(reduction.put_u64(8, 2));
+    assert(reduction.put_u64(16, 3));
+    assert(reduction.put_u64(24, 4));
+    for (std::size_t index = 32; index < reduction.size(); ++index) {
+        assert(reduction.bytes()[index] == 0);
+    }
     return 0;
 }

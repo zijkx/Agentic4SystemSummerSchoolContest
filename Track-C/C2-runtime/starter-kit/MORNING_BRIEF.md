@@ -7,9 +7,9 @@ device library was absent from Git but an exact manifest-hash copy already on th
 server was verified and restored. R101 has now been hardened and independently
 verified with official and custom TLS/error tests.
 
-Public score is 78/100, level Basic. R101-R106 and R201-R203 pass with focused
+Public score is 84/100, level Basic. R101-R106 and R201-R204 pass with focused
 custom coverage. R301/R302/R304 pass publicly but still need dedicated audits.
-The vector library and registration APIs remain explicit stubs.
+R303 host registration is the only non-Agent public failure.
 
 ## Where to review
 
@@ -20,9 +20,9 @@ The vector library and registration APIs remain explicit stubs.
 
 ## Next action
 
-Implement R204 AXPY, DOT, and NRM2 using their 28/32/24-byte canonical parameter
-blocks, fixed images, FP32 span/count checks, output overlap rules, and async
-Stream execution.
+Implement exact host registration intervals, duplicate/overlap/overflow
+rejection, registered-subspan detection, REGISTERED+ZERO_COPY DMA flags, and
+unregister waiting for queued async references. Then audit R301/R302/R304.
 
 ## Risks
 

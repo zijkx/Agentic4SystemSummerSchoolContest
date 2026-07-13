@@ -209,6 +209,21 @@ Run from `Track-C/C2-runtime/starter-kit`:
 
 Evidence: `reports/r203_public_report.json`.
 
+## R204 milestone
+
+Run from `Track-C/C2-runtime/starter-kit`:
+
+| Command | Exit | Result |
+|---|---:|---|
+| `make -j2` | 0 | Built vector library module without diagnostics. |
+| Serialization compile and `/tmp/c2_test_serialization` | 0 | AXPY float bits, DOT/NRM2 offsets, and unused zero bytes passed. |
+| `python3 cases/test_r204.py --submission .` | 0 | PASS R204, 6/6. |
+| `timeout 30s python3 tests/test_r204_extra.py --submission .` | 0 | PASS AXPY alias, async DOT, NRM2, and preflight bounds. |
+| Official/custom R101-R106/R201-R203 regression loops | 0 | All prior coverage passed. |
+| `python3 grader/public_grade.py --submission . --profile public --json-out reports/r204_public_report.json` | 0 | Score 84/100; only R303 non-Agent public failure remains. |
+
+Evidence: `reports/r204_public_report.json`.
+
 ## Current verification gaps
 
 - Custom coverage currently includes R101 TLS/error semantics, R102 allocation boundaries/lifetime, R103 DMA spans/accounting/concurrent sequence, and R104 parameter/launch boundaries.

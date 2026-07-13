@@ -5,6 +5,7 @@
 #include "error.h"
 #include "event.h"
 #include "kernel.h"
+#include "library_ops.h"
 #include "numeric.h"
 #include "stream.h"
 
@@ -211,9 +212,24 @@ aecError_t aecMatmulI32(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
         return aec::matmul(a, b, c, m, n, k, AEC_DTYPE_INT32, stream);
     });
 }
-aecError_t aecAxpy(aecDevicePtr, aecDevicePtr, uint64_t, float, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
-aecError_t aecDot(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint64_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
-aecError_t aecNrm2(aecDevicePtr, aecDevicePtr, uint64_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
+aecError_t aecAxpy(aecDevicePtr x, aecDevicePtr y, uint64_t count,
+                   float alpha, aecStream_t stream) {
+    return aec::api_boundary([&] {
+        return aec::axpy(x, y, count, alpha, stream);
+    });
+}
+aecError_t aecDot(aecDevicePtr x, aecDevicePtr y, aecDevicePtr result,
+                  uint64_t count, aecStream_t stream) {
+    return aec::api_boundary([&] {
+        return aec::dot(x, y, result, count, stream);
+    });
+}
+aecError_t aecNrm2(aecDevicePtr x, aecDevicePtr result, uint64_t count,
+                   aecStream_t stream) {
+    return aec::api_boundary([&] {
+        return aec::nrm2(x, result, count, stream);
+    });
+}
 
 #undef AEC_UNSUPPORTED_BODY
 

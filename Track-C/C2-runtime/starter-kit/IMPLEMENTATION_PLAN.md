@@ -74,7 +74,7 @@ device library with the hash above.
 | R201 | FP32/INT32 GEMM | 10 | PASS verified | `src/numeric.*`, shared kernel path | `cases/test_r201.py` | `tests/test_r201_extra.py`, serialization test | async integration deferred to R105 |
 | R202 | FP4/FP8/FP16/BF16/FP64 GEMM | 10 | PASS verified | generic `src/numeric.cpp` path | `cases/test_r202.py` | `tests/test_r202_extra.py` | hidden special-float/rounding breadth |
 | R203 | INT4/INT8/INT32 GEMM | 4 | PASS verified | generic `src/numeric.cpp` path | `cases/test_r203.py` | `tests/test_r203_extra.py` | hidden maximum-shape saturation breadth |
-| R204 | AXPY/DOT/NRM2 | 6 | TODO | library ops + kernel module | `cases/test_r204.py` | count limits, overlap, exact layouts | reduction spans/order evidence |
+| R204 | AXPY/DOT/NRM2 | 6 | PASS verified | `src/library_ops.*` | `cases/test_r204.py` | `tests/test_r204_extra.py`, serialization test | hidden maximum-count reduction breadth |
 | R301 | ABI sequence/completion/stats | 6 | PUBLIC PASS; audit pending | `src/command.*` | `cases/test_r301.py` | preflight accounting partly covered by R103/R104 | fault completion mapping and broader custom coverage |
 | R302 | Dual DMA/async recovery | 6 | PUBLIC PASS; audit pending | stream-id channel policy | `cases/test_r302.py` | R105 covers queued error recovery | broader multi-Stream stress |
 | R303 | Host registration/zero-copy | 4 | TODO | interval registry | `cases/test_r303.py` | duplicate/overlap/overflow/subspan/pending | host interval lifetime |
@@ -97,7 +97,7 @@ device library with the hash above.
 - [x] R106 Event generation, virtual-cycle markers, tombstones, and latest-generation tests.
 - [x] R202 floating multi-dtype GEMM, FP4 odd tail, format validation, and async coverage.
 - [x] R203 packed integer GEMM, odd nibble tail, async INT8, and INT32 output-span tests.
-- [ ] R204 fixed-image vector library operations.
+- [x] R204 fixed-image vector library operations, layouts, aliases, async, and preflight tests.
 - [ ] R301/R302/R303/R304 driver behavior and fault recovery.
 - [ ] Good gate full regression.
 - [ ] R401/R402 valid generalized policies and policy tests.
@@ -120,5 +120,6 @@ library was resolved from an exact-hash official artifact. The missing `file`
 utility affects only one inspection command; `readelf`, `nm`, and `ldd` provide
 the required ELF evidence.
 
-Next: implement R204 AXPY/DOT/NRM2 fixed-image parameter layouts, vector span and
-overlap rules, and async execution.
+Next: implement R303 exact host interval registration, zero-copy flags, and
+pending async unregister. Then perform dedicated R301/R302/R304 audits and close
+the Good gate.

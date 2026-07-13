@@ -103,3 +103,13 @@
 - Official R203, custom R203, all prior official/custom regressions, build, and full grader exited 0.
 - Public score is 78/100 but remains Basic because R204 and R303 are mandatory Good gates.
 - Next: R204 AXPY, DOT, and NRM2 fixed-image operations.
+
+## 2026-07-13 - R204 vector library operations
+
+- Added prepared fixed-image AXPY, DOT, and NRM2 operations in `src/library_ops.*` with shared sync/async execution.
+- Serialized exact 28/32/24-byte parameter blocks; alpha uses explicit FP32 bits and all unused bytes remain zero.
+- Added count/storage checks and result/input overlap rules while permitting the documented AXPY `x == y` case.
+- Added `tests/test_r204_extra.py` for in-place AXPY, async DOT, NRM2, partial overlap, zero count, undersized spans, and no-submit accounting; extended standalone serialization tests.
+- Official R204, custom R204, serialization, all prior official/custom regressions, build, and full grader exited 0.
+- Public score is 84/100. R303 is the only remaining non-Agent public failure.
+- Next: R303 registration/zero-copy/pending lifetime, followed by dedicated R301/R302/R304 audits.
