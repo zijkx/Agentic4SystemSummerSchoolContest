@@ -140,10 +140,42 @@ aecError_t aecLaunch(aecKernelId kernel, aecDim3 grid, aecDim3 block,
         return aec::launch(kernel, grid, block, args, args_size, stream);
     });
 }
-aecError_t aecMatmulF4(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint32_t, uint32_t, uint32_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
-aecError_t aecMatmulF8(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint32_t, uint32_t, uint32_t, aecFp8Format, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
-aecError_t aecMatmulF16(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint32_t, uint32_t, uint32_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
-aecError_t aecMatmulBF16(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint32_t, uint32_t, uint32_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
+aecError_t aecMatmulF4(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+                       uint32_t m, uint32_t n, uint32_t k,
+                       aecStream_t stream) {
+    return aec::api_boundary([&] {
+        return aec::matmul(a, b, c, m, n, k, AEC_DTYPE_FP4_E2M1, stream);
+    });
+}
+aecError_t aecMatmulF8(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+                       uint32_t m, uint32_t n, uint32_t k,
+                       aecFp8Format format, aecStream_t stream) {
+    return aec::api_boundary([&] {
+        aecDataType dtype;
+        if (format == AEC_FP8_E4M3) {
+            dtype = AEC_DTYPE_FP8_E4M3;
+        } else if (format == AEC_FP8_E5M2) {
+            dtype = AEC_DTYPE_FP8_E5M2;
+        } else {
+            return AEC_ERROR_INVALID_ARGUMENT;
+        }
+        return aec::matmul(a, b, c, m, n, k, dtype, stream);
+    });
+}
+aecError_t aecMatmulF16(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+                        uint32_t m, uint32_t n, uint32_t k,
+                        aecStream_t stream) {
+    return aec::api_boundary([&] {
+        return aec::matmul(a, b, c, m, n, k, AEC_DTYPE_FP16, stream);
+    });
+}
+aecError_t aecMatmulBF16(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+                         uint32_t m, uint32_t n, uint32_t k,
+                         aecStream_t stream) {
+    return aec::api_boundary([&] {
+        return aec::matmul(a, b, c, m, n, k, AEC_DTYPE_BF16, stream);
+    });
+}
 aecError_t aecMatmulF32(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
                         uint32_t m, uint32_t n, uint32_t k,
                         aecStream_t stream) {
@@ -151,7 +183,13 @@ aecError_t aecMatmulF32(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
         return aec::matmul(a, b, c, m, n, k, AEC_DTYPE_FP32, stream);
     });
 }
-aecError_t aecMatmulF64(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint32_t, uint32_t, uint32_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
+aecError_t aecMatmulF64(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+                        uint32_t m, uint32_t n, uint32_t k,
+                        aecStream_t stream) {
+    return aec::api_boundary([&] {
+        return aec::matmul(a, b, c, m, n, k, AEC_DTYPE_FP64, stream);
+    });
+}
 aecError_t aecMatmulI4(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint32_t, uint32_t, uint32_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
 aecError_t aecMatmulI8(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint32_t, uint32_t, uint32_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
 aecError_t aecMatmulI32(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,

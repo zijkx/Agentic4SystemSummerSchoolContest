@@ -86,3 +86,12 @@
 - Event example, official R106, custom R106, all prior official/custom regressions, build, and full grader exited 0.
 - Public score is 64/100, level Basic.
 - Next: R202 floating GEMM formats followed by R203 packed integer GEMM.
+
+## 2026-07-13 - R202 floating GEMM formats
+
+- Connected FP4 E2M1, FP8 E4M3/E5M2, FP16, BF16, and FP64 APIs to the existing checked generic GEMM path.
+- FP8 API values are explicitly mapped to Runtime dtypes; unknown formats fail before allocation lookup or submit.
+- Added `tests/test_r202_extra.py` for one-element FP4 low-nibble/high-zero output, invalid FP8 format, async FP16, and FP64.
+- Official R202, custom R202, all prior official/custom regressions, build, and full grader exited 0.
+- Public score is 74/100, still Basic because Good requires every named correctness requirement, not just a score threshold.
+- Next: R203 INT4/INT8 packed inputs and saturated INT32 outputs.

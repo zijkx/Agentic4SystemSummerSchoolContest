@@ -181,6 +181,20 @@ Run from `Track-C/C2-runtime/starter-kit`:
 
 Evidence: `reports/r106_public_report.json`.
 
+## R202 milestone
+
+Run from `Track-C/C2-runtime/starter-kit`:
+
+| Command | Exit | Result |
+|---|---:|---|
+| `make -j2` | 0 | Built all floating GEMM API mappings without diagnostics. |
+| `python3 cases/test_r202.py --submission .` | 0 | PASS R202, 10/10. |
+| `timeout 30s python3 tests/test_r202_extra.py --submission .` | 0 | PASS FP4 odd tail, FP8 format, async FP16, and FP64. |
+| Official/custom R101-R106/R201 regression loops | 0 | All prior coverage passed. |
+| `python3 grader/public_grade.py --submission . --profile public --json-out reports/r202_public_report.json` | 0 | Score 74/100, level Basic. |
+
+Evidence: `reports/r202_public_report.json`.
+
 ## Current verification gaps
 
 - Custom coverage currently includes R101 TLS/error semantics, R102 allocation boundaries/lifetime, R103 DMA spans/accounting/concurrent sequence, and R104 parameter/launch boundaries.
