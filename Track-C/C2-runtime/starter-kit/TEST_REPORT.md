@@ -165,6 +165,22 @@ The custom test was run with exactly 20 destroy-race iterations. R302/R304 publi
 passes are recorded but dedicated requirement-level custom tests are still
 pending. Evidence: `reports/r105_public_report.json`.
 
+## R106 milestone
+
+Run from `Track-C/C2-runtime/starter-kit`:
+
+| Command | Exit | Result |
+|---|---:|---|
+| `make -j2` | 0 | Built Event generation/marker module without diagnostics. |
+| `make examples` | 0 | Built all examples. |
+| `./bin/04_stream_event` | 0 | Reported a positive 241 virtual-cycle copy interval. |
+| `python3 cases/test_r106.py --submission .` | 0 | PASS R106, 5/5. |
+| `timeout 30s python3 tests/test_r106_extra.py --submission .` | 0 | PASS latest generation/cycles/stale handles and 20 destroy races. |
+| Official/custom R101-R106/R201 regression loops | 0 | All prior coverage passed. |
+| `python3 grader/public_grade.py --submission . --profile public --json-out reports/r106_public_report.json` | 0 | Score 64/100; R101-R106/R201/R301/R302/R304 public-pass. |
+
+Evidence: `reports/r106_public_report.json`.
+
 ## Current verification gaps
 
 - Custom coverage currently includes R101 TLS/error semantics, R102 allocation boundaries/lifetime, R103 DMA spans/accounting/concurrent sequence, and R104 parameter/launch boundaries.

@@ -3,6 +3,7 @@
 #include "allocation.h"
 #include "copy.h"
 #include "error.h"
+#include "event.h"
 #include "kernel.h"
 #include "numeric.h"
 #include "stream.h"
@@ -89,12 +90,27 @@ aecError_t aecStreamDestroy(aecStream_t stream) {
 aecError_t aecStreamSync(aecStream_t stream) {
     return aec::api_boundary([&] { return aec::stream_sync(stream); });
 }
-aecError_t aecEventCreate(aecEvent_t *) { AEC_UNSUPPORTED_BODY(); }
-aecError_t aecEventDestroy(aecEvent_t) { AEC_UNSUPPORTED_BODY(); }
-aecError_t aecEventRecord(aecEvent_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
-aecError_t aecEventSynchronize(aecEvent_t) { AEC_UNSUPPORTED_BODY(); }
-aecError_t aecEventQuery(aecEvent_t) { AEC_UNSUPPORTED_BODY(); }
-aecError_t aecEventElapsedCycles(aecEvent_t, aecEvent_t, uint64_t *) { AEC_UNSUPPORTED_BODY(); }
+aecError_t aecEventCreate(aecEvent_t *event) {
+    return aec::api_boundary([&] { return aec::event_create(event); });
+}
+aecError_t aecEventDestroy(aecEvent_t event) {
+    return aec::api_boundary([&] { return aec::event_destroy(event); });
+}
+aecError_t aecEventRecord(aecEvent_t event, aecStream_t stream) {
+    return aec::api_boundary([&] { return aec::event_record(event, stream); });
+}
+aecError_t aecEventSynchronize(aecEvent_t event) {
+    return aec::api_boundary([&] { return aec::event_synchronize(event); });
+}
+aecError_t aecEventQuery(aecEvent_t event) {
+    return aec::api_boundary([&] { return aec::event_query(event); });
+}
+aecError_t aecEventElapsedCycles(aecEvent_t start, aecEvent_t end,
+                                 uint64_t *cycles) {
+    return aec::api_boundary([&] {
+        return aec::event_elapsed_cycles(start, end, cycles);
+    });
+}
 aecError_t aecHostRegister(void *, size_t) { AEC_UNSUPPORTED_BODY(); }
 aecError_t aecHostUnregister(void *) { AEC_UNSUPPORTED_BODY(); }
 

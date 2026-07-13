@@ -75,3 +75,14 @@
 - Public R105 passes. R302 and R304 also pass publicly through the dual-channel and unified async fault paths.
 - Public score is 59/100, level Basic. R301/R302/R304 await dedicated custom audits before final completion status.
 - Next: R106 Event generations and virtual-cycle FIFO markers.
+
+## 2026-07-13 - R106 Event generations
+
+- Added Event handle tombstones/live registry and an explicit `next_generation`/`latest_generation` state model.
+- Event record reserves a generation and enqueues a Stream FIFO marker; the marker reads official device total virtual cycles only after prior work.
+- Completion slots are allocated at reserve time, so marker completion cannot strand a waiter through a later allocation failure.
+- Destroy removes the live handle, disables new records, snapshots the latest generation, and waits for it without stale pointer access.
+- Added `tests/test_r106_extra.py` for unrecorded behavior, latest of consecutive records, NOT_READY-or-complete query, positive/zero/reversed elapsed cycles, invalid-stream rollback, stale/double handles, and 20 record/destroy races.
+- Event example, official R106, custom R106, all prior official/custom regressions, build, and full grader exited 0.
+- Public score is 64/100, level Basic.
+- Next: R202 floating GEMM formats followed by R203 packed integer GEMM.

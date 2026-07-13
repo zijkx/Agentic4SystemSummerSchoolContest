@@ -7,9 +7,9 @@ device library was absent from Git but an exact manifest-hash copy already on th
 server was verified and restored. R101 has now been hardened and independently
 verified with official and custom TLS/error tests.
 
-Public score is 59/100, level Basic. R101-R105 and R201 pass with focused custom
-coverage. R301/R302/R304 pass publicly but still need dedicated audits. Event,
-higher compute-library, and registration APIs remain explicit stubs.
+Public score is 64/100, level Basic. R101-R106 and R201 pass with focused custom
+coverage. R301/R302/R304 pass publicly but still need dedicated audits. Higher
+compute-library and registration APIs remain explicit stubs.
 
 ## Where to review
 
@@ -20,9 +20,9 @@ higher compute-library, and registration APIs remain explicit stubs.
 
 ## Next action
 
-Implement R106 Event tombstones and latest-generation state. Record enqueues a
-FIFO marker, captures device virtual cycles only after prior work, and supports
-NOT_READY/query/synchronize/elapsed/destroy without stale-handle access.
+Connect the already generic checked-storage GEMM path to FP4, both FP8 formats,
+FP16, BF16, and FP64 for R202. Then add INT4/INT8 public APIs and packed-tail
+tests for R203.
 
 ## Risks
 

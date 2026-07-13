@@ -70,7 +70,7 @@ device library with the hash above.
 | R103 | Synchronous H2D/D2H | 6 | PASS verified | `src/command.*`, `src/copy.*`, allocation leases | `cases/test_r103.py` | `tests/test_r103_extra.py` | fault completion validation deferred to R304 |
 | R104 | Vector Add fixed image | 4 | PASS verified | `src/kernel.*`, `src/serialization.h` | `cases/test_r104.py` | `tests/test_r104_extra.py`, `test_serialization.cpp` | async integration deferred to R105 |
 | R105 | Stream FIFO/async | 5 | PASS verified | `src/stream.*`, queued work in copy/kernel/numeric | `cases/test_r105.py` | `tests/test_r105_extra.py` (20 destroy races) | host buffer lifetime remains caller-owned by contract |
-| R106 | Event generations/cycles | 5 | TODO | event + stream markers | `cases/test_r106.py` | unrecorded, NOT_READY, rerecord, destroy race | latest-generation semantics |
+| R106 | Event generations/cycles | 5 | PASS verified | `src/event.*`, Stream markers | `cases/test_r106.py` | `tests/test_r106_extra.py` (20 destroy races) | cross-Stream rerecord ordering |
 | R201 | FP32/INT32 GEMM | 10 | PASS verified | `src/numeric.*`, shared kernel path | `cases/test_r201.py` | `tests/test_r201_extra.py`, serialization test | async integration deferred to R105 |
 | R202 | FP4/FP8/FP16/BF16/FP64 GEMM | 10 | TODO | generic GEMM path | `cases/test_r202.py` | packed odd counts, special floats, shape limits | packed storage and canonical NaN |
 | R203 | INT4/INT8/INT32 GEMM | 4 | TODO | generic GEMM path | `cases/test_r203.py` | packed tails, undersized output, saturation | output storage differs from inputs |
@@ -94,7 +94,7 @@ device library with the hash above.
 - [x] R104 Vector Add fixed-image launch and serialization tests.
 - [x] R201 FP32/INT32 GEMM and Basic gate report (`44/100`, Basic).
 - [x] R105 Stream FIFO, async DMA/launch, handle tombstones, error recovery, and pending allocation lifetime.
-- [ ] R106 Event generation and virtual-cycle markers.
+- [x] R106 Event generation, virtual-cycle markers, tombstones, and latest-generation tests.
 - [ ] R202/R203 generic multi-dtype GEMM.
 - [ ] R204 fixed-image vector library operations.
 - [ ] R301/R302/R303/R304 driver behavior and fault recovery.
@@ -119,5 +119,5 @@ library was resolved from an exact-hash official artifact. The missing `file`
 utility affects only one inspection command; `readelf`, `nm`, and `ldd` provide
 the required ELF evidence.
 
-Next: implement R106 Event generation, FIFO markers, latest-record semantics,
-virtual-cycle capture, and stale handle behavior.
+Next: connect the generic GEMM path to all floating formats for R202, then add
+packed integer APIs for R203.
