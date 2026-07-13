@@ -163,3 +163,14 @@
 - Official R401/R402 correctness passed and both public performance diagnostics improved from 0.0 to 1.0. Public score remains 88/100 because public profile awards no performance points.
 - Hidden average speedup and the Excellent gate cannot be executed or claimed with the released grader.
 - Next: final hardening, sanitizer/stress regression, immutable audit, and documentation.
+
+## 2026-07-13 - ABI and hidden-surface hardening
+
+- Extended `aecLaunch` from Vector Add to every public Kernel ID: naive/tiled/vectorized GEMM, AXPY, DOT, and NRM2, with exact native argument sizes, field-wise reads, reserved checks, variant constraints, and canonical parameters.
+- Added `tests/test_launch_extra.py`; every public Kernel ID, including async tiled GEMM argument deep-copy, passed through official fixed images.
+- Changed unknown Kernel IDs from the implementation-stage `NOT_SUPPORTED` result to contract-appropriate invalid argument now that all public IDs are implemented.
+- Added hidden-by-default compiler visibility and `src/libaec.map`; the ELF exports exactly 36 public `aec*` functions plus the `AEC_2` version node.
+- Initial UBSan run exposed invalid C enum values being read as C++ enums. C ABI boundaries now copy raw enum bits to integers before validation for error names, copy direction, Kernel ID, and FP8 format.
+- Repeated ASan+UBSan build and eight lifetime/concurrency/fault/launch tests passed with no diagnostics, then a clean default release build was restored.
+- Release 16/16 public cases, all 16 custom scripts, serialization, Agent model sweeps, and public grader passed after hardening.
+- Next: immutable/final artifact audit and review documentation.

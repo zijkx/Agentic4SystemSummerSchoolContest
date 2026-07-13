@@ -13,6 +13,12 @@ aecError_t dot(aecDevicePtr x, aecDevicePtr y, aecDevicePtr result,
                uint64_t count, aecStream_t stream);
 aecError_t nrm2(aecDevicePtr x, aecDevicePtr result, uint64_t count,
                 aecStream_t stream);
+aecError_t launch_axpy(aecDim3 grid, aecDim3 block, const aecAxpyArgs &args,
+                       aecStream_t stream);
+aecError_t launch_dot(aecDim3 grid, aecDim3 block, const aecDotArgs &args,
+                      aecStream_t stream);
+aecError_t launch_nrm2(aecDim3 grid, aecDim3 block, const aecNrm2Args &args,
+                       aecStream_t stream);
 
 } // namespace aec
 

@@ -1,11 +1,12 @@
 CXX ?= g++
 CC ?= cc
-CXXFLAGS ?= -O2 -g -std=c++17 -fPIC -Wall -Wextra -Wpedantic -ffp-contract=off
+CXXFLAGS ?= -O2 -g -std=c++17 -fPIC -Wall -Wextra -Wpedantic -ffp-contract=off -fvisibility=hidden
 CPPFLAGS ?= -Iinclude
 
 RUNTIME := libaec.so
 RUNTIME_SOURCES := $(wildcard src/*.cpp)
 RUNTIME_HEADERS := $(wildcard src/*.h) include/aec_runtime.h include/aec_device_abi.h include/aec_isa.h
+RUNTIME_MAP := src/libaec.map
 EXAMPLES := \
 	bin/01_device_query \
 	bin/02_isa_encoding \
@@ -18,9 +19,9 @@ EXAMPLES := \
 
 all: $(RUNTIME)
 
-$(RUNTIME): $(RUNTIME_SOURCES) $(RUNTIME_HEADERS) lib/libaec_device.so
+$(RUNTIME): $(RUNTIME_SOURCES) $(RUNTIME_HEADERS) $(RUNTIME_MAP) lib/libaec_device.so
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -shared $(RUNTIME_SOURCES) -o $@ -Llib -laec_device -pthread \
-		-Wl,-rpath,'$$ORIGIN/lib'
+		-Wl,-rpath,'$$ORIGIN/lib' -Wl,--version-script=$(RUNTIME_MAP)
 
 bin/%: examples/%.c $(RUNTIME)
 	mkdir -p $(@D)

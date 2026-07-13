@@ -12,6 +12,10 @@
 
 #include <cstring>
 
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC visibility push(default)
+#endif
+
 extern "C" {
 
 aecError_t aecDeviceCount(int *count) {
@@ -53,7 +57,10 @@ aecError_t aecGetLastError(void) {
 aecError_t aecPeekAtLastError(void) { return aec::peek_last_error(); }
 
 const char *aecGetErrorName(aecError_t error) {
-    return aec::error_name(error);
+    static_assert(sizeof(error) == sizeof(int));
+    int error_value = 0;
+    std::memcpy(&error_value, &error, sizeof(error_value));
+    return aec::error_name(error_value);
 }
 
 aecError_t aecAlloc(aecDevicePtr *out_ptr, size_t bytes) {
@@ -70,8 +77,12 @@ aecError_t aecCopyD2H(void *dst, aecDevicePtr src, size_t bytes) {
 }
 aecError_t aecCopyAsync(aecDevicePtr device_ptr, void *host_ptr, size_t bytes,
                         aecCopyDirection direction, aecStream_t stream) {
+    static_assert(sizeof(direction) == sizeof(int));
+    int direction_value = 0;
+    std::memcpy(&direction_value, &direction, sizeof(direction_value));
     return aec::api_boundary([&] {
-        return aec::copy_async(device_ptr, host_ptr, bytes, direction, stream);
+        return aec::copy_async(device_ptr, host_ptr, bytes, direction_value,
+                               stream);
     });
 }
 aecError_t aecStreamCreate(aecStream_t *stream) {
@@ -133,8 +144,11 @@ aecError_t aecResetRuntimeStats(void) {
 
 aecError_t aecLaunch(aecKernelId kernel, aecDim3 grid, aecDim3 block,
                      const void *args, size_t args_size, aecStream_t stream) {
+    static_assert(sizeof(kernel) == sizeof(int));
+    int kernel_value = 0;
+    std::memcpy(&kernel_value, &kernel, sizeof(kernel_value));
     return aec::api_boundary([&] {
-        return aec::launch(kernel, grid, block, args, args_size, stream);
+        return aec::launch(kernel_value, grid, block, args, args_size, stream);
     });
 }
 aecError_t aecMatmulF4(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
@@ -147,11 +161,14 @@ aecError_t aecMatmulF4(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
 aecError_t aecMatmulF8(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
                        uint32_t m, uint32_t n, uint32_t k,
                        aecFp8Format format, aecStream_t stream) {
+    static_assert(sizeof(format) == sizeof(int));
+    int format_value = 0;
+    std::memcpy(&format_value, &format, sizeof(format_value));
     return aec::api_boundary([&] {
         aecDataType dtype;
-        if (format == AEC_FP8_E4M3) {
+        if (format_value == AEC_FP8_E4M3) {
             dtype = AEC_DTYPE_FP8_E4M3;
-        } else if (format == AEC_FP8_E5M2) {
+        } else if (format_value == AEC_FP8_E5M2) {
             dtype = AEC_DTYPE_FP8_E5M2;
         } else {
             return AEC_ERROR_INVALID_ARGUMENT;
@@ -228,3 +245,7 @@ aecError_t aecNrm2(aecDevicePtr x, aecDevicePtr result, uint64_t count,
 }
 
 } // extern "C"
+
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC visibility pop
+#endif

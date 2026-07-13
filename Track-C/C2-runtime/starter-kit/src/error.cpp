@@ -24,7 +24,7 @@ aecError_t peek_last_error() noexcept {
     return last_error;
 }
 
-const char *error_name(aecError_t error) noexcept {
+const char *error_name(int error) noexcept {
     switch (error) {
     case AEC_SUCCESS: return "AEC_SUCCESS";
     case AEC_ERROR_INVALID_ARGUMENT: return "AEC_ERROR_INVALID_ARGUMENT";

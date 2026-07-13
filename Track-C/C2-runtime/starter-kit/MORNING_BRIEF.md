@@ -17,6 +17,10 @@ DMA policy matched 120 brute-force optima and the Kernel policy matched 80
 official evaluator optima. Public score remains 88/100 because public Agent
 performance is diagnostic only; hidden Excellent evidence is unavailable.
 
+All public `aecLaunch` Kernel IDs now work. ASan+UBSan found and drove a fix for
+invalid C enum handling; the repeated sanitizer suite is clean. The final ELF
+export surface is limited to the 36 public C functions plus version node.
+
 ## Where to review
 
 1. `IMPLEMENTATION_PLAN.md` for the requirement matrix and invariants.
@@ -26,9 +30,8 @@ performance is diagnostic only; hidden Excellent evidence is unavailable.
 
 ## Next action
 
-Perform ABI visibility and sanitizer hardening, rerun all public/custom tests,
-verify immutable hashes and the final ELF, then finish `IMPLEMENTATION.md` and
-`REVIEW_GUIDE.md`.
+Verify immutable hashes and the final clean ELF, then finish
+`IMPLEMENTATION.md` and `REVIEW_GUIDE.md` and perform the completion audit.
 
 ## Risks
 

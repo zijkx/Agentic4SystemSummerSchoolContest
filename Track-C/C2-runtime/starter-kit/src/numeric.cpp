@@ -69,7 +69,9 @@ struct PreparedMatmul {
 
 aecError_t prepare_matmul(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
                           uint32_t m, uint32_t n, uint32_t k,
-                          aecDataType dtype, PreparedMatmul &prepared) {
+                          aecDataType dtype, uint32_t semantic_kernel,
+                          uint32_t variant, aecDim3 grid, aecDim3 block,
+                          PreparedMatmul &prepared) {
     uint64_t a_elements = 0;
     uint64_t b_elements = 0;
     uint64_t c_elements = 0;
@@ -91,6 +93,14 @@ aecError_t prepare_matmul(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
         spans_overlap(b, b_bytes, c, c_bytes)) {
         return AEC_ERROR_INVALID_ARGUMENT;
     }
+    if (variant == AEC_KERNEL_VARIANT_TILED &&
+        ((m | n | k) & 3u) != 0) {
+        return AEC_ERROR_INVALID_ARGUMENT;
+    }
+    if (variant == AEC_KERNEL_VARIANT_VECTORIZED &&
+        (((m | n | k) & 7u) != 0 || (a | b | c) % 16 != 0)) {
+        return AEC_ERROR_INVALID_ARGUMENT;
+    }
 
     aecError_t status = acquire_device_span(a, a_bytes, prepared.a_lease);
     if (status != AEC_SUCCESS) return status;
@@ -106,10 +116,29 @@ aecError_t prepare_matmul(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
         !parameters.put_u32(36, static_cast<uint32_t>(dtype))) {
         return AEC_ERROR_INTERNAL;
     }
-    return build_isa_command(
-        AEC_KERNEL_GEMM_NAIVE, static_cast<uint32_t>(dtype),
-        AEC_KERNEL_VARIANT_NAIVE, {1, 1, 1}, {1, 1, 1}, parameters.data(),
-        AEC_KERNEL_PARAM_GEMM_BYTES, prepared.command);
+    const aecError_t command_status = build_isa_command(
+        semantic_kernel, static_cast<uint32_t>(dtype), variant, grid, block,
+        parameters.data(), AEC_KERNEL_PARAM_GEMM_BYTES, prepared.command);
+    if (command_status != AEC_SUCCESS) return command_status;
+    if (variant == AEC_KERNEL_VARIANT_TILED) {
+        prepared.command.dynamic_shared_bytes = 4096;
+    } else if (variant == AEC_KERNEL_VARIANT_VECTORIZED) {
+        prepared.command.dynamic_shared_bytes = 8192;
+    }
+    return AEC_SUCCESS;
+}
+
+aecError_t execute_or_enqueue(const std::shared_ptr<PreparedMatmul> &prepared,
+                              aecError_t status, aecStream_t stream) {
+    if (stream == nullptr) {
+        if (status != AEC_SUCCESS) return status;
+        return submit_and_validate_completion(prepared->command);
+    }
+    return enqueue_stream_work(stream, [prepared, status](uint64_t stream_id) {
+        if (status != AEC_SUCCESS) return status;
+        prepared->command.stream_id = stream_id;
+        return submit_and_validate_completion(prepared->command);
+    });
 }
 
 } // namespace
@@ -124,16 +153,33 @@ aecError_t matmul(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
 
     auto prepared = std::make_shared<PreparedMatmul>();
     const aecError_t status = prepare_matmul(
-        a, b, c, m, n, k, dtype, *prepared);
-    if (stream == nullptr) {
-        if (status != AEC_SUCCESS) return status;
-        return submit_and_validate_completion(prepared->command);
+        a, b, c, m, n, k, dtype, AEC_KERNEL_GEMM_NAIVE,
+        AEC_KERNEL_VARIANT_NAIVE, {1, 1, 1}, {1, 1, 1}, *prepared);
+    return execute_or_enqueue(prepared, status, stream);
+}
+
+aecError_t launch_matmul(aecKernelId kernel, aecDim3 grid, aecDim3 block,
+                         const aecGemmArgs &args, aecStream_t stream) {
+    if (args.reserved != 0 || args.m == 0 || args.n == 0 || args.k == 0 ||
+        args.m > kMaxMatrixDimension || args.n > kMaxMatrixDimension ||
+        args.k > kMaxMatrixDimension) {
+        return AEC_ERROR_INVALID_ARGUMENT;
     }
-    return enqueue_stream_work(stream, [prepared, status](uint64_t stream_id) {
-        if (status != AEC_SUCCESS) return status;
-        prepared->command.stream_id = stream_id;
-        return submit_and_validate_completion(prepared->command);
-    });
+    uint32_t variant = 0;
+    switch (kernel) {
+    case AEC_KERNEL_GEMM_NAIVE: variant = AEC_KERNEL_VARIANT_NAIVE; break;
+    case AEC_KERNEL_GEMM_TILED: variant = AEC_KERNEL_VARIANT_TILED; break;
+    case AEC_KERNEL_GEMM_VECTORIZED:
+        variant = AEC_KERNEL_VARIANT_VECTORIZED;
+        break;
+    default: return AEC_ERROR_INVALID_ARGUMENT;
+    }
+    auto prepared = std::make_shared<PreparedMatmul>();
+    const aecError_t status = prepare_matmul(
+        args.a, args.b, args.c, args.m, args.n, args.k,
+        static_cast<aecDataType>(args.dtype), static_cast<uint32_t>(kernel),
+        variant, grid, block, *prepared);
+    return execute_or_enqueue(prepared, status, stream);
 }
 
 } // namespace aec

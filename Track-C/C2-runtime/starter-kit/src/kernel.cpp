@@ -5,6 +5,8 @@
 #include "allocation.h"
 #include "command.h"
 #include "error.h"
+#include "library_ops.h"
+#include "numeric.h"
 #include "serialization.h"
 #include "stream.h"
 
@@ -23,6 +25,11 @@ struct PreparedLaunch {
     AllocationLease second;
     AllocationLease output;
 };
+
+template <typename Field>
+void read_field(const uint8_t *raw, size_t offset, Field &field) noexcept {
+    std::memcpy(&field, raw + offset, sizeof(field));
+}
 
 bool spans_overlap(aecDevicePtr left, uint64_t left_bytes,
                    aecDevicePtr right, uint64_t right_bytes) noexcept {
@@ -129,44 +136,89 @@ aecError_t build_isa_command(uint32_t semantic_kernel, uint32_t dtype,
     return AEC_SUCCESS;
 }
 
-aecError_t launch(aecKernelId kernel, aecDim3 grid, aecDim3 block,
+aecError_t launch(int kernel, aecDim3 grid, aecDim3 block,
                   const void *args, size_t args_size, aecStream_t stream) {
     const aecError_t dimension_status = validate_dimensions(grid, block);
     if (dimension_status != AEC_SUCCESS) return dimension_status;
     if (args == nullptr) return AEC_ERROR_INVALID_ARGUMENT;
 
-    if (kernel != AEC_KERNEL_VECTOR_ADD_F32) {
-        return AEC_ERROR_NOT_SUPPORTED;
-    }
-    if (args_size != sizeof(aecVectorAddArgs)) {
-        return AEC_ERROR_INVALID_ARGUMENT;
-    }
-
     // Read each native API field independently so caller alignment is not
     // assumed and native tail padding can never enter the wire parameter block.
     const auto *raw_args = static_cast<const uint8_t *>(args);
-    aecVectorAddArgs vector_args{};
-    std::memcpy(&vector_args.a, raw_args + offsetof(aecVectorAddArgs, a),
-                sizeof(vector_args.a));
-    std::memcpy(&vector_args.b, raw_args + offsetof(aecVectorAddArgs, b),
-                sizeof(vector_args.b));
-    std::memcpy(&vector_args.c, raw_args + offsetof(aecVectorAddArgs, c),
-                sizeof(vector_args.c));
-    std::memcpy(&vector_args.count,
-                raw_args + offsetof(aecVectorAddArgs, count),
-                sizeof(vector_args.count));
-    auto prepared = std::make_shared<PreparedLaunch>();
-    const aecError_t status = prepare_vector_add(
-        grid, block, vector_args, *prepared);
-    if (stream == nullptr) {
-        if (status != AEC_SUCCESS) return status;
-        return submit_and_validate_completion(prepared->command);
+    if (kernel == AEC_KERNEL_VECTOR_ADD_F32) {
+        if (args_size != sizeof(aecVectorAddArgs)) {
+            return AEC_ERROR_INVALID_ARGUMENT;
+        }
+        aecVectorAddArgs vector_args{};
+        read_field(raw_args, offsetof(aecVectorAddArgs, a), vector_args.a);
+        read_field(raw_args, offsetof(aecVectorAddArgs, b), vector_args.b);
+        read_field(raw_args, offsetof(aecVectorAddArgs, c), vector_args.c);
+        read_field(raw_args, offsetof(aecVectorAddArgs, count),
+                   vector_args.count);
+        auto prepared = std::make_shared<PreparedLaunch>();
+        const aecError_t status = prepare_vector_add(
+            grid, block, vector_args, *prepared);
+        if (stream == nullptr) {
+            if (status != AEC_SUCCESS) return status;
+            return submit_and_validate_completion(prepared->command);
+        }
+        return enqueue_stream_work(stream,
+            [prepared, status](uint64_t stream_id) {
+                if (status != AEC_SUCCESS) return status;
+                prepared->command.stream_id = stream_id;
+                return submit_and_validate_completion(prepared->command);
+            });
     }
-    return enqueue_stream_work(stream, [prepared, status](uint64_t stream_id) {
-        if (status != AEC_SUCCESS) return status;
-        prepared->command.stream_id = stream_id;
-        return submit_and_validate_completion(prepared->command);
-    });
+
+    if (kernel == AEC_KERNEL_GEMM_NAIVE ||
+        kernel == AEC_KERNEL_GEMM_TILED ||
+        kernel == AEC_KERNEL_GEMM_VECTORIZED) {
+        if (args_size != sizeof(aecGemmArgs)) return AEC_ERROR_INVALID_ARGUMENT;
+        aecGemmArgs gemm_args{};
+        read_field(raw_args, offsetof(aecGemmArgs, a), gemm_args.a);
+        read_field(raw_args, offsetof(aecGemmArgs, b), gemm_args.b);
+        read_field(raw_args, offsetof(aecGemmArgs, c), gemm_args.c);
+        read_field(raw_args, offsetof(aecGemmArgs, m), gemm_args.m);
+        read_field(raw_args, offsetof(aecGemmArgs, n), gemm_args.n);
+        read_field(raw_args, offsetof(aecGemmArgs, k), gemm_args.k);
+        read_field(raw_args, offsetof(aecGemmArgs, dtype), gemm_args.dtype);
+        read_field(raw_args, offsetof(aecGemmArgs, reserved),
+                   gemm_args.reserved);
+        return launch_matmul(static_cast<aecKernelId>(kernel), grid, block,
+                             gemm_args, stream);
+    }
+
+    if (kernel == AEC_KERNEL_AXPY_F32) {
+        if (args_size != sizeof(aecAxpyArgs)) return AEC_ERROR_INVALID_ARGUMENT;
+        aecAxpyArgs axpy_args{};
+        read_field(raw_args, offsetof(aecAxpyArgs, x), axpy_args.x);
+        read_field(raw_args, offsetof(aecAxpyArgs, y), axpy_args.y);
+        read_field(raw_args, offsetof(aecAxpyArgs, count), axpy_args.count);
+        read_field(raw_args, offsetof(aecAxpyArgs, alpha), axpy_args.alpha);
+        read_field(raw_args, offsetof(aecAxpyArgs, reserved),
+                   axpy_args.reserved);
+        return launch_axpy(grid, block, axpy_args, stream);
+    }
+
+    if (kernel == AEC_KERNEL_DOT_F32) {
+        if (args_size != sizeof(aecDotArgs)) return AEC_ERROR_INVALID_ARGUMENT;
+        aecDotArgs dot_args{};
+        read_field(raw_args, offsetof(aecDotArgs, x), dot_args.x);
+        read_field(raw_args, offsetof(aecDotArgs, y), dot_args.y);
+        read_field(raw_args, offsetof(aecDotArgs, result), dot_args.result);
+        read_field(raw_args, offsetof(aecDotArgs, count), dot_args.count);
+        return launch_dot(grid, block, dot_args, stream);
+    }
+
+    if (kernel == AEC_KERNEL_NRM2_F32) {
+        if (args_size != sizeof(aecNrm2Args)) return AEC_ERROR_INVALID_ARGUMENT;
+        aecNrm2Args nrm2_args{};
+        read_field(raw_args, offsetof(aecNrm2Args, x), nrm2_args.x);
+        read_field(raw_args, offsetof(aecNrm2Args, result), nrm2_args.result);
+        read_field(raw_args, offsetof(aecNrm2Args, count), nrm2_args.count);
+        return launch_nrm2(grid, block, nrm2_args, stream);
+    }
+    return AEC_ERROR_INVALID_ARGUMENT;
 }
 
 } // namespace aec

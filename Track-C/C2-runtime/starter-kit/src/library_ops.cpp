@@ -52,7 +52,8 @@ aecError_t execute_or_enqueue(const std::shared_ptr<PreparedVectorOp> &prepared,
 }
 
 aecError_t prepare_axpy(aecDevicePtr x, aecDevicePtr y, uint64_t count,
-                        float alpha, PreparedVectorOp &prepared) {
+                        float alpha, aecDim3 grid, aecDim3 block,
+                        PreparedVectorOp &prepared) {
     uint64_t bytes = 0;
     aecError_t status = vector_bytes(count, bytes);
     if (status != AEC_SUCCESS) return status;
@@ -69,15 +70,15 @@ aecError_t prepare_axpy(aecDevicePtr x, aecDevicePtr y, uint64_t count,
         !parameters.put_u64(16, count) || !parameters.put_f32(24, alpha)) {
         return AEC_ERROR_INTERNAL;
     }
-    const uint32_t grid_x = static_cast<uint32_t>((count + 31) / 32);
     return build_isa_command(
         AEC_KERNEL_AXPY_F32, AEC_DTYPE_FP32, AEC_KERNEL_VARIANT_DEFAULT,
-        {grid_x, 1, 1}, {32, 1, 1}, parameters.data(),
-        AEC_KERNEL_PARAM_AXPY_BYTES, prepared.command);
+        grid, block, parameters.data(), AEC_KERNEL_PARAM_AXPY_BYTES,
+        prepared.command);
 }
 
 aecError_t prepare_dot(aecDevicePtr x, aecDevicePtr y, aecDevicePtr result,
-                       uint64_t count, PreparedVectorOp &prepared) {
+                       uint64_t count, aecDim3 grid, aecDim3 block,
+                       PreparedVectorOp &prepared) {
     uint64_t bytes = 0;
     aecError_t status = vector_bytes(count, bytes);
     if (status != AEC_SUCCESS) return status;
@@ -100,11 +101,12 @@ aecError_t prepare_dot(aecDevicePtr x, aecDevicePtr y, aecDevicePtr result,
     }
     return build_isa_command(
         AEC_KERNEL_DOT_F32, AEC_DTYPE_FP32, AEC_KERNEL_VARIANT_DEFAULT,
-        {1, 1, 1}, {1, 1, 1}, parameters.data(), AEC_KERNEL_PARAM_DOT_BYTES,
+        grid, block, parameters.data(), AEC_KERNEL_PARAM_DOT_BYTES,
         prepared.command);
 }
 
 aecError_t prepare_nrm2(aecDevicePtr x, aecDevicePtr result, uint64_t count,
+                        aecDim3 grid, aecDim3 block,
                         PreparedVectorOp &prepared) {
     uint64_t bytes = 0;
     aecError_t status = vector_bytes(count, bytes);
@@ -124,7 +126,7 @@ aecError_t prepare_nrm2(aecDevicePtr x, aecDevicePtr result, uint64_t count,
     }
     return build_isa_command(
         AEC_KERNEL_NRM2_F32, AEC_DTYPE_FP32, AEC_KERNEL_VARIANT_DEFAULT,
-        {1, 1, 1}, {1, 1, 1}, parameters.data(), AEC_KERNEL_PARAM_NRM2_BYTES,
+        grid, block, parameters.data(), AEC_KERNEL_PARAM_NRM2_BYTES,
         prepared.command);
 }
 
@@ -133,21 +135,50 @@ aecError_t prepare_nrm2(aecDevicePtr x, aecDevicePtr result, uint64_t count,
 aecError_t axpy(aecDevicePtr x, aecDevicePtr y, uint64_t count, float alpha,
                 aecStream_t stream) {
     auto prepared = std::make_shared<PreparedVectorOp>();
-    const aecError_t status = prepare_axpy(x, y, count, alpha, *prepared);
+    const uint32_t grid_x = static_cast<uint32_t>((count + 31) / 32);
+    const aecError_t status = prepare_axpy(
+        x, y, count, alpha, {grid_x, 1, 1}, {32, 1, 1}, *prepared);
     return execute_or_enqueue(prepared, status, stream);
 }
 
 aecError_t dot(aecDevicePtr x, aecDevicePtr y, aecDevicePtr result,
                uint64_t count, aecStream_t stream) {
     auto prepared = std::make_shared<PreparedVectorOp>();
-    const aecError_t status = prepare_dot(x, y, result, count, *prepared);
+    const aecError_t status = prepare_dot(
+        x, y, result, count, {1, 1, 1}, {1, 1, 1}, *prepared);
     return execute_or_enqueue(prepared, status, stream);
 }
 
 aecError_t nrm2(aecDevicePtr x, aecDevicePtr result, uint64_t count,
                 aecStream_t stream) {
     auto prepared = std::make_shared<PreparedVectorOp>();
-    const aecError_t status = prepare_nrm2(x, result, count, *prepared);
+    const aecError_t status = prepare_nrm2(
+        x, result, count, {1, 1, 1}, {1, 1, 1}, *prepared);
+    return execute_or_enqueue(prepared, status, stream);
+}
+
+aecError_t launch_axpy(aecDim3 grid, aecDim3 block, const aecAxpyArgs &args,
+                       aecStream_t stream) {
+    if (args.reserved != 0) return AEC_ERROR_INVALID_ARGUMENT;
+    auto prepared = std::make_shared<PreparedVectorOp>();
+    const aecError_t status = prepare_axpy(
+        args.x, args.y, args.count, args.alpha, grid, block, *prepared);
+    return execute_or_enqueue(prepared, status, stream);
+}
+
+aecError_t launch_dot(aecDim3 grid, aecDim3 block, const aecDotArgs &args,
+                      aecStream_t stream) {
+    auto prepared = std::make_shared<PreparedVectorOp>();
+    const aecError_t status = prepare_dot(
+        args.x, args.y, args.result, args.count, grid, block, *prepared);
+    return execute_or_enqueue(prepared, status, stream);
+}
+
+aecError_t launch_nrm2(aecDim3 grid, aecDim3 block, const aecNrm2Args &args,
+                       aecStream_t stream) {
+    auto prepared = std::make_shared<PreparedVectorOp>();
+    const aecError_t status = prepare_nrm2(
+        args.x, args.result, args.count, grid, block, *prepared);
     return execute_or_enqueue(prepared, status, stream);
 }
 

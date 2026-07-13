@@ -44,12 +44,13 @@ aecError_t copy_d2h(void *dst, aecDevicePtr src, size_t bytes) {
 }
 
 aecError_t copy_async(aecDevicePtr device_ptr, void *host_ptr, size_t bytes,
-                      aecCopyDirection direction, aecStream_t stream) {
+                      int direction_value, aecStream_t stream) {
     if (host_ptr == nullptr || bytes == 0 ||
-        (direction != AEC_COPY_HOST_TO_DEVICE &&
-         direction != AEC_COPY_DEVICE_TO_HOST)) {
+        (direction_value != AEC_COPY_HOST_TO_DEVICE &&
+         direction_value != AEC_COPY_DEVICE_TO_HOST)) {
         return AEC_ERROR_INVALID_ARGUMENT;
     }
+    const auto direction = static_cast<aecCopyDirection>(direction_value);
 
     struct AsyncCopy {
         AllocationLease allocation;

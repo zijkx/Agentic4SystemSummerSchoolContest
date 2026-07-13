@@ -13,7 +13,6 @@ from pathlib import Path
 SUCCESS = 0
 INVALID_ARGUMENT = 1
 INVALID_ADDRESS = 4
-NOT_SUPPORTED = 6
 VECTOR_ADD = 1
 
 
@@ -104,7 +103,7 @@ def main() -> int:
             runtime.aecLaunch(VECTOR_ADD, Dim3(1, 1, 1), Dim3(32, 1, 1),
                               ctypes.byref(launch_args), 1, None),
         ]
-        assert checks == [NOT_SUPPORTED, INVALID_ARGUMENT, INVALID_ARGUMENT,
+        assert checks == [INVALID_ARGUMENT, INVALID_ARGUMENT, INVALID_ARGUMENT,
                           INVALID_ARGUMENT, INVALID_ARGUMENT], checks
         launch_args.count = 0
         assert runtime.aecLaunch(VECTOR_ADD, Dim3(1, 1, 1), Dim3(32, 1, 1),

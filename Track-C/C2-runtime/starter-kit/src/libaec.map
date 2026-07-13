@@ -1,0 +1,6 @@
+AEC_2 {
+    global:
+        aec*;
+    local:
+        *;
+};

@@ -290,6 +290,23 @@ full/hidden profile, so hidden performance points and the Excellent gate remain
 unverified even though the policies are optimal on the published models and
 official evaluator sweep.
 
+## ABI and sanitizer hardening
+
+| Command | Exit | Result |
+|---|---:|---|
+| Initial ASan+UBSan build plus `tests/test_launch_extra.py` | 31 | UBSan found an invalid C `aecKernelId` value being loaded as a C++ enum for the unknown-ID test. |
+| Rebuilt ASan+UBSan after raw-enum boundary fix | 0 | Sanitizer build succeeded without warnings. |
+| Sanitized launch/R101/R105/R106/R301/R302/R303/R304 loop | 0 | All eight tests passed; no ASan or UBSan diagnostic. Leak detection was disabled for intentional process-lifetime handle tombstones. |
+| `make clean && make -j2` after sanitizer run | 0 | Restored default release artifact. |
+| `timeout 30s python3 tests/test_launch_extra.py --submission .` | 0 | PASS all public Kernel IDs and native argument structures. |
+| `make public-cases` after hardening | 0 | 16/16 public cases passed. |
+| All 16 custom Python scripts plus serialization | 0 | All passed; includes Agent 120+80 optimality sweep. |
+| `python3 grader/public_grade.py --submission . --profile public --json-out reports/hardening_public_report.json` | 0 | Score 88/100, Good; public Agent diagnostics 1.0. |
+| `nm -D --defined-only libaec.so` | 0 | Exactly 36 public `aec*` functions plus `AEC_2`; no project-internal C++ ABI symbols. |
+
+Evidence: `reports/hardening_public_report.json` and
+`reports/exported_symbols.txt`.
+
 ## Current verification gaps
 
 - Custom coverage currently includes R101 TLS/error semantics, R102 allocation boundaries/lifetime, R103 DMA spans/accounting/concurrent sequence, and R104 parameter/launch boundaries.

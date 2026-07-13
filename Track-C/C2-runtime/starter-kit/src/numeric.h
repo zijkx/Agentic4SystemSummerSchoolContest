@@ -10,6 +10,8 @@ namespace aec {
 aecError_t matmul(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
                   uint32_t m, uint32_t n, uint32_t k, aecDataType dtype,
                   aecStream_t stream);
+aecError_t launch_matmul(aecKernelId kernel, aecDim3 grid, aecDim3 block,
+                         const aecGemmArgs &args, aecStream_t stream);
 
 } // namespace aec
 

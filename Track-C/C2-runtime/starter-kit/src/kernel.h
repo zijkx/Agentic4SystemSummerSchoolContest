@@ -14,7 +14,7 @@ aecError_t build_isa_command(uint32_t semantic_kernel, uint32_t dtype,
                              uint32_t parameter_bytes,
                              aecDeviceCommand &command);
 
-aecError_t launch(aecKernelId kernel, aecDim3 grid, aecDim3 block,
+aecError_t launch(int kernel, aecDim3 grid, aecDim3 block,
                   const void *args, size_t args_size, aecStream_t stream);
 
 } // namespace aec
