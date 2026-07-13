@@ -1,0 +1,25 @@
+# Risk Register
+
+| Risk | Probability | Impact | Detection | Mitigation | Blocks tonight's Goal? |
+|---|---|---|---|---|---|
+| macOS versus Linux ABI | Certain locally | C2 artifact cannot be loaded/evaluated | `file`, `otool`, later `readelf` | Build/test final artifacts in pinned Linux | C2 yes; C1/C3 graph work no |
+| Apple Silicon versus formal CPU architecture | High/unknown until clarified | Supplied binaries may not load; emulation differs | Inspect official `.so` ELF `Machine`, ask organizer | Match container/remote architecture; avoid assumptions | C2 yes |
+| Docker architecture emulation | Medium | Slow tests and possible behavioral/toolchain differences | Compare native and `--platform linux/amd64` smoke timing | Prefer native matching remote host for final regression | No after device arch known |
+| Missing `libaec_device.so` | Certain | C2 cannot build or test any requirement | Manifest/hash/tree/build failure | Re-download exact starter artifact; verify SHA-256; add `.gitignore` exception only with organizer-approved artifact handling | C2 yes, P0 |
+| No NVIDIA GPU/CUDA/NVML | Certain locally | C3.5 GPU, performance, and peak VRAM unavailable | `nvidia-smi`, `nvcc`, framework device query | Provision remote NVIDIA Linux host early | C3.5 yes, P0 |
+| Python version/package conflict | High | Model parsing/runtime imports fail or numerical behavior differs | Fresh venv, import/version report, `pip check`, smoke model | Pin reviewed versions and lock hashes in Python 3.10-3.12-compatible venv/container | C3 yes until venv exists |
+| ONNX opset/shape differences | Medium | Hidden model parse/execution fails | Inspect all three public opset-17 models; test symbolic dynamic N and all 17 ops | Use ONNX APIs, preserve names/attributes, add generated structural variants | No for initial C3.1 Goal |
+| C++ compiler/stdlib drift (Apple clang vs GCC 13.3) | High | Linux compile/link/UB differences | Warnings-as-errors and CI builds on both toolchains | Pin GCC 13.3 Linux regression; avoid platform APIs | No for C1 design; C2 final yes |
+| C1 official validator/Golden/Cycle models absent | Certain in checkout | Cannot prove binary correctness or score performance | Inventory and organizer artifact check | Request official harness; build independent structural/unit tests meanwhile | Blocks performance claims, not implementation start |
+| C3.2/C3.3 benchmark absent | Certain in checkout | Cannot reproduce 30 scoring points | Verify Git tree/path and release errata | Request benchmark; implement contract-driven unit tests without claiming score | Blocks scoring claims, not graph design |
+| Public-test/hidden-test overfitting | High | Public passes but hidden robustness fails/disqualification | Review for case IDs/hashes/fixed shapes; mutation tests | General parsers/algorithms; randomized names/shapes/order/bounds | No if rules enforced |
+| Multiple Codex sessions in one worktree | High without isolation | Lost changes, mixed baselines, irreproducible tests | `git status`, worktree list, commit ownership | One worktree/branch/Goal per subproblem; commit handoffs | Yes before parallel Goals |
+| Overnight Goal blocked by permission/dependency prompt | High | Agent idles | Preflight every tool/artifact/daemon/venv/remote command | Prepare environments and explicit allowed commands before launch | Yes for affected Goal |
+| Tests exceed time/resource limits | Medium | C1 180-second timeout, C3 full data slow, disk/RAM pressure | Record timing/RSS/disk; run narrow-to-full | Incremental cases, bounded parallelism, stagger containers | No initially |
+| Local pass but formal evaluation fail | High | Score loss | Rebuild from clean artifact in matching offline image/remote | Pin toolchain/deps, eliminate absolute/network dependencies, final formal smoke | No initially, required pre-submit |
+| Modifying grader/test/reference contracts | Low with rules, catastrophic | False pass or disqualification | `git diff --` immutable paths and manifest hashes | Read-only permissions/checksums; code review before commits | No; enforce continuously |
+| Fixed image or model corruption | Low | Misleading numeric/ISA failures | Compare manifest/repository hashes and clean Git status | Never rewrite; restore only from verified official release | No |
+| ResNet decompression consumes disk or becomes stale | Low | Extra 117 MiB and accidental submission | Check gzip/output existence and Git status | Decompress only per worktree when runner ready; exclude generated data from submission | No |
+| Agent/bonus work starts before correctness | Medium | Large time cost for <=10/20 uncertain points | Milestone/tier review | Do not start C1 Agent before correct optimized compiler or C2 Agents before Good | No; process rule |
+
+The immediate launch blockers are: isolate three worktrees; restore and characterize C2's device library; create a pinned C3 venv; obtain a remote NVIDIA Linux test path; and clarify/retrieve the missing C1/C3 graders if score reproduction is expected overnight.
