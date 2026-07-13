@@ -16,6 +16,7 @@ Report date: 2026-07-13 (Asia/Shanghai)
 | glibc/ldd | 2.39 |
 | Initial commit | `abcaa940b107c153514d3cb162108090631cfdf6` |
 | Branch | `codex/c2-runtime-implementation` |
+| Verified implementation commit | `d7c2a93` |
 
 The initial tracked worktree was clean. Baseline commands generated untracked
 `bin/` and `reports/`; `lib/` and `libaec.so` are ignored by the root rules.
@@ -307,11 +308,82 @@ official evaluator sweep.
 Evidence: `reports/hardening_public_report.json` and
 `reports/exported_symbols.txt`.
 
-## Current verification gaps
+## Final release verification
 
-- Custom coverage currently includes R101 TLS/error semantics, R102 allocation boundaries/lifetime, R103 DMA spans/accounting/concurrent sequence, and R104 parameter/launch boundaries.
-- Pending-reference free behavior passed with queued 1 MiB H2D+D2H work in R105.
-- Basic correctness has public and focused custom evidence; hidden tests remain unknown and are not claimed passed.
-- No concurrency stress loop has run yet.
-- Final exported-symbol, Runtime ELF, dependency, clean-build, and immutable audits remain pending.
-- Public Agent diagnostics cannot prove hidden speedup.
+Run from `Track-C/C2-runtime/starter-kit` on the remote Linux host at verified
+implementation commit `d7c2a93`. The documentation and generated evidence are
+committed afterward and do not change the verified Runtime or Agent sources.
+
+Exact commands:
+
+```bash
+make clean
+make -j2
+make examples
+./bin/01_device_query
+./bin/02_isa_encoding
+./bin/03_vector_add
+./bin/04_stream_event
+./bin/05_fp32_gemm
+./bin/06_registered_copy
+make public-cases
+for test_path in tests/test_*.py; do python3 "$test_path" --submission . || exit $?; done
+g++ -Iinclude -Isrc -std=c++17 -Wall -Wextra -Wpedantic tests/test_serialization.cpp -o /tmp/c2_test_serialization
+/tmp/c2_test_serialization
+python3 grader/public_grade.py --submission . --profile public --json-out reports/final_public_report.json
+python3 tests/test_immutable.py --submission .
+nm -D --defined-only libaec.so > reports/exported_symbols.txt
+readelf -h -d libaec.so > reports/libaec_readelf.txt
+objdump -f libaec.so > reports/libaec_objdump.txt
+ldd libaec.so > reports/libaec_ldd.txt
+sha256sum lib/libaec_device.so libaec.so
+```
+
+| Verification | Exit | Result |
+|---|---:|---|
+| Clean and release build | 0 | Warning-free C++17 shared-library build with default `-O2` flags. |
+| Six examples | 0 | Query, ISA encoding, Vector Add, Stream/Event, FP32 GEMM, and registered copy all ran successfully. |
+| `make public-cases` | 0 | 16/16 public cases passed. |
+| All `tests/test_*.py` | 0 | 17/17 scripts passed, including immutable and Agent model audits. |
+| Standalone serialization | 0 | All canonical layouts, endian fields, float bits, and unused zero bytes passed. |
+| Final public grader | 0 | 88/100, level Good; Basic/Good true, Excellent false because hidden performance is absent. |
+| Immutable audit | 0 | 73 manifest files, 34 images, device hash, no extras/missing files, and initial-commit diff all clean. |
+| Symbol/ELF/dependency audit | 0 | 36 public `aec*` functions plus `AEC_2`; ELF64 little-endian x86-64; every dependency resolved. |
+
+Final requirement evidence:
+
+| Requirement | Public status | Earned in public profile | Focused custom evidence |
+|---|---|---:|---|
+| R101 | PASS | 4/4 | TLS isolation, error preservation, Peek/Get, unknown values. |
+| R102 | PASS | 6/6 | OOM, reuse, alignment, interior/stale/double free. |
+| R103 | PASS | 6/6 | Span arithmetic, reset invariants, 40 concurrent submissions. |
+| R104 | PASS | 4/4 | Fixed image, rejection paths, stats, serialization. |
+| R105 | PASS | 5/5 | FIFO, deep copy, recovery, free wait, 20 destroy races. |
+| R106 | PASS | 5/5 | Latest generation, cycles, stale handles, 20 destroy races. |
+| R201 | PASS | 10/10 | FP32, INT32 saturation, dimensions, overlap, spans. |
+| R202 | PASS | 10/10 | FP4 odd tail, FP8 format, async FP16, FP64. |
+| R203 | PASS | 4/4 | Odd INT4 packing, async INT8, INT32 output span. |
+| R204 | PASS | 6/6 | AXPY aliasing, async DOT, NRM2, bounds. |
+| R301 | PASS | 6/6 | Exact stats/resolve/reset and no-submit preflight. |
+| R302 | PASS | 6/6 | Four Streams, both channels, concurrent FIFO, recovery. |
+| R303 | PASS | 4/4 | Intervals, flags, partial overlap, pending unregister. |
+| R304 | PASS | 4/4 | One-shot DMA/kernel/command faults and recovery. |
+| R401 | PASS correctness | 4/10 | Schema/purity/determinism and 120 brute-force optima. |
+| R402 | PASS correctness | 4/10 | Candidate legality and 80 official-evaluator optima. |
+
+Final artifacts:
+
+- `reports/final_public_report.json`: machine-readable 88/100 result.
+- `reports/exported_symbols.txt`: exact versioned public export surface.
+- `reports/libaec_readelf.txt`: ELF header, `NEEDED` entries, and `$ORIGIN/lib` runpath.
+- `reports/libaec_objdump.txt`: `elf64-x86-64`, dynamic shared object.
+- `reports/libaec_ldd.txt`: all direct/transitive libraries resolved.
+- `libaec.so` SHA-256: `2784fd96377c8ac4d1969e34c16dd216561195f7000fb497d345a1a0b7308fe4`.
+- Device SHA-256: `295c47c51354a2e58b76cff18633b15daeea9f2e0e4115dccda338a9e66b01d5`.
+
+## Residual risk
+
+- Hidden Agent inputs, average speedup, and the Excellent gate are not available in the released grader and are not claimed passed.
+- Hidden maximum-size, special-floating-point, and unusual cross-Stream Event schedules remain possible coverage gaps despite public, custom, and sanitizer evidence.
+- The host lacks `file`; `readelf`, `objdump`, and `ldd` were used and all passed.
+- `lib/libaec_device.so` is ignored by Git and must accompany the submission/build environment with the exact manifest hash above.

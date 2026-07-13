@@ -174,3 +174,13 @@
 - Repeated ASan+UBSan build and eight lifetime/concurrency/fault/launch tests passed with no diagnostics, then a clean default release build was restored.
 - Release 16/16 public cases, all 16 custom scripts, serialization, Agent model sweeps, and public grader passed after hardening.
 - Next: immutable/final artifact audit and review documentation.
+
+## 2026-07-13 - Final release and review audit
+
+- Added `tests/test_immutable.py`; it verified 73 manifest-controlled contract files, exactly 34 official images, the device-library hash, no missing/extra files, and no tracked immutable diff from `abcaa940`.
+- Performed a clean warning-free default build and rebuilt all six examples; every example exited 0.
+- Final `make public-cases` passed 16/16. All 17 custom Python scripts and the standalone serialization test exited 0 on the same release artifact.
+- Final public grader produced `reports/final_public_report.json`: 88/100, level Good, Basic/Good true, Agent diagnostics 1.0.
+- Final ELF audit found ELF64 little-endian x86-64, 36 public `aec*` functions plus `AEC_2`, `$ORIGIN/lib`, and fully resolved dependencies.
+- Completed `IMPLEMENTATION.md` with five Mermaid diagrams and `REVIEW_GUIDE.md` with requirement/function mapping, commits, risks, and ten review questions.
+- Runtime and Agent work is complete against all released contracts. Hidden Agent performance remains unavailable and is not claimed.

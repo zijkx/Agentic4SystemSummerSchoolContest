@@ -1,25 +1,25 @@
 ELF Header:
-  Magic:   7f 45 4c 46 02 01 01 03 00 00 00 00 00 00 00 00
+  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
   Class:                             ELF64
   Data:                              2's complement, little endian
   Version:                           1 (current)
-  OS/ABI:                            UNIX - GNU
+  OS/ABI:                            UNIX - System V
   ABI Version:                       0
   Type:                              DYN (Shared object file)
   Machine:                           Advanced Micro Devices X86-64
   Version:                           0x1
   Entry point address:               0x0
   Start of program headers:          64 (bytes into file)
-  Start of section headers:          1408672 (bytes into file)
+  Start of section headers:          1445096 (bytes into file)
   Flags:                             0x0
   Size of this header:               64 (bytes)
   Size of program headers:           56 (bytes)
   Number of program headers:         12
   Size of section headers:           64 (bytes)
-  Number of section headers:         41
-  Section header string table index: 40
+  Number of section headers:         42
+  Section header string table index: 41
 
-Dynamic section at offset 0x15d78 contains 29 entries:
+Dynamic section at offset 0x14d78 contains 31 entries:
   Tag        Type                         Name/Value
  0x0000000000000001 (NEEDED)             Shared library: [libaec_device.so]
  0x0000000000000001 (NEEDED)             Shared library: [libstdc++.so.6]
@@ -27,26 +27,28 @@ Dynamic section at offset 0x15d78 contains 29 entries:
  0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
  0x0000000000000001 (NEEDED)             Shared library: [ld-linux-x86-64.so.2]
  0x000000000000001d (RUNPATH)            Library runpath: [$ORIGIN/lib]
- 0x000000000000000c (INIT)               0x5000
- 0x000000000000000d (FINI)               0x10e94
+ 0x000000000000000c (INIT)               0x3000
+ 0x000000000000000d (FINI)               0xf534
  0x0000000000000019 (INIT_ARRAY)         0x15a30
  0x000000000000001b (INIT_ARRAYSZ)       8 (bytes)
  0x000000000000001a (FINI_ARRAY)         0x15a38
  0x000000000000001c (FINI_ARRAYSZ)       8 (bytes)
  0x000000006ffffef5 (GNU_HASH)           0x328
- 0x0000000000000005 (STRTAB)             0x1788
- 0x0000000000000006 (SYMTAB)             0x720
- 0x000000000000000a (STRSZ)              7377 (bytes)
+ 0x0000000000000005 (STRTAB)             0xd20
+ 0x0000000000000006 (SYMTAB)             0x480
+ 0x000000000000000a (STRSZ)              2177 (bytes)
  0x000000000000000b (SYMENT)             24 (bytes)
  0x0000000000000003 (PLTGOT)             0x15fe8
- 0x0000000000000002 (PLTRELSZ)           2232 (bytes)
+ 0x0000000000000002 (PLTRELSZ)           1056 (bytes)
  0x0000000000000014 (PLTREL)             RELA
- 0x0000000000000017 (JMPREL)             0x4138
- 0x0000000000000007 (RELA)               0x36e8
- 0x0000000000000008 (RELASZ)             2640 (bytes)
+ 0x0000000000000017 (JMPREL)             0x21b8
+ 0x0000000000000007 (RELA)               0x17c8
+ 0x0000000000000008 (RELASZ)             2544 (bytes)
  0x0000000000000009 (RELAENT)            24 (bytes)
- 0x000000006ffffffe (VERNEED)            0x35b8
+ 0x000000006ffffffc (VERDEF)             0x1660
+ 0x000000006ffffffd (VERDEFNUM)          2
+ 0x000000006ffffffe (VERNEED)            0x1698
  0x000000006fffffff (VERNEEDNUM)         4
- 0x000000006ffffff0 (VERSYM)             0x345a
- 0x000000006ffffff9 (RELACOUNT)          55
+ 0x000000006ffffff0 (VERSYM)             0x15a2
+ 0x000000006ffffff9 (RELACOUNT)          81
  0x0000000000000000 (NULL)               0x0

@@ -23,3 +23,9 @@ A requirement is complete only when its public case passes, prior passes do not
 regress, the required device evidence is present, custom boundary/lifetime tests
 pass, exported symbols and ELF remain valid, immutable contracts are unchanged,
 and the exact commands/results are recorded.
+
+## Status
+
+All six delivery stages and released completion gates are complete. Final
+evidence is in `TEST_REPORT.md` and `reports/final_public_report.json`. Hidden
+Agent performance is outside the released profile and remains unclaimed.

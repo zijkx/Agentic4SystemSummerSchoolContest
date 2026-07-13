@@ -10,6 +10,7 @@ Last updated: 2026-07-13 (Asia/Shanghai)
 - Path resolution: the preferred path from the task exists; the concatenated fallback path does not.
 - Initial commit: `abcaa940b107c153514d3cb162108090631cfdf6`
 - Working branch: `codex/c2-runtime-implementation`
+- Verified implementation commit: `d7c2a93` (documentation/evidence finalization follows this commit).
 - Initial tracked worktree: clean. Baseline build later created untracked `bin/` and `reports/`; `lib/` and `libaec.so` are ignored by the repository.
 - Host: Linux `x86_64`, 64-bit, little-endian; kernel `6.8.0-110-generic`.
 - Toolchain: Python 3.12.3, GCC/G++ 13.3.0, GNU Make 4.3, glibc/ldd 2.39.
@@ -38,9 +39,10 @@ Do not modify:
 - `kernels/images/`, `kernels/manifest.json`
 - `grader/`, `cases/`, `golden/`, `schemas/`
 
-The audit SHA-256 list was captured before implementation. Final verification
-will compare every immutable tracked file with `RELEASE_MANIFEST.json` and the
-device library with the hash above.
+`tests/test_immutable.py` verifies the manifest hashes, rejects missing or extra
+contract files, checks all 34 fixed images, checks the device library, and
+compares every tracked immutable path with the initial commit. The final audit
+passed for all 73 immutable manifest entries.
 
 ## Non-negotiable invariants
 
@@ -105,7 +107,7 @@ device library with the hash above.
 - [x] Good gate clean full regression (`88/100`, Good, 16/16 public cases).
 - [x] R401/R402 valid generalized policies, invalid-input handling, purity, determinism, and policy tests.
 - [x] Agent public/model virtual-cycle optimization after all correctness requirements passed; hidden performance remains unverifiable.
-- [ ] Final clean build, all examples, all public cases, symbols, ELF/dependencies, immutable audit, documentation, and review audit.
+- [x] Final clean build, all examples, all public cases, symbols, ELF/dependencies, immutable audit, documentation, and review audit.
 
 ## Baseline
 
@@ -116,12 +118,15 @@ correctness portions. Public score: `12/100`, level `Not passed`.
 
 Evidence: `reports/baseline_public_report.json` and `TEST_REPORT.md`.
 
-## Current blockers and next step
+## Completion status
 
-There is no active implementation blocker. The checkout omission of the device
-library was resolved from an exact-hash official artifact. The missing `file`
-utility affects only one inspection command; `readelf`, `nm`, and `ldd` provide
-the required ELF evidence.
+There is no active implementation blocker. Final remote Linux verification at
+implementation commit `d7c2a93` passed the clean build, six examples, 16/16
+public cases, 17 custom Python scripts, standalone serialization, immutable
+audit, exported-symbol audit, ELF inspection, and dependency resolution. The
+public score is 88/100, level Good; Basic and Good gates are true.
 
-Next: perform ABI visibility hardening, sanitizer/concurrency regression, immutable
-hash audit, final clean build, and complete implementation/review documentation.
+The only unavailable gate is hidden Agent performance. The released public
+grader cannot establish the Excellent gate, so it remains explicitly unclaimed.
+The missing `file` utility is an inspection-tool limitation only; `readelf`,
+`objdump`, and `ldd` provide the required Linux artifact evidence.
