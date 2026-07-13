@@ -142,3 +142,13 @@
 - Verified invalid direction is immediate and a null Stream returns invalid handle.
 - Official R302 and the dedicated custom test exited 0.
 - Next: record R304 fault audit evidence.
+
+## 2026-07-13 - R304 fault recovery audit
+
+- Added `tests/test_r304_extra.py`.
+- Verified NEXT_DMA faults the first of two queued DMA commands, the second writes data, Stream sync reports/clears the first error, and later work succeeds.
+- Verified NEXT_KERNEL faults the first of two queued Vector Add launches, the second retires instructions and produces the correct output/digest.
+- Verified NEXT_COMMAND faults one synchronous DMA and the immediately following DMA succeeds.
+- Official R304 and the dedicated custom test exited 0.
+- Every non-Agent requirement now has public-pass evidence and focused custom coverage; public level remains Good at 88/100.
+- Next: implement and optimize generalized R401/R402 policies.

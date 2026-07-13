@@ -265,6 +265,17 @@ the official device stats and verified reset preserved allocation/image state.
 The custom check ran four Stream workers concurrently and verified both channel
 counters, exact round-trip bytes, deferred invalid-span reporting, and recovery.
 
+## R304 audit
+
+| Command | Exit | Result |
+|---|---:|---|
+| `python3 cases/test_r304.py --submission .` | 0 | PASS R304, 4/4 (Good-gate run). |
+| `timeout 30s python3 tests/test_r304_extra.py --submission .` | 0 | PASS one-shot DMA/kernel/command faults and recovery. |
+
+The custom check queued two matching commands after each injected DMA/kernel
+fault, proving only the first failed and the second produced valid data/ISA
+evidence. NEXT_COMMAND was also verified synchronously.
+
 ## Current verification gaps
 
 - Custom coverage currently includes R101 TLS/error semantics, R102 allocation boundaries/lifetime, R103 DMA spans/accounting/concurrent sequence, and R104 parameter/launch boundaries.
