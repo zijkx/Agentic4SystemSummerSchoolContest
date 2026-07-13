@@ -4,6 +4,7 @@
 #include "copy.h"
 #include "error.h"
 #include "kernel.h"
+#include "numeric.h"
 
 #include <cstring>
 
@@ -115,11 +116,23 @@ aecError_t aecMatmulF4(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint32_t, uint3
 aecError_t aecMatmulF8(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint32_t, uint32_t, uint32_t, aecFp8Format, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
 aecError_t aecMatmulF16(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint32_t, uint32_t, uint32_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
 aecError_t aecMatmulBF16(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint32_t, uint32_t, uint32_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
-aecError_t aecMatmulF32(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint32_t, uint32_t, uint32_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
+aecError_t aecMatmulF32(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+                        uint32_t m, uint32_t n, uint32_t k,
+                        aecStream_t stream) {
+    return aec::api_boundary([&] {
+        return aec::matmul(a, b, c, m, n, k, AEC_DTYPE_FP32, stream);
+    });
+}
 aecError_t aecMatmulF64(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint32_t, uint32_t, uint32_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
 aecError_t aecMatmulI4(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint32_t, uint32_t, uint32_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
 aecError_t aecMatmulI8(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint32_t, uint32_t, uint32_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
-aecError_t aecMatmulI32(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint32_t, uint32_t, uint32_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
+aecError_t aecMatmulI32(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+                        uint32_t m, uint32_t n, uint32_t k,
+                        aecStream_t stream) {
+    return aec::api_boundary([&] {
+        return aec::matmul(a, b, c, m, n, k, AEC_DTYPE_INT32, stream);
+    });
+}
 aecError_t aecAxpy(aecDevicePtr, aecDevicePtr, uint64_t, float, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
 aecError_t aecDot(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint64_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
 aecError_t aecNrm2(aecDevicePtr, aecDevicePtr, uint64_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }

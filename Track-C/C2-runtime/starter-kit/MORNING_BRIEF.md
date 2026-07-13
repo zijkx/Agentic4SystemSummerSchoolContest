@@ -7,10 +7,9 @@ device library was absent from Git but an exact manifest-hash copy already on th
 server was verified and restored. R101 has now been hardened and independently
 verified with official and custom TLS/error tests.
 
-Public score is 34/100: R101-R104, a public R301 pass, and 4 correctness points
-from each legal baseline Agent. R301 still needs dedicated completion/fault
-coverage before final completion. Stream/Event and compute-library APIs remain
-explicit stubs.
+Public score is 44/100, level Basic. R101-R104 and R201 pass with focused custom
+coverage; R301 also passes publicly but still needs dedicated completion/fault
+coverage. Stream/Event and higher compute-library APIs remain explicit stubs.
 
 ## Where to review
 
@@ -21,9 +20,9 @@ explicit stubs.
 
 ## Next action
 
-Generalize the prepared fixed-image launch for R201 FP32 and INT32 GEMM: checked
-storage sizes, non-overlap, exact 40-byte parameters, typed resolve, and numeric
-evidence. Passing R201 will close the Basic gate.
+Implement R105 Stream FIFO and connect async DMA plus prepared numeric/launch
+work. The key risks are stale handles, destroy/enqueue races, first-error
+reporting/recovery, deep-copied launch arguments, and free waiting on queued work.
 
 ## Risks
 

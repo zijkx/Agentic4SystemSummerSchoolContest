@@ -26,5 +26,21 @@ int main() {
         assert(block.bytes()[index] == 0);
     }
     assert(!block.put_u64(AEC_DEVICE_MAX_PARAM_BYTES - 7, 1));
+
+    aec::ParameterBlock<AEC_DEVICE_MAX_PARAM_BYTES> gemm;
+    assert(gemm.put_u64(0, UINT64_C(0x0102030405060708)));
+    assert(gemm.put_u64(8, UINT64_C(0x1112131415161718)));
+    assert(gemm.put_u64(16, UINT64_C(0x2122232425262728)));
+    assert(gemm.put_u32(24, UINT32_C(0x31323334)));
+    assert(gemm.put_u32(28, UINT32_C(0x41424344)));
+    assert(gemm.put_u32(32, UINT32_C(0x51525354)));
+    assert(gemm.put_u32(36, UINT32_C(0x61626364)));
+    assert(gemm.bytes()[24] == 0x34 && gemm.bytes()[27] == 0x31);
+    assert(gemm.bytes()[28] == 0x44 && gemm.bytes()[31] == 0x41);
+    assert(gemm.bytes()[32] == 0x54 && gemm.bytes()[35] == 0x51);
+    assert(gemm.bytes()[36] == 0x64 && gemm.bytes()[39] == 0x61);
+    for (std::size_t index = 40; index < gemm.size(); ++index) {
+        assert(gemm.bytes()[index] == 0);
+    }
     return 0;
 }

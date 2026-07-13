@@ -71,7 +71,7 @@ device library with the hash above.
 | R104 | Vector Add fixed image | 4 | PASS verified | `src/kernel.*`, `src/serialization.h` | `cases/test_r104.py` | `tests/test_r104_extra.py`, `test_serialization.cpp` | async integration deferred to R105 |
 | R105 | Stream FIFO/async | 5 | TODO | stream + work items | `cases/test_r105.py` | multiple streams, destroy races, async recovery | handle lifetime/data races |
 | R106 | Event generations/cycles | 5 | TODO | event + stream markers | `cases/test_r106.py` | unrecorded, NOT_READY, rerecord, destroy race | latest-generation semantics |
-| R201 | FP32/INT32 GEMM | 10 | TODO | numeric + kernel modules | `cases/test_r201.py` | shape/span/overlap/overflow and saturation | dtype mapping and exact params |
+| R201 | FP32/INT32 GEMM | 10 | PASS verified | `src/numeric.*`, shared kernel path | `cases/test_r201.py` | `tests/test_r201_extra.py`, serialization test | async integration deferred to R105 |
 | R202 | FP4/FP8/FP16/BF16/FP64 GEMM | 10 | TODO | generic GEMM path | `cases/test_r202.py` | packed odd counts, special floats, shape limits | packed storage and canonical NaN |
 | R203 | INT4/INT8/INT32 GEMM | 4 | TODO | generic GEMM path | `cases/test_r203.py` | packed tails, undersized output, saturation | output storage differs from inputs |
 | R204 | AXPY/DOT/NRM2 | 6 | TODO | library ops + kernel module | `cases/test_r204.py` | count limits, overlap, exact layouts | reduction spans/order evidence |
@@ -92,7 +92,7 @@ device library with the hash above.
 - [x] R103 synchronous DMA, process sequence, and unified completion/status handling.
 - [ ] Stats-reset invariants and command-accounting tests.
 - [x] R104 Vector Add fixed-image launch and serialization tests.
-- [ ] R201 FP32/INT32 GEMM and Basic gate report.
+- [x] R201 FP32/INT32 GEMM and Basic gate report (`44/100`, Basic).
 - [ ] R105 Stream FIFO and async lifetime.
 - [ ] R106 Event generation and virtual-cycle markers.
 - [ ] R202/R203 generic multi-dtype GEMM.
@@ -119,5 +119,5 @@ library was resolved from an exact-hash official artifact. The missing `file`
 utility affects only one inspection command; `readelf`, `nm`, and `ldd` provide
 the required ELF evidence.
 
-Next: generalize the prepared fixed-image launch to FP32/INT32 GEMM for R201 and
-close the Basic gate.
+Next: implement R105 Stream FIFO, queued DMA/launch work, async error recovery,
+and allocation pending-reference lifetime.

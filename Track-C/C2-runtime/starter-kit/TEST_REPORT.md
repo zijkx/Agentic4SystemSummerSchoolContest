@@ -129,10 +129,28 @@ Run from `Track-C/C2-runtime/starter-kit`:
 R301's public pass is useful evidence but is not yet treated as full completion;
 dedicated status/fault/reset tests remain. Evidence: `reports/r104_public_report.json`.
 
+## R201 / Basic gate milestone
+
+Run from `Track-C/C2-runtime/starter-kit`:
+
+| Command | Exit | Result |
+|---|---:|---|
+| `make -j2` | 0 | Built generic numeric/GEMM path without diagnostics. |
+| `make examples` | 0 | Built all examples. |
+| `./bin/05_fp32_gemm` | 0 | Printed the expected 2x3 FP32 result through the fixed image. |
+| Serialization compile and `/tmp/c2_test_serialization` | 0 | Exact GEMM offsets 0-39 and unused zero bytes passed. |
+| `python3 cases/test_r201.py --submission .` | 0 | PASS R201, 10/10. |
+| `python3 tests/test_r201_extra.py --submission .` | 0 | PASS FP32, INT32 saturation, dimensions, overlap, and spans. |
+| Official/custom R101-R104 regression loops | 0 | All prior coverage passed. |
+| `python3 grader/public_grade.py --submission . --profile public --json-out reports/basic_gate_report.json` | 0 | Score 44/100, level Basic, Basic gate true. |
+
+Evidence: `reports/basic_gate_report.json`.
+
 ## Current verification gaps
 
 - Custom coverage currently includes R101 TLS/error semantics, R102 allocation boundaries/lifetime, R103 DMA spans/accounting/concurrent sequence, and R104 parameter/launch boundaries.
 - Pending-reference free behavior will be stress-tested once async Stream work exists in R105.
+- Basic correctness has public and focused custom evidence; hidden tests remain unknown and are not claimed passed.
 - No concurrency stress loop has run yet.
 - Final exported-symbol, Runtime ELF, dependency, clean-build, and immutable audits remain pending.
 - Public Agent diagnostics cannot prove hidden speedup.

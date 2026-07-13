@@ -52,3 +52,14 @@
 - Official R104, custom R104, serialization test, example, all earlier official/custom regressions, build, and full public grader exited 0.
 - Public score is 34/100. R301 also passes publicly through the shared command/stats path, but remains pending dedicated audit and fault-path coverage.
 - Next: R201 generic GEMM spans/serialization/image selection for FP32 and INT32; Basic gate.
+
+## 2026-07-13 - R201 and Basic gate
+
+- Added checked GEMM element/storage sizing for packed, byte, 16-bit, 32-bit, and 64-bit dtypes; integer outputs use INT32 storage.
+- Added three-span non-overlap validation and allocation leases.
+- Serialized exact 40-byte GEMM parameters and submitted typed naive frozen images resolved through the official device.
+- Connected FP32 and INT32 public APIs; no host-side numeric implementation exists.
+- Added `tests/test_r201_extra.py` for FP32, INT32 saturation, invalid/over-limit dimensions, overlap, undersized spans, and no-submit accounting; extended the byte-layout test through offset 39 and unused zero bytes.
+- Official R201, custom R201, FP32 example, serialization, all Basic regressions, build, and full grader exited 0.
+- Public score is 44/100, level Basic, with the Basic gate true.
+- Next: R105 Stream FIFO, async DMA/launch ownership, errors, recovery, destroy races, and pending allocation free.

@@ -82,12 +82,6 @@ aecError_t prepare_vector_add(aecDim3 grid, aecDim3 block,
     status = acquire_device_span(args.c, bytes, prepared.output);
     if (status != AEC_SUCCESS) return status;
 
-    aecDeviceKernelInfo info{};
-    status = resolve_kernel(AEC_KERNEL_VECTOR_ADD_F32, AEC_DTYPE_FP32,
-                            AEC_KERNEL_VARIANT_DEFAULT,
-                            AEC_KERNEL_PARAM_VECTOR_ADD_BYTES, info);
-    if (status != AEC_SUCCESS) return status;
-
     ParameterBlock<AEC_DEVICE_MAX_PARAM_BYTES> parameters;
     if (!parameters.put_u64(0, args.a) || !parameters.put_u64(8, args.b) ||
         !parameters.put_u64(16, args.c) ||
@@ -95,20 +89,43 @@ aecError_t prepare_vector_add(aecDim3 grid, aecDim3 block,
         return AEC_ERROR_INTERNAL;
     }
 
-    prepared.command = {};
-    prepared.command.abi_version = AEC_DEVICE_ABI_VERSION;
-    prepared.command.opcode = AEC_DEVICE_OP_ISA_LAUNCH;
-    prepared.command.kernel_handle = info.handle;
-    prepared.command.isa_version = info.isa_version;
-    prepared.command.entry_pc = info.entry_pc;
-    prepared.command.grid = {grid.x, grid.y, grid.z};
-    prepared.command.block = {block.x, block.y, block.z};
-    prepared.command.parameter_bytes = info.parameter_bytes;
-    std::memcpy(prepared.command.parameters, parameters.data(), parameters.size());
-    return AEC_SUCCESS;
+    return build_isa_command(
+        AEC_KERNEL_VECTOR_ADD_F32, AEC_DTYPE_FP32,
+        AEC_KERNEL_VARIANT_DEFAULT, grid, block, parameters.data(),
+        AEC_KERNEL_PARAM_VECTOR_ADD_BYTES, prepared.command);
 }
 
 } // namespace
+
+aecError_t build_isa_command(uint32_t semantic_kernel, uint32_t dtype,
+                             uint32_t variant, aecDim3 grid, aecDim3 block,
+                             const uint8_t *parameters,
+                             uint32_t parameter_bytes,
+                             aecDeviceCommand &command) {
+    const aecError_t dimension_status = validate_dimensions(grid, block);
+    if (dimension_status != AEC_SUCCESS) return dimension_status;
+    if (parameters == nullptr || parameter_bytes == 0 ||
+        parameter_bytes > AEC_DEVICE_MAX_PARAM_BYTES) {
+        return AEC_ERROR_INVALID_ARGUMENT;
+    }
+
+    aecDeviceKernelInfo info{};
+    const aecError_t resolve_status = resolve_kernel(
+        semantic_kernel, dtype, variant, parameter_bytes, info);
+    if (resolve_status != AEC_SUCCESS) return resolve_status;
+
+    command = {};
+    command.abi_version = AEC_DEVICE_ABI_VERSION;
+    command.opcode = AEC_DEVICE_OP_ISA_LAUNCH;
+    command.kernel_handle = info.handle;
+    command.isa_version = info.isa_version;
+    command.entry_pc = info.entry_pc;
+    command.grid = {grid.x, grid.y, grid.z};
+    command.block = {block.x, block.y, block.z};
+    command.parameter_bytes = info.parameter_bytes;
+    std::memcpy(command.parameters, parameters, parameter_bytes);
+    return AEC_SUCCESS;
+}
 
 aecError_t launch(aecKernelId kernel, aecDim3 grid, aecDim3 block,
                   const void *args, size_t args_size, aecStream_t stream) {
