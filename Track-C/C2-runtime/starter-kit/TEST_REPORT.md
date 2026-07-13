@@ -91,9 +91,28 @@ Run from `Track-C/C2-runtime/starter-kit`:
 
 Evidence: `reports/r102_public_report.json`.
 
+## R103 milestone
+
+Run from `Track-C/C2-runtime/starter-kit`:
+
+| Command | Exit | Result |
+|---|---:|---|
+| `make -j2` | 0 | Built command/copy/allocation/error/API modules without diagnostics. |
+| `python3 cases/test_r103.py --submission .` | 0 | PASS R103, 6/6. |
+| `python3 tests/test_r103_extra.py --submission .` | 0 | PASS spans/accounting/reset and 40 concurrent DMA submits. |
+| `python3 cases/test_r102.py --submission .` | 0 | PASS prior official requirement. |
+| `python3 tests/test_r102_extra.py --submission .` | 0 | PASS prior custom coverage. |
+| `python3 cases/test_r101.py --submission .` | 0 | PASS prior official requirement. |
+| `python3 tests/test_r101_extra.py --submission .` | 0 | PASS prior custom coverage. |
+| `python3 grader/public_grade.py --submission . --profile public --json-out reports/r103_public_report.json` | 0 | Score 24/100; R101-R103 pass. |
+
+The custom case verified that invalid copy preflight left `submitted_commands`
+unchanged and that `aecResetRuntimeStats` did not invalidate a live allocation.
+Evidence: `reports/r103_public_report.json`.
+
 ## Current verification gaps
 
-- Custom coverage currently includes R101 TLS/error semantics and R102 allocation boundaries/lifetime.
+- Custom coverage currently includes R101 TLS/error semantics, R102 allocation boundaries/lifetime, and R103 DMA spans/accounting/concurrent sequence.
 - Pending-reference free behavior will be stress-tested once async Stream work exists in R105.
 - No concurrency stress loop has run yet.
 - Final exported-symbol, Runtime ELF, dependency, clean-build, and immutable audits remain pending.

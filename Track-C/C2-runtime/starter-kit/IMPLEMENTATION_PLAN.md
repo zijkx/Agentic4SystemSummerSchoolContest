@@ -67,7 +67,7 @@ device library with the hash above.
 |---|---|---:|---|---|---|---|---|
 | R101 | Query, error names, TLS error | 4 | PASS verified | `src/aec_runtime.cpp`, `src/error.*` | `cases/test_r101.py` | `tests/test_r101_extra.py` | ABI exception/error consistency |
 | R102 | Allocation/free/lifetime | 6 | PASS verified | `src/allocation.*` | `cases/test_r102.py` | `tests/test_r102_extra.py` | pending async free and external device reset |
-| R103 | Synchronous H2D/D2H | 6 | TODO | command + allocation modules | `cases/test_r103.py` | cross-allocation, `UINT64_MAX`, null/zero | command ABI and span overflow |
+| R103 | Synchronous H2D/D2H | 6 | PASS verified | `src/command.*`, `src/copy.*`, allocation leases | `cases/test_r103.py` | `tests/test_r103_extra.py` | fault completion validation deferred to R304 |
 | R104 | Vector Add fixed image | 4 | TODO | kernel + serialization | `cases/test_r104.py` | exact 32-byte params, invalid dimensions/spans | mandatory ISA evidence |
 | R105 | Stream FIFO/async | 5 | TODO | stream + work items | `cases/test_r105.py` | multiple streams, destroy races, async recovery | handle lifetime/data races |
 | R106 | Event generations/cycles | 5 | TODO | event + stream markers | `cases/test_r106.py` | unrecorded, NOT_READY, rerecord, destroy race | latest-generation semantics |
@@ -89,7 +89,7 @@ device library with the hash above.
 - [x] Run and archive the unmodified-source public baseline.
 - [x] R101 hardening and custom TLS tests; regress baseline pass.
 - [x] R102 allocation registry and synchronous lifetime tests; async free-waits coverage remains attached to R105.
-- [ ] R103 synchronous DMA and unified completion/status handling.
+- [x] R103 synchronous DMA, process sequence, and unified completion/status handling.
 - [ ] Stats-reset invariants and command-accounting tests.
 - [ ] R104 Vector Add fixed-image launch.
 - [ ] R201 FP32/INT32 GEMM and Basic gate report.
@@ -119,5 +119,5 @@ library was resolved from an exact-hash official artifact. The missing `file`
 utility affects only one inspection command; `readelf`, `nm`, and `ldd` provide
 the required ELF evidence.
 
-Next: add the process-wide sequence, canonical DMA command construction, and
-completion validation for R103.
+Next: implement canonical fixed-image Vector Add resolve/launch for R104, then
+reuse that path for R201 GEMM and close the Basic gate.

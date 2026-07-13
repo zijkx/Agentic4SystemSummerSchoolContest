@@ -32,3 +32,13 @@
 - Official R102, custom R102, official/custom R101 regression, build, and full public grader all exited 0.
 - Public score is now 18/100: R101, R102, and both baseline Agent correctness portions.
 - Next: R103 synchronous DMA, global sequence, command/completion validation, and span tests.
+
+## 2026-07-13 - R103 synchronous DMA
+
+- Added one process-wide command sequence and a serialized submit/completion validator in `src/command.*`.
+- Built zero-initialized ABI-v2 H2D/D2H commands with legal chunk, queue depth, channel, host address, and device offset fields.
+- Added synchronous copy entry points that validate null/zero inputs and acquire a complete single-allocation lease before submit.
+- Added `tests/test_r103_extra.py` for interior spans, adjacent-allocation crossing, near-`UINT64_MAX`, no-submit-on-preflight-failure, stats reset preserving allocations, round-trip bytes, and 40 concurrent submits.
+- Official R103, all custom/basic regressions, build, and full public grader exited 0.
+- Public score is now 24/100; R101-R103 pass.
+- Next: R104 canonical Vector Add parameters, fixed-image resolve, launch validation, and ISA evidence.

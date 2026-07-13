@@ -1,6 +1,7 @@
 #include "aec_runtime.h"
 #include "aec_device_abi.h"
 #include "allocation.h"
+#include "copy.h"
 #include "error.h"
 
 #include <cstring>
@@ -64,8 +65,12 @@ aecError_t aecAlloc(aecDevicePtr *out_ptr, size_t bytes) {
 aecError_t aecFree(aecDevicePtr ptr) {
     return aec::api_boundary([&] { return aec::free_device(ptr); });
 }
-aecError_t aecCopyH2D(aecDevicePtr, const void *, size_t) { AEC_UNSUPPORTED_BODY(); }
-aecError_t aecCopyD2H(void *, aecDevicePtr, size_t) { AEC_UNSUPPORTED_BODY(); }
+aecError_t aecCopyH2D(aecDevicePtr dst, const void *src, size_t bytes) {
+    return aec::api_boundary([&] { return aec::copy_h2d(dst, src, bytes); });
+}
+aecError_t aecCopyD2H(void *dst, aecDevicePtr src, size_t bytes) {
+    return aec::api_boundary([&] { return aec::copy_d2h(dst, src, bytes); });
+}
 aecError_t aecCopyAsync(aecDevicePtr, void *, size_t, aecCopyDirection, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
 aecError_t aecStreamCreate(aecStream_t *) { AEC_UNSUPPORTED_BODY(); }
 aecError_t aecStreamDestroy(aecStream_t) { AEC_UNSUPPORTED_BODY(); }

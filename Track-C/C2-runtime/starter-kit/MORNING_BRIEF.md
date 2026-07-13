@@ -7,8 +7,8 @@ device library was absent from Git but an exact manifest-hash copy already on th
 server was verified and restored. R101 has now been hardened and independently
 verified with official and custom TLS/error tests.
 
-Public score is 18/100: R101, R102, and 4 correctness points from each legal
-baseline Agent. Copy, launch, Stream/Event, library, and Driver APIs remain
+Public score is 24/100: R101-R103 and 4 correctness points from each legal
+baseline Agent. Launch, Stream/Event, library, and advanced Driver APIs remain
 explicit stubs.
 
 ## Where to review
@@ -20,8 +20,9 @@ explicit stubs.
 
 ## Next action
 
-Implement R103's process-wide sequence, DMA command builder, completion
-validation, synchronous H2D/D2H path, and allocation-relative span tests.
+Implement R104 fixed-image Vector Add with explicit little-endian serialization,
+resolve metadata validation, launch-dimension checks, and ISA evidence. Reuse
+that path for R201 to close the Basic gate.
 
 ## Risks
 
