@@ -42,3 +42,13 @@
 - Official R103, all custom/basic regressions, build, and full public grader exited 0.
 - Public score is now 24/100; R101-R103 pass.
 - Next: R104 canonical Vector Add parameters, fixed-image resolve, launch validation, and ISA evidence.
+
+## 2026-07-13 - R104 fixed-image Vector Add
+
+- Added reusable explicit little-endian parameter serialization; command bytes never come from native-struct `memcpy` and unused bytes remain zero.
+- Added dimension/block-volume checks, vector count/storage checks, complete allocation leases, and output/input overlap rejection.
+- Resolved `(VECTOR_ADD_F32, FP32, default)` through the official device and validated ABI, ISA, handle, parameter size, and instruction hash before submit.
+- Added `tests/test_serialization.cpp` and `tests/test_r104_extra.py`, including a 33-element launch, invalid kernels/dimensions/args/spans/overlap, and no-submit preflight accounting.
+- Official R104, custom R104, serialization test, example, all earlier official/custom regressions, build, and full public grader exited 0.
+- Public score is 34/100. R301 also passes publicly through the shared command/stats path, but remains pending dedicated audit and fault-path coverage.
+- Next: R201 generic GEMM spans/serialization/image selection for FP32 and INT32; Basic gate.

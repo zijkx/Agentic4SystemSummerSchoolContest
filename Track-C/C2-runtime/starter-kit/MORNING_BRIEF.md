@@ -7,8 +7,9 @@ device library was absent from Git but an exact manifest-hash copy already on th
 server was verified and restored. R101 has now been hardened and independently
 verified with official and custom TLS/error tests.
 
-Public score is 24/100: R101-R103 and 4 correctness points from each legal
-baseline Agent. Launch, Stream/Event, library, and advanced Driver APIs remain
+Public score is 34/100: R101-R104, a public R301 pass, and 4 correctness points
+from each legal baseline Agent. R301 still needs dedicated completion/fault
+coverage before final completion. Stream/Event and compute-library APIs remain
 explicit stubs.
 
 ## Where to review
@@ -20,9 +21,9 @@ explicit stubs.
 
 ## Next action
 
-Implement R104 fixed-image Vector Add with explicit little-endian serialization,
-resolve metadata validation, launch-dimension checks, and ISA evidence. Reuse
-that path for R201 to close the Basic gate.
+Generalize the prepared fixed-image launch for R201 FP32 and INT32 GEMM: checked
+storage sizes, non-overlap, exact 40-byte parameters, typed resolve, and numeric
+evidence. Passing R201 will close the Basic gate.
 
 ## Risks
 

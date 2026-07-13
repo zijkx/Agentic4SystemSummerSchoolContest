@@ -3,6 +3,7 @@
 #include "allocation.h"
 #include "copy.h"
 #include "error.h"
+#include "kernel.h"
 
 #include <cstring>
 
@@ -104,7 +105,12 @@ aecError_t aecResetRuntimeStats(void) {
     });
 }
 
-aecError_t aecLaunch(aecKernelId, aecDim3, aecDim3, const void *, size_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
+aecError_t aecLaunch(aecKernelId kernel, aecDim3 grid, aecDim3 block,
+                     const void *args, size_t args_size, aecStream_t stream) {
+    return aec::api_boundary([&] {
+        return aec::launch(kernel, grid, block, args, args_size, stream);
+    });
+}
 aecError_t aecMatmulF4(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint32_t, uint32_t, uint32_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
 aecError_t aecMatmulF8(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint32_t, uint32_t, uint32_t, aecFp8Format, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
 aecError_t aecMatmulF16(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint32_t, uint32_t, uint32_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }

@@ -110,9 +110,28 @@ The custom case verified that invalid copy preflight left `submitted_commands`
 unchanged and that `aecResetRuntimeStats` did not invalidate a live allocation.
 Evidence: `reports/r103_public_report.json`.
 
+## R104 milestone
+
+Run from `Track-C/C2-runtime/starter-kit`:
+
+| Command | Exit | Result |
+|---|---:|---|
+| `make -j2` | 0 | Built kernel/serialization path without diagnostics. |
+| `make examples` | 0 | Built all six examples. |
+| `./bin/03_vector_add` | 0 | Produced the five expected FP32 sums through the fixed image. |
+| `g++ -Iinclude -Isrc -std=c++17 -Wall -Wextra -Wpedantic tests/test_serialization.cpp -o /tmp/c2_test_serialization` | 0 | Built standalone byte-layout test. |
+| `/tmp/c2_test_serialization` | 0 | Exact 32-byte little-endian layout and 32 unused zero bytes passed. |
+| `python3 cases/test_r104.py --submission .` | 0 | PASS R104, 4/4. |
+| `python3 tests/test_r104_extra.py --submission .` | 0 | PASS fixed image, 33 elements, rejection paths, no-submit preflight. |
+| Official/custom R101-R103 regression loops | 0 | All prior coverage passed. |
+| `python3 grader/public_grade.py --submission . --profile public --json-out reports/r104_public_report.json` | 0 | Score 34/100; R101-R104 and R301 pass publicly. |
+
+R301's public pass is useful evidence but is not yet treated as full completion;
+dedicated status/fault/reset tests remain. Evidence: `reports/r104_public_report.json`.
+
 ## Current verification gaps
 
-- Custom coverage currently includes R101 TLS/error semantics, R102 allocation boundaries/lifetime, and R103 DMA spans/accounting/concurrent sequence.
+- Custom coverage currently includes R101 TLS/error semantics, R102 allocation boundaries/lifetime, R103 DMA spans/accounting/concurrent sequence, and R104 parameter/launch boundaries.
 - Pending-reference free behavior will be stress-tested once async Stream work exists in R105.
 - No concurrency stress loop has run yet.
 - Final exported-symbol, Runtime ELF, dependency, clean-build, and immutable audits remain pending.

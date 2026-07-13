@@ -68,14 +68,14 @@ device library with the hash above.
 | R101 | Query, error names, TLS error | 4 | PASS verified | `src/aec_runtime.cpp`, `src/error.*` | `cases/test_r101.py` | `tests/test_r101_extra.py` | ABI exception/error consistency |
 | R102 | Allocation/free/lifetime | 6 | PASS verified | `src/allocation.*` | `cases/test_r102.py` | `tests/test_r102_extra.py` | pending async free and external device reset |
 | R103 | Synchronous H2D/D2H | 6 | PASS verified | `src/command.*`, `src/copy.*`, allocation leases | `cases/test_r103.py` | `tests/test_r103_extra.py` | fault completion validation deferred to R304 |
-| R104 | Vector Add fixed image | 4 | TODO | kernel + serialization | `cases/test_r104.py` | exact 32-byte params, invalid dimensions/spans | mandatory ISA evidence |
+| R104 | Vector Add fixed image | 4 | PASS verified | `src/kernel.*`, `src/serialization.h` | `cases/test_r104.py` | `tests/test_r104_extra.py`, `test_serialization.cpp` | async integration deferred to R105 |
 | R105 | Stream FIFO/async | 5 | TODO | stream + work items | `cases/test_r105.py` | multiple streams, destroy races, async recovery | handle lifetime/data races |
 | R106 | Event generations/cycles | 5 | TODO | event + stream markers | `cases/test_r106.py` | unrecorded, NOT_READY, rerecord, destroy race | latest-generation semantics |
 | R201 | FP32/INT32 GEMM | 10 | TODO | numeric + kernel modules | `cases/test_r201.py` | shape/span/overlap/overflow and saturation | dtype mapping and exact params |
 | R202 | FP4/FP8/FP16/BF16/FP64 GEMM | 10 | TODO | generic GEMM path | `cases/test_r202.py` | packed odd counts, special floats, shape limits | packed storage and canonical NaN |
 | R203 | INT4/INT8/INT32 GEMM | 4 | TODO | generic GEMM path | `cases/test_r203.py` | packed tails, undersized output, saturation | output storage differs from inputs |
 | R204 | AXPY/DOT/NRM2 | 6 | TODO | library ops + kernel module | `cases/test_r204.py` | count limits, overlap, exact layouts | reduction spans/order evidence |
-| R301 | ABI sequence/completion/stats | 6 | TODO | unified command module | `cases/test_r301.py` | preflight accounting, reset invariants | exact status and completion mapping |
+| R301 | ABI sequence/completion/stats | 6 | PUBLIC PASS; audit pending | `src/command.*` | `cases/test_r301.py` | preflight accounting partly covered by R103/R104 | fault completion mapping and broader custom coverage |
 | R302 | Dual DMA/async recovery | 6 | TODO | channel policy + streams | `cases/test_r302.py` | invalid queued span and recovery | deterministic use of both channels |
 | R303 | Host registration/zero-copy | 4 | TODO | interval registry | `cases/test_r303.py` | duplicate/overlap/overflow/subspan/pending | host interval lifetime |
 | R304 | Fault propagation/recovery | 4 | TODO | command + async error path | `cases/test_r304.py` | DMA/ISA one-shot and recovery | preserving fault consumption order |
@@ -91,7 +91,7 @@ device library with the hash above.
 - [x] R102 allocation registry and synchronous lifetime tests; async free-waits coverage remains attached to R105.
 - [x] R103 synchronous DMA, process sequence, and unified completion/status handling.
 - [ ] Stats-reset invariants and command-accounting tests.
-- [ ] R104 Vector Add fixed-image launch.
+- [x] R104 Vector Add fixed-image launch and serialization tests.
 - [ ] R201 FP32/INT32 GEMM and Basic gate report.
 - [ ] R105 Stream FIFO and async lifetime.
 - [ ] R106 Event generation and virtual-cycle markers.
@@ -119,5 +119,5 @@ library was resolved from an exact-hash official artifact. The missing `file`
 utility affects only one inspection command; `readelf`, `nm`, and `ldd` provide
 the required ELF evidence.
 
-Next: implement canonical fixed-image Vector Add resolve/launch for R104, then
-reuse that path for R201 GEMM and close the Basic gate.
+Next: generalize the prepared fixed-image launch to FP32/INT32 GEMM for R201 and
+close the Basic gate.
