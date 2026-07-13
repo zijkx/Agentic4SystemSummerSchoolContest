@@ -8,8 +8,9 @@ server was verified and restored. R101 has now been hardened and independently
 verified with official and custom TLS/error tests.
 
 Public score is 88/100, level Good. All 16 public cases pass; R101-R106,
-R201-R204, and R303 have focused custom coverage. R301/R302/R304 still need
-dedicated custom audits before the final correctness claim.
+R201-R204, and R303 have focused custom coverage. R301 now has a dedicated
+accounting/reset audit; R302/R304 pass their new custom tests but still need
+documentation commits.
 
 ## Where to review
 
@@ -20,9 +21,8 @@ dedicated custom audits before the final correctness claim.
 
 ## Next action
 
-Add dedicated R301 stats/preflight/reset, R302 multi-Stream/channel/recovery, and
-R304 DMA/ISA one-shot fault tests. After those pass, optimize both Agent policies
-using only input metadata and legal candidate constraints.
+Record the R302/R304 audit evidence, then optimize both Agent policies using only
+input metadata and legal candidate constraints.
 
 ## Risks
 

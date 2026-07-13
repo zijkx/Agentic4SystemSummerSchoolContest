@@ -245,6 +245,16 @@ Run from `Track-C/C2-runtime/starter-kit`:
 Evidence: `reports/good_gate_report.json`, `reports/exported_symbols.txt`,
 `reports/libaec_readelf.txt`, and `reports/libaec_ldd.txt`.
 
+## R301 audit
+
+| Command | Exit | Result |
+|---|---:|---|
+| `python3 cases/test_r301.py --submission .` | 0 | PASS R301, 6/6 (Good-gate run). |
+| `timeout 30s python3 tests/test_r301_extra.py --submission .` | 0 | PASS exact stats/resolve/reset and no-submit preflight. |
+
+The custom check compared the entire `aecRuntimeStats` object byte-for-byte with
+the official device stats and verified reset preserved allocation/image state.
+
 ## Current verification gaps
 
 - Custom coverage currently includes R101 TLS/error semantics, R102 allocation boundaries/lifetime, R103 DMA spans/accounting/concurrent sequence, and R104 parameter/launch boundaries.

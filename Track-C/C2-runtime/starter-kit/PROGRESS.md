@@ -123,3 +123,12 @@
 - Clean build, all six examples, 16/16 public cases, all 11 custom scripts, serialization, symbols, ELF, and dependencies exited 0.
 - Public score is 88/100, level Good, with Basic and Good gates true.
 - Next: dedicated R301/R302/R304 custom audits, then Agent policy optimization.
+
+## 2026-07-13 - R301 command accounting audit
+
+- Added `tests/test_r301_extra.py`.
+- Verified exact 4-command accounting (two H2D, one ISA launch, one D2H), Runtime/device stats byte equality, resolved frozen handle, retired instructions, digest, and cycle relationships.
+- Verified invalid launch preflight leaves every stat byte unchanged.
+- Verified stats reset zeros counters while preserving a live allocation, process command usability, and the resolved image handle.
+- Official R301 was already public-pass; the dedicated custom test exited 0.
+- Next: record R302 and R304 dedicated audit evidence.
