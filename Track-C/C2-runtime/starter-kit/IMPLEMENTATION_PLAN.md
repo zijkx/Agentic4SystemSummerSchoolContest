@@ -79,8 +79,8 @@ device library with the hash above.
 | R302 | Dual DMA/async recovery | 6 | PASS verified | stream-id channel policy | `cases/test_r302.py` | `tests/test_r302_extra.py` | submits serialize for sequence correctness |
 | R303 | Host registration/zero-copy | 4 | PASS verified | `src/registration.*`, copy flags | `cases/test_r303.py` | `tests/test_r303_extra.py` | concurrent new normal copy after unregister linearization |
 | R304 | Fault propagation/recovery | 4 | PASS verified | command + async error path | `cases/test_r304.py` | `tests/test_r304_extra.py` | hidden ISA-trap PC variants |
-| R401 | DMA Agent | 10 | correctness-only baseline | `agents/dma_agent.py` | `cases/test_r401.py` | schema, purity, timeout, determinism | hidden policy generalization |
-| R402 | Kernel Agent | 10 | correctness-only baseline | `agents/kernel_agent.py` | `cases/test_r402.py` | constraint filtering and deterministic choice | hidden candidate ordering/constraints |
+| R401 | DMA Agent | 10 | correctness PASS; public diagnostic 1.0 | `agents/dma_agent.py` | `cases/test_r401.py` | `tests/test_agents.py`: 120 brute-force optima | hidden speedup profile unavailable |
+| R402 | Kernel Agent | 10 | correctness PASS; public diagnostic 1.0 | `agents/kernel_agent.py` | `cases/test_r402.py` | 80 official-evaluator optima | hidden candidate distribution unavailable |
 
 ## Milestones
 
@@ -103,8 +103,8 @@ device library with the hash above.
 - [x] Dedicated R304 DMA/kernel/next-command one-shot fault and recovery audit.
 - [x] R303 registration, zero-copy flags, interval boundaries, and pending unregister.
 - [x] Good gate clean full regression (`88/100`, Good, 16/16 public cases).
-- [ ] R401/R402 valid generalized policies and policy tests.
-- [ ] Agent virtual-cycle optimization after all correctness requirements pass.
+- [x] R401/R402 valid generalized policies, invalid-input handling, purity, determinism, and policy tests.
+- [x] Agent public/model virtual-cycle optimization after all correctness requirements passed; hidden performance remains unverifiable.
 - [ ] Final clean build, all examples, all public cases, symbols, ELF/dependencies, immutable audit, documentation, and review audit.
 
 ## Baseline
@@ -123,5 +123,5 @@ library was resolved from an exact-hash official artifact. The missing `file`
 utility affects only one inspection command; `readelf`, `nm`, and `ldd` provide
 the required ELF evidence.
 
-Next: replace the legal baseline Agents with schema-safe generalized policies,
-verify deterministic/pure output, and optimize public virtual cycles.
+Next: perform ABI visibility hardening, sanitizer/concurrency regression, immutable
+hash audit, final clean build, and complete implementation/review documentation.

@@ -276,6 +276,20 @@ The custom check queued two matching commands after each injected DMA/kernel
 fault, proving only the first failed and the second produced valid data/ISA
 evidence. NEXT_COMMAND was also verified synchronously.
 
+## R401/R402 Agent milestone
+
+| Command | Exit | Result |
+|---|---:|---|
+| `timeout 30s python3 tests/test_agents.py --submission .` | 0 | PASS schema/purity plus 120 DMA and 80 Kernel model optima. |
+| `python3 cases/test_r401.py --submission .` | 0 | PASS correctness; public diagnostic 1.000000. |
+| `python3 cases/test_r402.py --submission .` | 0 | PASS correctness; public diagnostic 1.000000. |
+| `python3 grader/public_grade.py --submission . --profile public --json-out reports/excellent_public_report.json` | 0 | Score 88/100, Good; all requirements pass, both Agent public diagnostics 1.0. |
+
+Evidence: `reports/excellent_public_report.json`. The released grader exposes no
+full/hidden profile, so hidden performance points and the Excellent gate remain
+unverified even though the policies are optimal on the published models and
+official evaluator sweep.
+
 ## Current verification gaps
 
 - Custom coverage currently includes R101 TLS/error semantics, R102 allocation boundaries/lifetime, R103 DMA spans/accounting/concurrent sequence, and R104 parameter/launch boundaries.

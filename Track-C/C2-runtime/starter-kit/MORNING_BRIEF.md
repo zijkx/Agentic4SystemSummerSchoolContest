@@ -12,6 +12,11 @@ R201-R204, and R303 have focused custom coverage. R301 now has a dedicated
 accounting/reset audit, R302 has a four-Stream dual-channel audit, and R304 has
 one-shot DMA/kernel/command fault recovery coverage.
 
+Both Agents now pass correctness with public performance diagnostic 1.0. The
+DMA policy matched 120 brute-force optima and the Kernel policy matched 80
+official evaluator optima. Public score remains 88/100 because public Agent
+performance is diagnostic only; hidden Excellent evidence is unavailable.
+
 ## Where to review
 
 1. `IMPLEMENTATION_PLAN.md` for the requirement matrix and invariants.
@@ -21,8 +26,9 @@ one-shot DMA/kernel/command fault recovery coverage.
 
 ## Next action
 
-Optimize both Agent policies using only input metadata and legal candidate
-constraints, with deterministic stdout-pure schema/error tests.
+Perform ABI visibility and sanitizer hardening, rerun all public/custom tests,
+verify immutable hashes and the final ELF, then finish `IMPLEMENTATION.md` and
+`REVIEW_GUIDE.md`.
 
 ## Risks
 

@@ -152,3 +152,14 @@
 - Official R304 and the dedicated custom test exited 0.
 - Every non-Agent requirement now has public-pass evidence and focused custom coverage; public level remains Good at 88/100.
 - Next: implement and optimize generalized R401/R402 policies.
+
+## 2026-07-13 - R401/R402 generalized Agent policies
+
+- Replaced the DMA baseline with a strict-schema policy that uses the largest legal chunk, effective two-way queueing when concurrency permits, registered zero-copy, and a direction-based legal channel.
+- Replaced the Kernel baseline with strict candidate validation, alignment/workspace/divisibility filtering, public diagnostic-cycle minimization when supplied, and highest legal variant selection otherwise.
+- Neither policy uses `case_id`, candidate names, public input values, persistent state, network access, or non-stdlib dependencies.
+- Added `tests/test_agents.py` for valid/invalid JSON, exact output keys, stdout/stderr purity, one-second timeout, determinism, arbitrary candidate IDs/order, and no-legal-candidate failure.
+- Exhaustively matched 120 DMA requests against all legal action combinations and matched 80 dtype/shape Kernel requests against the official read-only evaluator's minimum cycles.
+- Official R401/R402 correctness passed and both public performance diagnostics improved from 0.0 to 1.0. Public score remains 88/100 because public profile awards no performance points.
+- Hidden average speedup and the Excellent gate cannot be executed or claimed with the released grader.
+- Next: final hardening, sanitizer/stress regression, immutable audit, and documentation.
