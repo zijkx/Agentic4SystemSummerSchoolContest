@@ -22,3 +22,13 @@
 - `make -j2`, official R101, custom R101, full public grader, `nm`, `readelf`, and `ldd` all exited 0.
 - Public score remains the expected 12/100 because later APIs are still explicit stubs.
 - Next: R102 allocation registry, exact-base free, span ownership, and pending references.
+
+## 2026-07-13 - R102 allocation lifetime
+
+- Added a live allocation registry around the official `aecDeviceAlloc`/`aecDeviceFree` calls.
+- Device offsets remain opaque; complete spans are checked against one allocation with overflow-safe subtraction.
+- Exact-base free removes the allocation from the live registry before waiting for pending leases, preventing new async references.
+- Added `tests/test_r102_extra.py` for zero-byte/null output, OOM, 64-byte alignment, lowest-address reuse, interior/unknown/stale/double free, and unchanged outputs on failure.
+- Official R102, custom R102, official/custom R101 regression, build, and full public grader all exited 0.
+- Public score is now 18/100: R101, R102, and both baseline Agent correctness portions.
+- Next: R103 synchronous DMA, global sequence, command/completion validation, and span tests.

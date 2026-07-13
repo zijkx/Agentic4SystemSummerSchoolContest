@@ -66,7 +66,7 @@ device library with the hash above.
 | Requirement | API/capability | Points | Status | Primary implementation | Public test | Custom coverage | Main risk |
 |---|---|---:|---|---|---|---|---|
 | R101 | Query, error names, TLS error | 4 | PASS verified | `src/aec_runtime.cpp`, `src/error.*` | `cases/test_r101.py` | `tests/test_r101_extra.py` | ABI exception/error consistency |
-| R102 | Allocation/free/lifetime | 6 | TODO | allocation registry | `cases/test_r102.py` | zero, overflow, interior/stale/double free, reuse/OOM | async free and device reset interaction |
+| R102 | Allocation/free/lifetime | 6 | PASS verified | `src/allocation.*` | `cases/test_r102.py` | `tests/test_r102_extra.py` | pending async free and external device reset |
 | R103 | Synchronous H2D/D2H | 6 | TODO | command + allocation modules | `cases/test_r103.py` | cross-allocation, `UINT64_MAX`, null/zero | command ABI and span overflow |
 | R104 | Vector Add fixed image | 4 | TODO | kernel + serialization | `cases/test_r104.py` | exact 32-byte params, invalid dimensions/spans | mandatory ISA evidence |
 | R105 | Stream FIFO/async | 5 | TODO | stream + work items | `cases/test_r105.py` | multiple streams, destroy races, async recovery | handle lifetime/data races |
@@ -88,7 +88,7 @@ device library with the hash above.
 - [x] Verify Linux toolchain, endian, repository state, device artifact, and immutable hashes.
 - [x] Run and archive the unmodified-source public baseline.
 - [x] R101 hardening and custom TLS tests; regress baseline pass.
-- [ ] R102 allocation registry and lifetime tests.
+- [x] R102 allocation registry and synchronous lifetime tests; async free-waits coverage remains attached to R105.
 - [ ] R103 synchronous DMA and unified completion/status handling.
 - [ ] Stats-reset invariants and command-accounting tests.
 - [ ] R104 Vector Add fixed-image launch.
@@ -119,5 +119,5 @@ library was resolved from an exact-hash official artifact. The missing `file`
 utility affects only one inspection command; `readelf`, `nm`, and `ldd` provide
 the required ELF evidence.
 
-Next: implement the allocation registry and pending-reference lifetime for R102,
-then add the global-sequence DMA path for R103.
+Next: add the process-wide sequence, canonical DMA command construction, and
+completion validation for R103.

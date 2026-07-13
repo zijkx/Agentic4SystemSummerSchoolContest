@@ -76,9 +76,25 @@ Run from `Track-C/C2-runtime/starter-kit` after the error/query refactor:
 Evidence: `reports/r101_public_report.json`, `reports/exported_symbols.txt`,
 `reports/libaec_readelf.txt`, and `reports/libaec_ldd.txt`.
 
+## R102 milestone
+
+Run from `Track-C/C2-runtime/starter-kit`:
+
+| Command | Exit | Result |
+|---|---:|---|
+| `make -j2` | 0 | Built allocation, error, and public API modules without diagnostics. |
+| `python3 cases/test_r102.py --submission .` | 0 | PASS R102, 6/6. |
+| `python3 tests/test_r102_extra.py --submission .` | 0 | PASS zero/OOM/alignment/reuse/interior/stale/double-free checks. |
+| `python3 cases/test_r101.py --submission .` | 0 | PASS prior official requirement. |
+| `python3 tests/test_r101_extra.py --submission .` | 0 | PASS prior custom coverage. |
+| `python3 grader/public_grade.py --submission . --profile public --json-out reports/r102_public_report.json` | 0 | Score 18/100; R101/R102 pass. |
+
+Evidence: `reports/r102_public_report.json`.
+
 ## Current verification gaps
 
-- Custom coverage currently includes R101 TLS/error semantics.
+- Custom coverage currently includes R101 TLS/error semantics and R102 allocation boundaries/lifetime.
+- Pending-reference free behavior will be stress-tested once async Stream work exists in R105.
 - No concurrency stress loop has run yet.
 - Final exported-symbol, Runtime ELF, dependency, clean-build, and immutable audits remain pending.
 - Public Agent diagnostics cannot prove hidden speedup.

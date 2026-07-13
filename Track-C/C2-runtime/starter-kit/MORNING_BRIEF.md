@@ -7,8 +7,9 @@ device library was absent from Git but an exact manifest-hash copy already on th
 server was verified and restored. R101 has now been hardened and independently
 verified with official and custom TLS/error tests.
 
-Public baseline is 12/100: R101 plus 4 correctness points from each legal
-baseline Agent. All other Runtime requirements are still starter stubs.
+Public score is 18/100: R101, R102, and 4 correctness points from each legal
+baseline Agent. Copy, launch, Stream/Event, library, and Driver APIs remain
+explicit stubs.
 
 ## Where to review
 
@@ -19,9 +20,8 @@ baseline Agent. All other Runtime requirements are still starter stubs.
 
 ## Next action
 
-Implement the allocation registry, exact-base free, allocation-relative span
-validation, and pending-reference lifetime for R102. R103 will then add the
-global-sequence DMA command submission path.
+Implement R103's process-wide sequence, DMA command builder, completion
+validation, synchronous H2D/D2H path, and allocation-relative span tests.
 
 ## Risks
 

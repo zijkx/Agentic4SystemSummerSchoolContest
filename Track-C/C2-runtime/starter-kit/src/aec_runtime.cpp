@@ -1,5 +1,6 @@
 #include "aec_runtime.h"
 #include "aec_device_abi.h"
+#include "allocation.h"
 #include "error.h"
 
 #include <cstring>
@@ -56,14 +57,13 @@ const char *aecGetErrorName(aecError_t error) {
     return aec::error_name(error);
 }
 
-aecError_t aecAlloc(aecDevicePtr *out_ptr, size_t) {
-    return aec::api_boundary([&] {
-        if (out_ptr == nullptr) return AEC_ERROR_INVALID_ARGUMENT;
-        return unsupported();
-    });
+aecError_t aecAlloc(aecDevicePtr *out_ptr, size_t bytes) {
+    return aec::api_boundary([&] { return aec::allocate_device(out_ptr, bytes); });
 }
 #define AEC_UNSUPPORTED_BODY() return aec::api_boundary([] { return unsupported(); })
-aecError_t aecFree(aecDevicePtr) { AEC_UNSUPPORTED_BODY(); }
+aecError_t aecFree(aecDevicePtr ptr) {
+    return aec::api_boundary([&] { return aec::free_device(ptr); });
+}
 aecError_t aecCopyH2D(aecDevicePtr, const void *, size_t) { AEC_UNSUPPORTED_BODY(); }
 aecError_t aecCopyD2H(void *, aecDevicePtr, size_t) { AEC_UNSUPPORTED_BODY(); }
 aecError_t aecCopyAsync(aecDevicePtr, void *, size_t, aecCopyDirection, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
