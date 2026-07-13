@@ -9,8 +9,8 @@ verified with official and custom TLS/error tests.
 
 Public score is 88/100, level Good. All 16 public cases pass; R101-R106,
 R201-R204, and R303 have focused custom coverage. R301 now has a dedicated
-accounting/reset audit; R302/R304 pass their new custom tests but still need
-documentation commits.
+accounting/reset audit and R302 has a four-Stream dual-channel audit. R304 passes
+its new custom test but still needs a documentation commit.
 
 ## Where to review
 
@@ -21,7 +21,7 @@ documentation commits.
 
 ## Next action
 
-Record the R302/R304 audit evidence, then optimize both Agent policies using only
+Record the R304 audit evidence, then optimize both Agent policies using only
 input metadata and legal candidate constraints.
 
 ## Risks

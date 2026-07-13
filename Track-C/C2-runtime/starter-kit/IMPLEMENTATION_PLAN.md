@@ -76,7 +76,7 @@ device library with the hash above.
 | R203 | INT4/INT8/INT32 GEMM | 4 | PASS verified | generic `src/numeric.cpp` path | `cases/test_r203.py` | `tests/test_r203_extra.py` | hidden maximum-shape saturation breadth |
 | R204 | AXPY/DOT/NRM2 | 6 | PASS verified | `src/library_ops.*` | `cases/test_r204.py` | `tests/test_r204_extra.py`, serialization test | hidden maximum-count reduction breadth |
 | R301 | ABI sequence/completion/stats | 6 | PASS verified | `src/command.*`, stats API | `cases/test_r301.py` | `tests/test_r301_extra.py` | sequence exhaustion is theoretical only |
-| R302 | Dual DMA/async recovery | 6 | PUBLIC PASS; audit pending | stream-id channel policy | `cases/test_r302.py` | R105 covers queued error recovery | broader multi-Stream stress |
+| R302 | Dual DMA/async recovery | 6 | PASS verified | stream-id channel policy | `cases/test_r302.py` | `tests/test_r302_extra.py` | submits serialize for sequence correctness |
 | R303 | Host registration/zero-copy | 4 | PASS verified | `src/registration.*`, copy flags | `cases/test_r303.py` | `tests/test_r303_extra.py` | concurrent new normal copy after unregister linearization |
 | R304 | Fault propagation/recovery | 4 | PUBLIC PASS; audit pending | command + async error path | `cases/test_r304.py` | dedicated one-shot/stat test pending | preserving fault consumption order |
 | R401 | DMA Agent | 10 | correctness-only baseline | `agents/dma_agent.py` | `cases/test_r401.py` | schema, purity, timeout, determinism | hidden policy generalization |
@@ -99,7 +99,8 @@ device library with the hash above.
 - [x] R203 packed integer GEMM, odd nibble tail, async INT8, and INT32 output-span tests.
 - [x] R204 fixed-image vector library operations, layouts, aliases, async, and preflight tests.
 - [x] Dedicated R301 command/stat/reset/preflight audit.
-- [ ] Dedicated R302/R304 driver behavior and fault recovery audits (tests written and passing; documentation commits pending).
+- [x] Dedicated R302 four-Stream/channel/error-recovery audit.
+- [ ] Dedicated R304 one-shot fault/recovery audit (test passing; documentation commit pending).
 - [x] R303 registration, zero-copy flags, interval boundaries, and pending unregister.
 - [x] Good gate clean full regression (`88/100`, Good, 16/16 public cases).
 - [ ] R401/R402 valid generalized policies and policy tests.
@@ -122,5 +123,5 @@ library was resolved from an exact-hash official artifact. The missing `file`
 utility affects only one inspection command; `readelf`, `nm`, and `ldd` provide
 the required ELF evidence.
 
-Next: record the completed R302 multi-Stream/channel audit and R304 one-shot
-fault/recovery audit, then optimize the two Agents.
+Next: record the completed R304 one-shot fault/recovery audit, then optimize the
+two Agents.

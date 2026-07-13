@@ -132,3 +132,13 @@
 - Verified stats reset zeros counters while preserving a live allocation, process command usability, and the resolved image handle.
 - Official R301 was already public-pass; the dedicated custom test exited 0.
 - Next: record R302 and R304 dedicated audit evidence.
+
+## 2026-07-13 - R302 dual-DMA audit
+
+- Added `tests/test_r302_extra.py`.
+- Verified four live Streams enqueue independent H2D/D2H FIFO pairs and synchronize concurrently with exact byte results.
+- Verified both official DMA channels receive commands under the stable Stream-ID policy.
+- Verified an invalid queued span reports on Stream sync, the error is cleared after reporting, and later valid work succeeds.
+- Verified invalid direction is immediate and a null Stream returns invalid handle.
+- Official R302 and the dedicated custom test exited 0.
+- Next: record R304 fault audit evidence.
