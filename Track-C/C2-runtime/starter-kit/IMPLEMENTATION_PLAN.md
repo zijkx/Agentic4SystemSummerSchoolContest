@@ -69,16 +69,16 @@ device library with the hash above.
 | R102 | Allocation/free/lifetime | 6 | PASS verified | `src/allocation.*` | `cases/test_r102.py` | `tests/test_r102_extra.py` | pending async free and external device reset |
 | R103 | Synchronous H2D/D2H | 6 | PASS verified | `src/command.*`, `src/copy.*`, allocation leases | `cases/test_r103.py` | `tests/test_r103_extra.py` | fault completion validation deferred to R304 |
 | R104 | Vector Add fixed image | 4 | PASS verified | `src/kernel.*`, `src/serialization.h` | `cases/test_r104.py` | `tests/test_r104_extra.py`, `test_serialization.cpp` | async integration deferred to R105 |
-| R105 | Stream FIFO/async | 5 | TODO | stream + work items | `cases/test_r105.py` | multiple streams, destroy races, async recovery | handle lifetime/data races |
+| R105 | Stream FIFO/async | 5 | PASS verified | `src/stream.*`, queued work in copy/kernel/numeric | `cases/test_r105.py` | `tests/test_r105_extra.py` (20 destroy races) | host buffer lifetime remains caller-owned by contract |
 | R106 | Event generations/cycles | 5 | TODO | event + stream markers | `cases/test_r106.py` | unrecorded, NOT_READY, rerecord, destroy race | latest-generation semantics |
 | R201 | FP32/INT32 GEMM | 10 | PASS verified | `src/numeric.*`, shared kernel path | `cases/test_r201.py` | `tests/test_r201_extra.py`, serialization test | async integration deferred to R105 |
 | R202 | FP4/FP8/FP16/BF16/FP64 GEMM | 10 | TODO | generic GEMM path | `cases/test_r202.py` | packed odd counts, special floats, shape limits | packed storage and canonical NaN |
 | R203 | INT4/INT8/INT32 GEMM | 4 | TODO | generic GEMM path | `cases/test_r203.py` | packed tails, undersized output, saturation | output storage differs from inputs |
 | R204 | AXPY/DOT/NRM2 | 6 | TODO | library ops + kernel module | `cases/test_r204.py` | count limits, overlap, exact layouts | reduction spans/order evidence |
 | R301 | ABI sequence/completion/stats | 6 | PUBLIC PASS; audit pending | `src/command.*` | `cases/test_r301.py` | preflight accounting partly covered by R103/R104 | fault completion mapping and broader custom coverage |
-| R302 | Dual DMA/async recovery | 6 | TODO | channel policy + streams | `cases/test_r302.py` | invalid queued span and recovery | deterministic use of both channels |
+| R302 | Dual DMA/async recovery | 6 | PUBLIC PASS; audit pending | stream-id channel policy | `cases/test_r302.py` | R105 covers queued error recovery | broader multi-Stream stress |
 | R303 | Host registration/zero-copy | 4 | TODO | interval registry | `cases/test_r303.py` | duplicate/overlap/overflow/subspan/pending | host interval lifetime |
-| R304 | Fault propagation/recovery | 4 | TODO | command + async error path | `cases/test_r304.py` | DMA/ISA one-shot and recovery | preserving fault consumption order |
+| R304 | Fault propagation/recovery | 4 | PUBLIC PASS; audit pending | command + async error path | `cases/test_r304.py` | dedicated one-shot/stat test pending | preserving fault consumption order |
 | R401 | DMA Agent | 10 | correctness-only baseline | `agents/dma_agent.py` | `cases/test_r401.py` | schema, purity, timeout, determinism | hidden policy generalization |
 | R402 | Kernel Agent | 10 | correctness-only baseline | `agents/kernel_agent.py` | `cases/test_r402.py` | constraint filtering and deterministic choice | hidden candidate ordering/constraints |
 
@@ -93,7 +93,7 @@ device library with the hash above.
 - [ ] Stats-reset invariants and command-accounting tests.
 - [x] R104 Vector Add fixed-image launch and serialization tests.
 - [x] R201 FP32/INT32 GEMM and Basic gate report (`44/100`, Basic).
-- [ ] R105 Stream FIFO and async lifetime.
+- [x] R105 Stream FIFO, async DMA/launch, handle tombstones, error recovery, and pending allocation lifetime.
 - [ ] R106 Event generation and virtual-cycle markers.
 - [ ] R202/R203 generic multi-dtype GEMM.
 - [ ] R204 fixed-image vector library operations.
@@ -119,5 +119,5 @@ library was resolved from an exact-hash official artifact. The missing `file`
 utility affects only one inspection command; `readelf`, `nm`, and `ldd` provide
 the required ELF evidence.
 
-Next: implement R105 Stream FIFO, queued DMA/launch work, async error recovery,
-and allocation pending-reference lifetime.
+Next: implement R106 Event generation, FIFO markers, latest-record semantics,
+virtual-cycle capture, and stale handle behavior.

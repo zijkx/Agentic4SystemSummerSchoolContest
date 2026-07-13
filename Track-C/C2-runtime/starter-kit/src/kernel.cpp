@@ -6,9 +6,11 @@
 #include "command.h"
 #include "error.h"
 #include "serialization.h"
+#include "stream.h"
 
 #include <cstring>
 #include <limits>
+#include <memory>
 
 namespace aec {
 namespace {
@@ -129,7 +131,6 @@ aecError_t build_isa_command(uint32_t semantic_kernel, uint32_t dtype,
 
 aecError_t launch(aecKernelId kernel, aecDim3 grid, aecDim3 block,
                   const void *args, size_t args_size, aecStream_t stream) {
-    if (stream != nullptr) return AEC_ERROR_NOT_SUPPORTED;
     const aecError_t dimension_status = validate_dimensions(grid, block);
     if (dimension_status != AEC_SUCCESS) return dimension_status;
     if (args == nullptr) return AEC_ERROR_INVALID_ARGUMENT;
@@ -154,11 +155,18 @@ aecError_t launch(aecKernelId kernel, aecDim3 grid, aecDim3 block,
     std::memcpy(&vector_args.count,
                 raw_args + offsetof(aecVectorAddArgs, count),
                 sizeof(vector_args.count));
-    PreparedLaunch prepared;
+    auto prepared = std::make_shared<PreparedLaunch>();
     const aecError_t status = prepare_vector_add(
-        grid, block, vector_args, prepared);
-    if (status != AEC_SUCCESS) return status;
-    return submit_and_validate_completion(prepared.command);
+        grid, block, vector_args, *prepared);
+    if (stream == nullptr) {
+        if (status != AEC_SUCCESS) return status;
+        return submit_and_validate_completion(prepared->command);
+    }
+    return enqueue_stream_work(stream, [prepared, status](uint64_t stream_id) {
+        if (status != AEC_SUCCESS) return status;
+        prepared->command.stream_id = stream_id;
+        return submit_and_validate_completion(prepared->command);
+    });
 }
 
 } // namespace aec

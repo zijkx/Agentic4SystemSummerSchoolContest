@@ -5,6 +5,7 @@
 #include "error.h"
 #include "kernel.h"
 #include "numeric.h"
+#include "stream.h"
 
 #include <cstring>
 
@@ -73,10 +74,21 @@ aecError_t aecCopyH2D(aecDevicePtr dst, const void *src, size_t bytes) {
 aecError_t aecCopyD2H(void *dst, aecDevicePtr src, size_t bytes) {
     return aec::api_boundary([&] { return aec::copy_d2h(dst, src, bytes); });
 }
-aecError_t aecCopyAsync(aecDevicePtr, void *, size_t, aecCopyDirection, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
-aecError_t aecStreamCreate(aecStream_t *) { AEC_UNSUPPORTED_BODY(); }
-aecError_t aecStreamDestroy(aecStream_t) { AEC_UNSUPPORTED_BODY(); }
-aecError_t aecStreamSync(aecStream_t) { AEC_UNSUPPORTED_BODY(); }
+aecError_t aecCopyAsync(aecDevicePtr device_ptr, void *host_ptr, size_t bytes,
+                        aecCopyDirection direction, aecStream_t stream) {
+    return aec::api_boundary([&] {
+        return aec::copy_async(device_ptr, host_ptr, bytes, direction, stream);
+    });
+}
+aecError_t aecStreamCreate(aecStream_t *stream) {
+    return aec::api_boundary([&] { return aec::stream_create(stream); });
+}
+aecError_t aecStreamDestroy(aecStream_t stream) {
+    return aec::api_boundary([&] { return aec::stream_destroy(stream); });
+}
+aecError_t aecStreamSync(aecStream_t stream) {
+    return aec::api_boundary([&] { return aec::stream_sync(stream); });
+}
 aecError_t aecEventCreate(aecEvent_t *) { AEC_UNSUPPORTED_BODY(); }
 aecError_t aecEventDestroy(aecEvent_t) { AEC_UNSUPPORTED_BODY(); }
 aecError_t aecEventRecord(aecEvent_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }

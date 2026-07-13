@@ -7,9 +7,9 @@ device library was absent from Git but an exact manifest-hash copy already on th
 server was verified and restored. R101 has now been hardened and independently
 verified with official and custom TLS/error tests.
 
-Public score is 44/100, level Basic. R101-R104 and R201 pass with focused custom
-coverage; R301 also passes publicly but still needs dedicated completion/fault
-coverage. Stream/Event and higher compute-library APIs remain explicit stubs.
+Public score is 59/100, level Basic. R101-R105 and R201 pass with focused custom
+coverage. R301/R302/R304 pass publicly but still need dedicated audits. Event,
+higher compute-library, and registration APIs remain explicit stubs.
 
 ## Where to review
 
@@ -20,9 +20,9 @@ coverage. Stream/Event and higher compute-library APIs remain explicit stubs.
 
 ## Next action
 
-Implement R105 Stream FIFO and connect async DMA plus prepared numeric/launch
-work. The key risks are stale handles, destroy/enqueue races, first-error
-reporting/recovery, deep-copied launch arguments, and free waiting on queued work.
+Implement R106 Event tombstones and latest-generation state. Record enqueues a
+FIFO marker, captures device virtual cycles only after prior work, and supports
+NOT_READY/query/synchronize/elapsed/destroy without stale-handle access.
 
 ## Risks
 

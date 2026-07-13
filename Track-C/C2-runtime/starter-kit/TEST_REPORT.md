@@ -146,10 +146,29 @@ Run from `Track-C/C2-runtime/starter-kit`:
 
 Evidence: `reports/basic_gate_report.json`.
 
+## R105 milestone
+
+Run from `Track-C/C2-runtime/starter-kit`:
+
+| Command | Exit | Result |
+|---|---:|---|
+| `make -j2` | 0 | Built Stream/async integration without diagnostics. |
+| `python3 cases/test_r105.py --submission .` | 0 | PASS R105, 5/5. |
+| Initial `timeout 30s python3 tests/test_r105_extra.py --submission .` | 1 | Test bug: target created with integer size N was compared as N-1 against a source bytes buffer of N+1. Runtime operations returned success. |
+| Corrected `timeout 30s python3 tests/test_r105_extra.py --submission .` | 0 | PASS FIFO/deep-copy/recovery/free-waits and 20 destroy races. |
+| Official/custom R101-R105/R201 regression loops | 0 | All prior coverage passed. |
+| `python3 cases/test_r302.py --submission .` | 0 | Public dual-channel/async recovery diagnostic passed. |
+| `python3 cases/test_r304.py --submission .` | 0 | Public DMA/kernel fault recovery diagnostic passed. |
+| `python3 grader/public_grade.py --submission . --profile public --json-out reports/r105_public_report.json` | 0 | Score 59/100; R105/R301/R302/R304 public-pass. |
+
+The custom test was run with exactly 20 destroy-race iterations. R302/R304 public
+passes are recorded but dedicated requirement-level custom tests are still
+pending. Evidence: `reports/r105_public_report.json`.
+
 ## Current verification gaps
 
 - Custom coverage currently includes R101 TLS/error semantics, R102 allocation boundaries/lifetime, R103 DMA spans/accounting/concurrent sequence, and R104 parameter/launch boundaries.
-- Pending-reference free behavior will be stress-tested once async Stream work exists in R105.
+- Pending-reference free behavior passed with queued 1 MiB H2D+D2H work in R105.
 - Basic correctness has public and focused custom evidence; hidden tests remain unknown and are not claimed passed.
 - No concurrency stress loop has run yet.
 - Final exported-symbol, Runtime ELF, dependency, clean-build, and immutable audits remain pending.

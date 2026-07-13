@@ -63,3 +63,15 @@
 - Official R201, custom R201, FP32 example, serialization, all Basic regressions, build, and full grader exited 0.
 - Public score is 44/100, level Basic, with the Basic gate true.
 - Next: R105 Stream FIFO, async DMA/launch ownership, errors, recovery, destroy races, and pending allocation free.
+
+## 2026-07-13 - R105 asynchronous Stream FIFO
+
+- Added process-lifetime Stream handle tombstones and a live registry, preventing stale pointer reuse after destroy.
+- Added one worker/deque per Stream, strict FIFO, drain/join destroy, first-unreported async error, and recovery after `aecStreamSync` reports it.
+- Connected async DMA and prepared Vector Add/FP32/INT32 GEMM work; launch parameters are fully materialized before enqueue.
+- Work items own allocation leases. A queued H2D+D2H followed immediately by `aecFree` completed correctly before free returned.
+- Added `tests/test_r105_extra.py` for null/stale/double handles, launch-args deep copy, FIFO, queued invalid-span propagation/recovery, free-waits, and 20 enqueue/destroy races.
+- The first custom run found a test-only `ctypes` N versus N+1 buffer-length mistake; no Runtime change was made. After correcting the copy length, the test and full repeated regression passed.
+- Public R105 passes. R302 and R304 also pass publicly through the dual-channel and unified async fault paths.
+- Public score is 59/100, level Basic. R301/R302/R304 await dedicated custom audits before final completion status.
+- Next: R106 Event generations and virtual-cycle FIFO markers.

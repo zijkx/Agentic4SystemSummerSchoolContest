@@ -6,8 +6,10 @@
 #include "command.h"
 #include "kernel.h"
 #include "serialization.h"
+#include "stream.h"
 
 #include <limits>
+#include <memory>
 
 namespace aec {
 namespace {
@@ -58,17 +60,16 @@ bool spans_overlap(aecDevicePtr left, uint64_t left_bytes,
     return left - right < right_bytes;
 }
 
-} // namespace
+struct PreparedMatmul {
+    aecDeviceCommand command{};
+    AllocationLease a_lease;
+    AllocationLease b_lease;
+    AllocationLease c_lease;
+};
 
-aecError_t matmul(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
-                  uint32_t m, uint32_t n, uint32_t k, aecDataType dtype,
-                  aecStream_t stream) {
-    if (stream != nullptr) return AEC_ERROR_NOT_SUPPORTED;
-    if (m == 0 || n == 0 || k == 0 || m > kMaxMatrixDimension ||
-        n > kMaxMatrixDimension || k > kMaxMatrixDimension) {
-        return AEC_ERROR_INVALID_ARGUMENT;
-    }
-
+aecError_t prepare_matmul(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+                          uint32_t m, uint32_t n, uint32_t k,
+                          aecDataType dtype, PreparedMatmul &prepared) {
     uint64_t a_elements = 0;
     uint64_t b_elements = 0;
     uint64_t c_elements = 0;
@@ -91,14 +92,11 @@ aecError_t matmul(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
         return AEC_ERROR_INVALID_ARGUMENT;
     }
 
-    AllocationLease a_lease;
-    AllocationLease b_lease;
-    AllocationLease c_lease;
-    aecError_t status = acquire_device_span(a, a_bytes, a_lease);
+    aecError_t status = acquire_device_span(a, a_bytes, prepared.a_lease);
     if (status != AEC_SUCCESS) return status;
-    status = acquire_device_span(b, b_bytes, b_lease);
+    status = acquire_device_span(b, b_bytes, prepared.b_lease);
     if (status != AEC_SUCCESS) return status;
-    status = acquire_device_span(c, c_bytes, c_lease);
+    status = acquire_device_span(c, c_bytes, prepared.c_lease);
     if (status != AEC_SUCCESS) return status;
 
     ParameterBlock<AEC_DEVICE_MAX_PARAM_BYTES> parameters;
@@ -108,14 +106,34 @@ aecError_t matmul(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
         !parameters.put_u32(36, static_cast<uint32_t>(dtype))) {
         return AEC_ERROR_INTERNAL;
     }
-
-    aecDeviceCommand command{};
-    status = build_isa_command(
+    return build_isa_command(
         AEC_KERNEL_GEMM_NAIVE, static_cast<uint32_t>(dtype),
         AEC_KERNEL_VARIANT_NAIVE, {1, 1, 1}, {1, 1, 1}, parameters.data(),
-        AEC_KERNEL_PARAM_GEMM_BYTES, command);
-    if (status != AEC_SUCCESS) return status;
-    return submit_and_validate_completion(command);
+        AEC_KERNEL_PARAM_GEMM_BYTES, prepared.command);
+}
+
+} // namespace
+
+aecError_t matmul(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+                  uint32_t m, uint32_t n, uint32_t k, aecDataType dtype,
+                  aecStream_t stream) {
+    if (m == 0 || n == 0 || k == 0 || m > kMaxMatrixDimension ||
+        n > kMaxMatrixDimension || k > kMaxMatrixDimension) {
+        return AEC_ERROR_INVALID_ARGUMENT;
+    }
+
+    auto prepared = std::make_shared<PreparedMatmul>();
+    const aecError_t status = prepare_matmul(
+        a, b, c, m, n, k, dtype, *prepared);
+    if (stream == nullptr) {
+        if (status != AEC_SUCCESS) return status;
+        return submit_and_validate_completion(prepared->command);
+    }
+    return enqueue_stream_work(stream, [prepared, status](uint64_t stream_id) {
+        if (status != AEC_SUCCESS) return status;
+        prepared->command.stream_id = stream_id;
+        return submit_and_validate_completion(prepared->command);
+    });
 }
 
 } // namespace aec
