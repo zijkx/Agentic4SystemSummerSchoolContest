@@ -1,0 +1,123 @@
+# C2 Runtime Implementation Plan
+
+Last updated: 2026-07-13 (Asia/Shanghai)
+
+## Environment and repository
+
+- Repository: `/home/mig19/c2/Agentic4SystemSummerSchoolContest`
+- C2 root: `/home/mig19/c2/Agentic4SystemSummerSchoolContest/Track-C/C2-runtime`
+- Starter kit: `/home/mig19/c2/Agentic4SystemSummerSchoolContest/Track-C/C2-runtime/starter-kit`
+- Path resolution: the preferred path from the task exists; the concatenated fallback path does not.
+- Initial commit: `abcaa940b107c153514d3cb162108090631cfdf6`
+- Working branch: `codex/c2-runtime-implementation`
+- Initial tracked worktree: clean. Baseline build later created untracked `bin/` and `reports/`; `lib/` and `libaec.so` are ignored by the repository.
+- Host: Linux `x86_64`, 64-bit, little-endian; kernel `6.8.0-110-generic`.
+- Toolchain: Python 3.12.3, GCC/G++ 13.3.0, GNU Make 4.3, glibc/ldd 2.39.
+- `file` is not installed. ELF identity is verified with `readelf`; no system package was installed.
+
+## Official device library
+
+The checkout initially lacked `lib/libaec_device.so`. An existing artifact at
+`/home/mig19/c2/test/libaec_device.so` was inspected before use. Its SHA-256 is
+exactly the value frozen in `RELEASE_MANIFEST.json`:
+
+```text
+295c47c51354a2e58b76cff18633b15daeea9f2e0e4115dccda338a9e66b01d5
+```
+
+It is ELF64, little-endian, x86-64, and all dependencies resolve. The exact
+artifact was restored to `starter-kit/lib/libaec_device.so`; it remains ignored
+and must be present in the formal build environment.
+
+## Immutable contracts
+
+Do not modify:
+
+- `include/aec_runtime.h`, `include/aec_device_abi.h`, `include/aec_isa.h`
+- `lib/libaec_device.so`
+- `kernels/images/`, `kernels/manifest.json`
+- `grader/`, `cases/`, `golden/`, `schemas/`
+
+The audit SHA-256 list was captured before implementation. Final verification
+will compare every immutable tracked file with `RELEASE_MANIFEST.json` and the
+device library with the hash above.
+
+## Non-negotiable invariants
+
+1. `aecDevicePtr` is an opaque 64-bit device offset and is never dereferenced by the host.
+2. A device span must be wholly contained in one live allocation.
+3. Addition, multiplication, span, and storage-size calculations are overflow checked.
+4. Command sequence is process-wide, nonzero, and strictly increasing.
+5. Successful APIs do not clear a prior thread-local error.
+6. Runtime kernel IDs are resolved through `aecDeviceResolveKernel`; they are never device handles.
+7. Parameter blocks are canonical little-endian byte arrays without native padding.
+8. Every successful numeric operation uses a frozen image and `AEC_DEVICE_OP_ISA_LAUNCH`.
+9. Work in one Stream is FIFO; different Streams have no implicit ordering.
+10. Async launch metadata and argument bytes are owned by the queued work item.
+11. Every opaque handle is validated through a live registry before dereference.
+12. Destroyed and stale handles return an error without use-after-free.
+13. No global registry lock is held while `aecDeviceSubmit` may block.
+14. Stats reset does not reset allocations, registrations, sequence, handles, or images.
+15. Runtime preflight failures submit no command, retire no instruction, and modify no device bytes.
+16. Injected faults are reported once; subsequent legal commands remain usable.
+
+## Requirement matrix
+
+| Requirement | API/capability | Points | Status | Primary implementation | Public test | Custom coverage | Main risk |
+|---|---|---:|---|---|---|---|---|
+| R101 | Query, error names, TLS error | 4 | PASS baseline | `src/aec_runtime.cpp`, error module | `cases/test_r101.py` | two-thread Peek/Get and success-preserves-error | ABI exception/error consistency |
+| R102 | Allocation/free/lifetime | 6 | TODO | allocation registry | `cases/test_r102.py` | zero, overflow, interior/stale/double free, reuse/OOM | async free and device reset interaction |
+| R103 | Synchronous H2D/D2H | 6 | TODO | command + allocation modules | `cases/test_r103.py` | cross-allocation, `UINT64_MAX`, null/zero | command ABI and span overflow |
+| R104 | Vector Add fixed image | 4 | TODO | kernel + serialization | `cases/test_r104.py` | exact 32-byte params, invalid dimensions/spans | mandatory ISA evidence |
+| R105 | Stream FIFO/async | 5 | TODO | stream + work items | `cases/test_r105.py` | multiple streams, destroy races, async recovery | handle lifetime/data races |
+| R106 | Event generations/cycles | 5 | TODO | event + stream markers | `cases/test_r106.py` | unrecorded, NOT_READY, rerecord, destroy race | latest-generation semantics |
+| R201 | FP32/INT32 GEMM | 10 | TODO | numeric + kernel modules | `cases/test_r201.py` | shape/span/overlap/overflow and saturation | dtype mapping and exact params |
+| R202 | FP4/FP8/FP16/BF16/FP64 GEMM | 10 | TODO | generic GEMM path | `cases/test_r202.py` | packed odd counts, special floats, shape limits | packed storage and canonical NaN |
+| R203 | INT4/INT8/INT32 GEMM | 4 | TODO | generic GEMM path | `cases/test_r203.py` | packed tails, undersized output, saturation | output storage differs from inputs |
+| R204 | AXPY/DOT/NRM2 | 6 | TODO | library ops + kernel module | `cases/test_r204.py` | count limits, overlap, exact layouts | reduction spans/order evidence |
+| R301 | ABI sequence/completion/stats | 6 | TODO | unified command module | `cases/test_r301.py` | preflight accounting, reset invariants | exact status and completion mapping |
+| R302 | Dual DMA/async recovery | 6 | TODO | channel policy + streams | `cases/test_r302.py` | invalid queued span and recovery | deterministic use of both channels |
+| R303 | Host registration/zero-copy | 4 | TODO | interval registry | `cases/test_r303.py` | duplicate/overlap/overflow/subspan/pending | host interval lifetime |
+| R304 | Fault propagation/recovery | 4 | TODO | command + async error path | `cases/test_r304.py` | DMA/ISA one-shot and recovery | preserving fault consumption order |
+| R401 | DMA Agent | 10 | correctness-only baseline | `agents/dma_agent.py` | `cases/test_r401.py` | schema, purity, timeout, determinism | hidden policy generalization |
+| R402 | Kernel Agent | 10 | correctness-only baseline | `agents/kernel_agent.py` | `cases/test_r402.py` | constraint filtering and deterministic choice | hidden candidate ordering/constraints |
+
+## Milestones
+
+- [x] Audit repository instructions, specs, scoring, public ABI, device ABI, ISA, docs, starter source, public tests, manifests, examples, and Agents.
+- [x] Verify Linux toolchain, endian, repository state, device artifact, and immutable hashes.
+- [x] Run and archive the unmodified-source public baseline.
+- [ ] R101 hardening and custom TLS tests; regress baseline pass.
+- [ ] R102 allocation registry and lifetime tests.
+- [ ] R103 synchronous DMA and unified completion/status handling.
+- [ ] Stats-reset invariants and command-accounting tests.
+- [ ] R104 Vector Add fixed-image launch.
+- [ ] R201 FP32/INT32 GEMM and Basic gate report.
+- [ ] R105 Stream FIFO and async lifetime.
+- [ ] R106 Event generation and virtual-cycle markers.
+- [ ] R202/R203 generic multi-dtype GEMM.
+- [ ] R204 fixed-image vector library operations.
+- [ ] R301/R302/R303/R304 driver behavior and fault recovery.
+- [ ] Good gate full regression.
+- [ ] R401/R402 valid generalized policies and policy tests.
+- [ ] Agent virtual-cycle optimization after all correctness requirements pass.
+- [ ] Final clean build, all examples, all public cases, symbols, ELF/dependencies, immutable audit, documentation, and review audit.
+
+## Baseline
+
+The original starter source builds once the exact official device library is
+present. `R101` passes. `R102-R106`, `R201-R204`, and `R301-R304` return
+`AEC_ERROR_NOT_SUPPORTED`. Both baseline Agents receive only their 4-point
+correctness portions. Public score: `12/100`, level `Not passed`.
+
+Evidence: `reports/baseline_public_report.json` and `TEST_REPORT.md`.
+
+## Current blockers and next step
+
+There is no active implementation blocker. The checkout omission of the device
+library was resolved from an exact-hash official artifact. The missing `file`
+utility affects only one inspection command; `readelf`, `nm`, and `ldd` provide
+the required ELF evidence.
+
+Next: implement the shared Runtime state/error/allocation/command foundation,
+then validate R101-R103 before adding kernel launch logic.
