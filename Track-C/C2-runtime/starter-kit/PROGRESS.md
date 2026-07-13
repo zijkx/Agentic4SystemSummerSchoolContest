@@ -12,3 +12,13 @@
 - Captured immutable contract hashes.
 - Baseline build/examples/query succeeded; R101 passed; public score is 12/100.
 - Next: shared Runtime state, R101 hardening, R102 allocation, and R103 DMA.
+
+## 2026-07-13 - R101 query and TLS errors
+
+- Added centralized TLS error storage, stable error names, and Device-to-Runtime status mapping in `src/error.*`.
+- Wrapped public C entry points in a no-throw exception boundary; success still preserves prior TLS error.
+- Changed the Makefile to compile all Runtime source modules while preserving `make -j2` and example entry points.
+- Added `tests/test_r101_extra.py` for unknown error names, Peek/Get behavior, success-preserves-error, and two-thread isolation.
+- `make -j2`, official R101, custom R101, full public grader, `nm`, `readelf`, and `ldd` all exited 0.
+- Public score remains the expected 12/100 because later APIs are still explicit stubs.
+- Next: R102 allocation registry, exact-base free, span ownership, and pending references.

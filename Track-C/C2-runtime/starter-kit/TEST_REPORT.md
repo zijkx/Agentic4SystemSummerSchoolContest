@@ -59,9 +59,26 @@ fail; pass/fail is therefore read from the JSON and printed requirement status.
 
 Machine-readable evidence: `reports/baseline_public_report.json`.
 
+## R101 milestone
+
+Run from `Track-C/C2-runtime/starter-kit` after the error/query refactor:
+
+| Command | Exit | Result |
+|---|---:|---|
+| `make -j2` | 0 | Built `src/aec_runtime.cpp` and `src/error.cpp` without diagnostics. |
+| `python3 cases/test_r101.py --submission .` | 0 | PASS R101, 4/4. |
+| `python3 tests/test_r101_extra.py --submission .` | 0 | PASS TLS isolation, success-preserves-error, Peek/Get, and unknown name. |
+| `python3 grader/public_grade.py --submission . --profile public --json-out reports/r101_public_report.json` | 0 | Score remained 12/100; no baseline regression. |
+| `nm -D --defined-only libaec.so > reports/exported_symbols.txt` | 0 | Dynamic symbol inspection completed. |
+| `readelf -h -d libaec.so > reports/libaec_readelf.txt` | 0 | ELF64 little-endian x86-64 shared object. |
+| `ldd libaec.so > reports/libaec_ldd.txt` | 0 | All dependencies resolved. |
+
+Evidence: `reports/r101_public_report.json`, `reports/exported_symbols.txt`,
+`reports/libaec_readelf.txt`, and `reports/libaec_ldd.txt`.
+
 ## Current verification gaps
 
-- No custom tests have run yet.
+- Custom coverage currently includes R101 TLS/error semantics.
 - No concurrency stress loop has run yet.
 - Final exported-symbol, Runtime ELF, dependency, clean-build, and immutable audits remain pending.
 - Public Agent diagnostics cannot prove hidden speedup.

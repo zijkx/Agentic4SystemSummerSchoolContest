@@ -65,7 +65,7 @@ device library with the hash above.
 
 | Requirement | API/capability | Points | Status | Primary implementation | Public test | Custom coverage | Main risk |
 |---|---|---:|---|---|---|---|---|
-| R101 | Query, error names, TLS error | 4 | PASS baseline | `src/aec_runtime.cpp`, error module | `cases/test_r101.py` | two-thread Peek/Get and success-preserves-error | ABI exception/error consistency |
+| R101 | Query, error names, TLS error | 4 | PASS verified | `src/aec_runtime.cpp`, `src/error.*` | `cases/test_r101.py` | `tests/test_r101_extra.py` | ABI exception/error consistency |
 | R102 | Allocation/free/lifetime | 6 | TODO | allocation registry | `cases/test_r102.py` | zero, overflow, interior/stale/double free, reuse/OOM | async free and device reset interaction |
 | R103 | Synchronous H2D/D2H | 6 | TODO | command + allocation modules | `cases/test_r103.py` | cross-allocation, `UINT64_MAX`, null/zero | command ABI and span overflow |
 | R104 | Vector Add fixed image | 4 | TODO | kernel + serialization | `cases/test_r104.py` | exact 32-byte params, invalid dimensions/spans | mandatory ISA evidence |
@@ -87,7 +87,7 @@ device library with the hash above.
 - [x] Audit repository instructions, specs, scoring, public ABI, device ABI, ISA, docs, starter source, public tests, manifests, examples, and Agents.
 - [x] Verify Linux toolchain, endian, repository state, device artifact, and immutable hashes.
 - [x] Run and archive the unmodified-source public baseline.
-- [ ] R101 hardening and custom TLS tests; regress baseline pass.
+- [x] R101 hardening and custom TLS tests; regress baseline pass.
 - [ ] R102 allocation registry and lifetime tests.
 - [ ] R103 synchronous DMA and unified completion/status handling.
 - [ ] Stats-reset invariants and command-accounting tests.
@@ -119,5 +119,5 @@ library was resolved from an exact-hash official artifact. The missing `file`
 utility affects only one inspection command; `readelf`, `nm`, and `ldd` provide
 the required ELF evidence.
 
-Next: implement the shared Runtime state/error/allocation/command foundation,
-then validate R101-R103 before adding kernel launch logic.
+Next: implement the allocation registry and pending-reference lifetime for R102,
+then add the global-sequence DMA path for R103.

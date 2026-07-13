@@ -4,7 +4,8 @@
 
 Audit and baseline are complete on the formal remote Linux host. The official
 device library was absent from Git but an exact manifest-hash copy already on the
-server was verified and restored. The starter now builds and R101 passes.
+server was verified and restored. R101 has now been hardened and independently
+verified with official and custom TLS/error tests.
 
 Public baseline is 12/100: R101 plus 4 correctness points from each legal
 baseline Agent. All other Runtime requirements are still starter stubs.
@@ -18,9 +19,9 @@ baseline Agent. All other Runtime requirements are still starter stubs.
 
 ## Next action
 
-Implement the shared Runtime state, centralized error/status mapping, allocation
-registry, span validation, global sequence, and DMA command submission. Validate
-R101-R103 before introducing fixed-image launch and GEMM.
+Implement the allocation registry, exact-base free, allocation-relative span
+validation, and pending-reference lifetime for R102. R103 will then add the
+global-sequence DMA command submission path.
 
 ## Risks
 

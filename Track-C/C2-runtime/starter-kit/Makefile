@@ -4,6 +4,8 @@ CXXFLAGS ?= -O2 -g -std=c++17 -fPIC -Wall -Wextra -Wpedantic -ffp-contract=off
 CPPFLAGS ?= -Iinclude
 
 RUNTIME := libaec.so
+RUNTIME_SOURCES := $(wildcard src/*.cpp)
+RUNTIME_HEADERS := $(wildcard src/*.h) include/aec_runtime.h include/aec_device_abi.h include/aec_isa.h
 EXAMPLES := \
 	bin/01_device_query \
 	bin/02_isa_encoding \
@@ -16,8 +18,8 @@ EXAMPLES := \
 
 all: $(RUNTIME)
 
-$(RUNTIME): src/aec_runtime.cpp include/aec_runtime.h include/aec_device_abi.h include/aec_isa.h lib/libaec_device.so
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -shared $< -o $@ -Llib -laec_device -pthread \
+$(RUNTIME): $(RUNTIME_SOURCES) $(RUNTIME_HEADERS) lib/libaec_device.so
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -shared $(RUNTIME_SOURCES) -o $@ -Llib -laec_device -pthread \
 		-Wl,-rpath,'$$ORIGIN/lib'
 
 bin/%: examples/%.c $(RUNTIME)
