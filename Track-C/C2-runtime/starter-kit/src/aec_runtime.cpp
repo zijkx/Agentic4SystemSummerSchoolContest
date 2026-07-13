@@ -7,17 +7,10 @@
 #include "kernel.h"
 #include "library_ops.h"
 #include "numeric.h"
+#include "registration.h"
 #include "stream.h"
 
 #include <cstring>
-
-namespace {
-
-aecError_t unsupported() noexcept {
-    return AEC_ERROR_NOT_SUPPORTED;
-}
-
-} // namespace
 
 extern "C" {
 
@@ -66,7 +59,6 @@ const char *aecGetErrorName(aecError_t error) {
 aecError_t aecAlloc(aecDevicePtr *out_ptr, size_t bytes) {
     return aec::api_boundary([&] { return aec::allocate_device(out_ptr, bytes); });
 }
-#define AEC_UNSUPPORTED_BODY() return aec::api_boundary([] { return unsupported(); })
 aecError_t aecFree(aecDevicePtr ptr) {
     return aec::api_boundary([&] { return aec::free_device(ptr); });
 }
@@ -112,8 +104,12 @@ aecError_t aecEventElapsedCycles(aecEvent_t start, aecEvent_t end,
         return aec::event_elapsed_cycles(start, end, cycles);
     });
 }
-aecError_t aecHostRegister(void *, size_t) { AEC_UNSUPPORTED_BODY(); }
-aecError_t aecHostUnregister(void *) { AEC_UNSUPPORTED_BODY(); }
+aecError_t aecHostRegister(void *ptr, size_t bytes) {
+    return aec::api_boundary([&] { return aec::host_register(ptr, bytes); });
+}
+aecError_t aecHostUnregister(void *ptr) {
+    return aec::api_boundary([&] { return aec::host_unregister(ptr); });
+}
 
 aecError_t aecGetRuntimeStats(aecRuntimeStats *stats) {
     return aec::api_boundary([&] {
@@ -230,7 +226,5 @@ aecError_t aecNrm2(aecDevicePtr x, aecDevicePtr result, uint64_t count,
         return aec::nrm2(x, result, count, stream);
     });
 }
-
-#undef AEC_UNSUPPORTED_BODY
 
 } // extern "C"

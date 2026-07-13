@@ -1,0 +1,400 @@
+{
+  "competition": "AEC-C2",
+  "gates": {
+    "basic": true,
+    "excellent": false,
+    "good": true
+  },
+  "level": "Good",
+  "profile": "public",
+  "requirement_filter": null,
+  "requirements": {
+    "R101": {
+      "cases": [],
+      "detail": "device metadata and TLS error isolation verified",
+      "device_evidence": {
+        "dma_commands": 0,
+        "instructions_retired": 0,
+        "isa_launches": 0,
+        "isa_traps": 0,
+        "last_kernel_handle": 0,
+        "last_trace_digest": 0,
+        "last_virtual_cycles": 0,
+        "submitted_commands": 0,
+        "total_virtual_cycles": 0
+      },
+      "earned": 4,
+      "hidden_positive": false,
+      "passed": true,
+      "possible": 4
+    },
+    "R102": {
+      "cases": [],
+      "detail": "allocation reuse, OOM, and double-free behavior verified",
+      "device_evidence": {
+        "dma_commands": 0,
+        "instructions_retired": 0,
+        "isa_launches": 0,
+        "isa_traps": 0,
+        "last_kernel_handle": 0,
+        "last_trace_digest": 0,
+        "last_virtual_cycles": 0,
+        "submitted_commands": 0,
+        "total_virtual_cycles": 0
+      },
+      "earned": 6,
+      "hidden_positive": false,
+      "passed": true,
+      "possible": 6
+    },
+    "R103": {
+      "cases": [],
+      "detail": "synchronous copies and allocation-relative bounds verified",
+      "device_evidence": {
+        "dma_commands": 2,
+        "instructions_retired": 0,
+        "isa_launches": 0,
+        "isa_traps": 0,
+        "last_kernel_handle": 0,
+        "last_trace_digest": 0,
+        "last_virtual_cycles": 101,
+        "submitted_commands": 2,
+        "total_virtual_cycles": 202
+      },
+      "earned": 6,
+      "hidden_positive": false,
+      "passed": true,
+      "possible": 6
+    },
+    "R104": {
+      "cases": [],
+      "detail": "registered vector-add launch and launch validation verified",
+      "device_evidence": {
+        "dma_commands": 3,
+        "instructions_retired": 348,
+        "isa_launches": 1,
+        "isa_traps": 0,
+        "last_kernel_handle": 12592627508081395200,
+        "last_trace_digest": 2329465730392227546,
+        "last_virtual_cycles": 101,
+        "submitted_commands": 4,
+        "total_virtual_cycles": 1102
+      },
+      "earned": 4,
+      "hidden_positive": false,
+      "passed": true,
+      "possible": 4
+    },
+    "R105": {
+      "cases": [],
+      "detail": "stream FIFO and asynchronous copy verified",
+      "device_evidence": {
+        "dma_commands": 2,
+        "instructions_retired": 0,
+        "isa_launches": 0,
+        "isa_traps": 0,
+        "last_kernel_handle": 0,
+        "last_trace_digest": 0,
+        "last_virtual_cycles": 228,
+        "submitted_commands": 2,
+        "total_virtual_cycles": 456
+      },
+      "earned": 5,
+      "hidden_positive": false,
+      "passed": true,
+      "possible": 5
+    },
+    "R106": {
+      "cases": [],
+      "detail": "event generations, cycle capture, and async error propagation verified",
+      "device_evidence": {
+        "dma_commands": 1,
+        "instructions_retired": 0,
+        "isa_launches": 0,
+        "isa_traps": 0,
+        "last_kernel_handle": 0,
+        "last_trace_digest": 0,
+        "last_virtual_cycles": 7,
+        "submitted_commands": 2,
+        "total_virtual_cycles": 363
+      },
+      "earned": 5,
+      "hidden_positive": false,
+      "passed": true,
+      "possible": 5
+    },
+    "R201": {
+      "cases": [],
+      "detail": "FP32 and INT32 GEMM match an independent scalar oracle",
+      "device_evidence": {
+        "dma_commands": 6,
+        "instructions_retired": 182,
+        "isa_launches": 2,
+        "isa_traps": 0,
+        "last_kernel_handle": 12592627508081986049,
+        "last_trace_digest": 6470273287386225738,
+        "last_virtual_cycles": 101,
+        "submitted_commands": 8,
+        "total_virtual_cycles": 932
+      },
+      "earned": 10,
+      "hidden_positive": false,
+      "passed": true,
+      "possible": 10
+    },
+    "R202": {
+      "cases": [],
+      "detail": "all low-precision formats and FP64 match independent encoding/oracles",
+      "device_evidence": {
+        "dma_commands": 18,
+        "instructions_retired": 546,
+        "isa_launches": 6,
+        "isa_traps": 0,
+        "last_kernel_handle": 12592627508081985281,
+        "last_trace_digest": 14536670144718844367,
+        "last_virtual_cycles": 102,
+        "submitted_commands": 24,
+        "total_virtual_cycles": 2794
+      },
+      "earned": 10,
+      "hidden_positive": false,
+      "passed": true,
+      "possible": 10
+    },
+    "R203": {
+      "cases": [],
+      "detail": "packed INT4 and INT8 GEMM match exact INT32 results",
+      "device_evidence": {
+        "dma_commands": 6,
+        "instructions_retired": 182,
+        "isa_launches": 2,
+        "isa_traps": 0,
+        "last_kernel_handle": 12592627508081985793,
+        "last_trace_digest": 673701968014239496,
+        "last_virtual_cycles": 101,
+        "submitted_commands": 8,
+        "total_virtual_cycles": 930
+      },
+      "earned": 4,
+      "hidden_positive": false,
+      "passed": true,
+      "possible": 4
+    },
+    "R204": {
+      "cases": [],
+      "detail": "AXPY, DOT, and NRM2 match ordered FP32 oracles",
+      "device_evidence": {
+        "dma_commands": 6,
+        "instructions_retired": 472,
+        "isa_launches": 3,
+        "isa_traps": 0,
+        "last_kernel_handle": 12592627508082771456,
+        "last_trace_digest": 16917262625834826617,
+        "last_virtual_cycles": 101,
+        "submitted_commands": 9,
+        "total_virtual_cycles": 1843
+      },
+      "earned": 6,
+      "hidden_positive": false,
+      "passed": true,
+      "possible": 6
+    },
+    "R301": {
+      "cases": [],
+      "detail": "command types and deterministic completion accounting verified",
+      "device_evidence": {
+        "dma_commands": 3,
+        "instructions_retired": 336,
+        "isa_launches": 1,
+        "isa_traps": 0,
+        "last_kernel_handle": 12592627508081395200,
+        "last_trace_digest": 11235465794454740521,
+        "last_virtual_cycles": 101,
+        "submitted_commands": 4,
+        "total_virtual_cycles": 1051
+      },
+      "earned": 6,
+      "hidden_positive": false,
+      "passed": true,
+      "possible": 6
+    },
+    "R302": {
+      "cases": [],
+      "detail": "both DMA channels, asynchronous bounds, and recovery verified",
+      "device_evidence": {
+        "dma_commands": 3,
+        "instructions_retired": 0,
+        "isa_launches": 0,
+        "isa_traps": 0,
+        "last_kernel_handle": 0,
+        "last_trace_digest": 0,
+        "last_virtual_cycles": 101,
+        "submitted_commands": 3,
+        "total_virtual_cycles": 365
+      },
+      "earned": 6,
+      "hidden_positive": false,
+      "passed": true,
+      "possible": 6
+    },
+    "R303": {
+      "cases": [],
+      "detail": "registration lifecycle and modeled zero-copy benefit verified",
+      "device_evidence": {
+        "dma_commands": 1,
+        "instructions_retired": 0,
+        "isa_launches": 0,
+        "isa_traps": 0,
+        "last_kernel_handle": 0,
+        "last_trace_digest": 0,
+        "last_virtual_cycles": 2093,
+        "submitted_commands": 1,
+        "total_virtual_cycles": 2093
+      },
+      "earned": 4,
+      "hidden_positive": false,
+      "passed": true,
+      "possible": 4
+    },
+    "R304": {
+      "cases": [],
+      "detail": "DMA/kernel fault injection and post-fault recovery verified",
+      "device_evidence": {
+        "dma_commands": 1,
+        "instructions_retired": 0,
+        "isa_launches": 0,
+        "isa_traps": 0,
+        "last_kernel_handle": 0,
+        "last_trace_digest": 0,
+        "last_virtual_cycles": 7,
+        "submitted_commands": 3,
+        "total_virtual_cycles": 146
+      },
+      "earned": 4,
+      "hidden_positive": false,
+      "passed": true,
+      "possible": 4
+    },
+    "R401": {
+      "cases": [
+        {
+          "action": {
+            "channel": 0,
+            "chunk_bytes": 4096,
+            "queue_depth": 1,
+            "use_zero_copy": false
+          },
+          "baseline_cycles": 132,
+          "candidate_cycles": 132,
+          "case_id": 0,
+          "fraction": 0.0,
+          "visibility": "public"
+        },
+        {
+          "action": {
+            "channel": 0,
+            "chunk_bytes": 4096,
+            "queue_depth": 1,
+            "use_zero_copy": false
+          },
+          "baseline_cycles": 2508,
+          "candidate_cycles": 2508,
+          "case_id": 1,
+          "fraction": 0.0,
+          "visibility": "public"
+        },
+        {
+          "action": {
+            "channel": 0,
+            "chunk_bytes": 4096,
+            "queue_depth": 1,
+            "use_zero_copy": false
+          },
+          "baseline_cycles": 39001,
+          "candidate_cycles": 39001,
+          "case_id": 2,
+          "fraction": 0.0,
+          "visibility": "public"
+        }
+      ],
+      "detail": "DMA Agent schema/correctness passed; public diagnostic=0.000000; hidden performance=0.000000",
+      "device_evidence": {
+        "dma_commands": 0,
+        "instructions_retired": 0,
+        "isa_launches": 0,
+        "isa_traps": 0,
+        "last_kernel_handle": 0,
+        "last_trace_digest": 0,
+        "last_virtual_cycles": 0,
+        "submitted_commands": 0,
+        "total_virtual_cycles": 0
+      },
+      "earned": 4.0,
+      "hidden_positive": false,
+      "passed": true,
+      "possible": 10
+    },
+    "R402": {
+      "cases": [
+        {
+          "action": {
+            "kernel_id": "naive"
+          },
+          "baseline_cycles": 1115,
+          "candidate_cycles": 1115,
+          "case_id": 0,
+          "fraction": 0.0,
+          "image_id": 656897,
+          "instructions_retired": 620,
+          "trace_digest": 7307755105743929672,
+          "visibility": "public"
+        },
+        {
+          "action": {
+            "kernel_id": "naive"
+          },
+          "baseline_cycles": 543,
+          "candidate_cycles": 543,
+          "case_id": 1,
+          "fraction": 0.0,
+          "image_id": 657665,
+          "instructions_retired": 310,
+          "trace_digest": 4141290604652241782,
+          "visibility": "public"
+        },
+        {
+          "action": {
+            "kernel_id": "naive"
+          },
+          "baseline_cycles": 162,
+          "candidate_cycles": 162,
+          "case_id": 2,
+          "fraction": 0.0,
+          "image_id": 656385,
+          "instructions_retired": 91,
+          "trace_digest": 11181336386295931455,
+          "visibility": "public"
+        }
+      ],
+      "detail": "Kernel Agent legality passed; public diagnostic=0.000000; hidden performance=0.000000",
+      "device_evidence": {
+        "dma_commands": 0,
+        "instructions_retired": 0,
+        "isa_launches": 0,
+        "isa_traps": 0,
+        "last_kernel_handle": 0,
+        "last_trace_digest": 0,
+        "last_virtual_cycles": 0,
+        "submitted_commands": 0,
+        "total_virtual_cycles": 0
+      },
+      "earned": 4.0,
+      "hidden_positive": false,
+      "passed": true,
+      "possible": 10
+    }
+  },
+  "schema_version": 2,
+  "score": 88.0,
+  "submission": "/home/mig19/c2/Agentic4SystemSummerSchoolContest/Track-C/C2-runtime/starter-kit"
+}

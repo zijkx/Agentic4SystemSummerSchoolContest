@@ -113,3 +113,13 @@
 - Official R204, custom R204, serialization, all prior official/custom regressions, build, and full grader exited 0.
 - Public score is 84/100. R303 is the only remaining non-Agent public failure.
 - Next: R303 registration/zero-copy/pending lifetime, followed by dedicated R301/R302/R304 audits.
+
+## 2026-07-13 - R303 and Good gate
+
+- Added exact nonempty host interval registration with duplicate/overlap/overflow rejection and exact-base unregister.
+- Complete registered subspans acquire pending leases and set both REGISTERED and ZERO_COPY; partial overlaps remain legal normal DMA.
+- Unregister removes the interval from the live map and waits for prior async registration leases.
+- Added `tests/test_r303_extra.py` for null/duplicate/contained/partial overlap, adjacent intervals, interior unregister, pointer overflow, subspan flags, partial normal flags, and pending async unregister.
+- Clean build, all six examples, 16/16 public cases, all 11 custom scripts, serialization, symbols, ELF, and dependencies exited 0.
+- Public score is 88/100, level Good, with Basic and Good gates true.
+- Next: dedicated R301/R302/R304 custom audits, then Agent policy optimization.

@@ -224,6 +224,27 @@ Run from `Track-C/C2-runtime/starter-kit`:
 
 Evidence: `reports/r204_public_report.json`.
 
+## R303 / Good gate milestone
+
+Run from `Track-C/C2-runtime/starter-kit`:
+
+| Command | Exit | Result |
+|---|---:|---|
+| `make clean && make -j2 && make examples` | 0 | Clean warning-free build of Runtime and all examples. |
+| `./bin/01_device_query` through `./bin/06_registered_copy` | 0 | All six examples passed; registered copy reported one zero-copy command. |
+| `python3 cases/test_r303.py --submission .` | 0 | PASS R303, 4/4. |
+| `timeout 30s python3 tests/test_r303_extra.py --submission .` | 0 | PASS intervals/subspan/partial flags/pending unregister. |
+| `make public-cases` | 0 | 16/16 public cases passed. |
+| Custom R101-R106/R201-R204/R303 loop | 0 | All 11 scripts passed; R105/R106 each include 20 races. |
+| Serialization compile and run | 0 | All canonical layout tests passed. |
+| `python3 grader/public_grade.py --submission . --profile public --json-out reports/good_gate_report.json` | 0 | Score 88/100, level Good, Basic/Good gates true. |
+| `nm -D --defined-only libaec.so` | 0 | Dynamic symbols captured in `reports/exported_symbols.txt`. |
+| `readelf -h -d libaec.so` | 0 | ELF64 little-endian x86-64 shared object. |
+| `ldd libaec.so` | 0 | All dynamic dependencies resolved. |
+
+Evidence: `reports/good_gate_report.json`, `reports/exported_symbols.txt`,
+`reports/libaec_readelf.txt`, and `reports/libaec_ldd.txt`.
+
 ## Current verification gaps
 
 - Custom coverage currently includes R101 TLS/error semantics, R102 allocation boundaries/lifetime, R103 DMA spans/accounting/concurrent sequence, and R104 parameter/launch boundaries.

@@ -7,9 +7,9 @@ device library was absent from Git but an exact manifest-hash copy already on th
 server was verified and restored. R101 has now been hardened and independently
 verified with official and custom TLS/error tests.
 
-Public score is 84/100, level Basic. R101-R106 and R201-R204 pass with focused
-custom coverage. R301/R302/R304 pass publicly but still need dedicated audits.
-R303 host registration is the only non-Agent public failure.
+Public score is 88/100, level Good. All 16 public cases pass; R101-R106,
+R201-R204, and R303 have focused custom coverage. R301/R302/R304 still need
+dedicated custom audits before the final correctness claim.
 
 ## Where to review
 
@@ -20,9 +20,9 @@ R303 host registration is the only non-Agent public failure.
 
 ## Next action
 
-Implement exact host registration intervals, duplicate/overlap/overflow
-rejection, registered-subspan detection, REGISTERED+ZERO_COPY DMA flags, and
-unregister waiting for queued async references. Then audit R301/R302/R304.
+Add dedicated R301 stats/preflight/reset, R302 multi-Stream/channel/recovery, and
+R304 DMA/ISA one-shot fault tests. After those pass, optimize both Agent policies
+using only input metadata and legal candidate constraints.
 
 ## Risks
 

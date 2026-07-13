@@ -77,7 +77,7 @@ device library with the hash above.
 | R204 | AXPY/DOT/NRM2 | 6 | PASS verified | `src/library_ops.*` | `cases/test_r204.py` | `tests/test_r204_extra.py`, serialization test | hidden maximum-count reduction breadth |
 | R301 | ABI sequence/completion/stats | 6 | PUBLIC PASS; audit pending | `src/command.*` | `cases/test_r301.py` | preflight accounting partly covered by R103/R104 | fault completion mapping and broader custom coverage |
 | R302 | Dual DMA/async recovery | 6 | PUBLIC PASS; audit pending | stream-id channel policy | `cases/test_r302.py` | R105 covers queued error recovery | broader multi-Stream stress |
-| R303 | Host registration/zero-copy | 4 | TODO | interval registry | `cases/test_r303.py` | duplicate/overlap/overflow/subspan/pending | host interval lifetime |
+| R303 | Host registration/zero-copy | 4 | PASS verified | `src/registration.*`, copy flags | `cases/test_r303.py` | `tests/test_r303_extra.py` | concurrent new normal copy after unregister linearization |
 | R304 | Fault propagation/recovery | 4 | PUBLIC PASS; audit pending | command + async error path | `cases/test_r304.py` | dedicated one-shot/stat test pending | preserving fault consumption order |
 | R401 | DMA Agent | 10 | correctness-only baseline | `agents/dma_agent.py` | `cases/test_r401.py` | schema, purity, timeout, determinism | hidden policy generalization |
 | R402 | Kernel Agent | 10 | correctness-only baseline | `agents/kernel_agent.py` | `cases/test_r402.py` | constraint filtering and deterministic choice | hidden candidate ordering/constraints |
@@ -98,8 +98,9 @@ device library with the hash above.
 - [x] R202 floating multi-dtype GEMM, FP4 odd tail, format validation, and async coverage.
 - [x] R203 packed integer GEMM, odd nibble tail, async INT8, and INT32 output-span tests.
 - [x] R204 fixed-image vector library operations, layouts, aliases, async, and preflight tests.
-- [ ] R301/R302/R303/R304 driver behavior and fault recovery.
-- [ ] Good gate full regression.
+- [ ] Dedicated R301/R302/R304 driver behavior and fault recovery audits (all public cases already pass).
+- [x] R303 registration, zero-copy flags, interval boundaries, and pending unregister.
+- [x] Good gate clean full regression (`88/100`, Good, 16/16 public cases).
 - [ ] R401/R402 valid generalized policies and policy tests.
 - [ ] Agent virtual-cycle optimization after all correctness requirements pass.
 - [ ] Final clean build, all examples, all public cases, symbols, ELF/dependencies, immutable audit, documentation, and review audit.
@@ -120,6 +121,5 @@ library was resolved from an exact-hash official artifact. The missing `file`
 utility affects only one inspection command; `readelf`, `nm`, and `ldd` provide
 the required ELF evidence.
 
-Next: implement R303 exact host interval registration, zero-copy flags, and
-pending async unregister. Then perform dedicated R301/R302/R304 audits and close
-the Good gate.
+Next: add dedicated R301 command/stats, R302 multi-Stream/channel recovery, and
+R304 one-shot fault/recovery custom tests. Then optimize the two Agents.
