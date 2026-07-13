@@ -95,3 +95,11 @@
 - Official R202, custom R202, all prior official/custom regressions, build, and full grader exited 0.
 - Public score is 74/100, still Basic because Good requires every named correctness requirement, not just a score threshold.
 - Next: R203 INT4/INT8 packed inputs and saturated INT32 outputs.
+
+## 2026-07-13 - R203 packed integer GEMM
+
+- Connected INT4 and INT8 APIs to the shared typed frozen-image GEMM path; both use INT32 output storage.
+- Added `tests/test_r203_extra.py` with K=3 signed INT4 low-nibble packing/zero high tail, equivalent async INT8, and an undersized INT32 output preflight rejection.
+- Official R203, custom R203, all prior official/custom regressions, build, and full grader exited 0.
+- Public score is 78/100 but remains Basic because R204 and R303 are mandatory Good gates.
+- Next: R204 AXPY, DOT, and NRM2 fixed-image operations.

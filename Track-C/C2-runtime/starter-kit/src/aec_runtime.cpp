@@ -190,8 +190,20 @@ aecError_t aecMatmulF64(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
         return aec::matmul(a, b, c, m, n, k, AEC_DTYPE_FP64, stream);
     });
 }
-aecError_t aecMatmulI4(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint32_t, uint32_t, uint32_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
-aecError_t aecMatmulI8(aecDevicePtr, aecDevicePtr, aecDevicePtr, uint32_t, uint32_t, uint32_t, aecStream_t) { AEC_UNSUPPORTED_BODY(); }
+aecError_t aecMatmulI4(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+                       uint32_t m, uint32_t n, uint32_t k,
+                       aecStream_t stream) {
+    return aec::api_boundary([&] {
+        return aec::matmul(a, b, c, m, n, k, AEC_DTYPE_INT4, stream);
+    });
+}
+aecError_t aecMatmulI8(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+                       uint32_t m, uint32_t n, uint32_t k,
+                       aecStream_t stream) {
+    return aec::api_boundary([&] {
+        return aec::matmul(a, b, c, m, n, k, AEC_DTYPE_INT8, stream);
+    });
+}
 aecError_t aecMatmulI32(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
                         uint32_t m, uint32_t n, uint32_t k,
                         aecStream_t stream) {

@@ -195,6 +195,20 @@ Run from `Track-C/C2-runtime/starter-kit`:
 
 Evidence: `reports/r202_public_report.json`.
 
+## R203 milestone
+
+Run from `Track-C/C2-runtime/starter-kit`:
+
+| Command | Exit | Result |
+|---|---:|---|
+| `make -j2` | 0 | Built INT4/INT8 API mappings without diagnostics. |
+| `python3 cases/test_r203.py --submission .` | 0 | PASS R203, 4/4. |
+| `timeout 30s python3 tests/test_r203_extra.py --submission .` | 0 | PASS odd INT4 packing, async INT8, and INT32 output span. |
+| Official/custom R101-R106/R201-R202 regression loops | 0 | All prior coverage passed. |
+| `python3 grader/public_grade.py --submission . --profile public --json-out reports/r203_public_report.json` | 0 | Score 78/100, level Basic; Good gate false. |
+
+Evidence: `reports/r203_public_report.json`.
+
 ## Current verification gaps
 
 - Custom coverage currently includes R101 TLS/error semantics, R102 allocation boundaries/lifetime, R103 DMA spans/accounting/concurrent sequence, and R104 parameter/launch boundaries.

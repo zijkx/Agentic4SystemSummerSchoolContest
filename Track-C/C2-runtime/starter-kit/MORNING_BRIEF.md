@@ -7,9 +7,9 @@ device library was absent from Git but an exact manifest-hash copy already on th
 server was verified and restored. R101 has now been hardened and independently
 verified with official and custom TLS/error tests.
 
-Public score is 74/100, level Basic. R101-R106, R201, and R202 pass with focused
+Public score is 78/100, level Basic. R101-R106 and R201-R203 pass with focused
 custom coverage. R301/R302/R304 pass publicly but still need dedicated audits.
-Integer packed GEMM, vector library, and registration APIs remain explicit stubs.
+The vector library and registration APIs remain explicit stubs.
 
 ## Where to review
 
@@ -20,8 +20,9 @@ Integer packed GEMM, vector library, and registration APIs remain explicit stubs
 
 ## Next action
 
-Connect INT4/INT8 public APIs to the generic GEMM path and verify low-nibble
-packing, odd tails, exact signed decode, INT32 output storage, and saturation.
+Implement R204 AXPY, DOT, and NRM2 using their 28/32/24-byte canonical parameter
+blocks, fixed images, FP32 span/count checks, output overlap rules, and async
+Stream execution.
 
 ## Risks
 
