@@ -251,3 +251,25 @@
   256-cubed GEMMs, standalone serialization, and ASan+UBSan without errors.
 - R105/R106/R302/R303/R304 passed 50 consecutive rounds each, totaling 250
   process-level case runs after the Stream fix.
+
+## 2026-07-14 - Kernel Agent AC-6 completion correction
+
+- A final requirement audit found that the temporary 250 ms regression
+  guardrail did not satisfy the original Kernel plan's p99-below-20-ms AC-6.
+- Replaced the 11,964-byte decoder implementation with an 8,520-byte compact
+  strict parser. Selection, candidate legality, duplicate-key rejection,
+  Unicode handling, output escaping, and offline restrictions are unchanged.
+- Restored the test assertion to p99 below 20 ms. Five consecutive final-source
+  runs of 1,000 processes passed at 18.018, 17.964, 18.154, 17.939, and 18.142 ms.
+- Added raw-protocol coverage for reordered keys, duplicate keys, trailing data,
+  leading zeroes, floats, booleans, null, NaN, malformed Unicode, and isolated
+  surrogates. All invalid payloads fail with no stdout/stderr output.
+- Compared 500 deterministic randomized requests against the previously audited
+  Agent; exit status, stdout, and stderr were byte-identical for every request.
+- A 45,199-byte input with 300 legal candidates completed 200 times with median
+  22.628 ms, p99 26.305 ms, and max 26.901 ms, far below the one-second timeout.
+- Reissued the policy certificate for Agent SHA
+  `ca7f936c...939052`; mismatch remains zero, argmin accuracy 100%, and maximum
+  regret zero. R402 diagnostic remains 1.0.
+- Re-ran 16/16 public cases, the public grader, immutable audit, all custom
+  scripts, and standalone serialization without regression.

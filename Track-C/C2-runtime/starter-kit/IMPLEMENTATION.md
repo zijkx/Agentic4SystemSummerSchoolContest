@@ -342,11 +342,12 @@ threshold do not change successful completion cycles.
 Both Agents use only Python standard library, emit exactly one compact JSON to
 stdout on valid input, emit no logs, keep no state, and reject invalid/no-legal
 input with a nonzero exit. The Kernel Agent contains a small self-contained JSON
-codec without relaxing strict parsing, Unicode escaping, or output purity. The
-custom regression uses a 250 ms process-level p99 guardrail, leaving a fourfold
-margin below the official 1 second invocation timeout. It does not import
-`ctypes`, load the device library, read external files, invoke subprocesses, or
-access the network.
+codec without relaxing duplicate-key rejection, numeric syntax, Unicode
+escaping, or output purity. Compacting the decoder reduced source compilation
+overhead while preserving the oracle-optimal policy. The regression enforces
+the original 20 ms process-level p99 gate; five consecutive 1,000-process runs
+measured 17.939-18.154 ms. It does not import `ctypes`, load the device library,
+read external files, invoke subprocesses, or access the network.
 
 Oracle collection and policy generation are pre-submission tools only. They are
 not copied into the three-file scoring artifact.

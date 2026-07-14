@@ -1,0 +1,33 @@
+{
+  "agent_sha256": "ca7f936ca17d4889dc0068237e143a2cc14004e18881a054f038f94639939052",
+  "differential_requests": 500,
+  "large_candidate_boundary": {
+    "candidates": 300,
+    "input_bytes": 45199,
+    "max_ms": 26.901080273091793,
+    "median_ms": 22.62824773788452,
+    "p99_ms": 26.30520425736904,
+    "runs": 200
+  },
+  "official_domain_latency": {
+    "all_p99_below_20_ms": true,
+    "candidate_subset_permutation_cases_per_trial": 550,
+    "determinism_runs_per_trial": 1000,
+    "p99_ms": [
+      18.018,
+      17.964,
+      18.154,
+      17.939,
+      18.142
+    ],
+    "threshold_ms": 20.0,
+    "trials": 5
+  },
+  "oracle_certificate": {
+    "argmin_accuracy": 1.0,
+    "calls": 5570560,
+    "max_regret_cycles": 0,
+    "mismatch_count": 0
+  },
+  "schema_version": 1
+}

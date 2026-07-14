@@ -31,5 +31,6 @@ remediation are complete. Final evidence is in `TEST_REPORT.md`,
 `reports/device_update_public_report.json`, and the audit/follow-up reports.
 The official `c30b3f9` device update is included, maximum-length DOT/NRM2 passes
 without traps, and a strict three-file submission passes every public
-requirement. Hidden Agent performance is outside the released profile and
-remains unclaimed.
+requirement. The final Kernel parser also passes the original process-level p99
+below 20 ms gate in five consecutive 1,000-run trials. Hidden Agent performance
+is outside the released profile and remains unclaimed.

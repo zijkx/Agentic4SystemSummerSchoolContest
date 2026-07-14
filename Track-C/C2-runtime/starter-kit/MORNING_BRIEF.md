@@ -16,9 +16,10 @@ policy matched 120 brute-force optima. The Kernel policy now has a full-domain
 certificate: 5,570,560 official evaluator calls over all 10 dtypes produced
 zero dominance violations, zero mismatches, 100% argmin accuracy, and zero
 regret. Candidate subset/permutation tests and 1,000-run determinism passed; the
-latest run measured median 17.121 ms and p99 31.838 ms, well inside the official
-one second timeout. Public score remains 88/100 because public Agent performance
-is diagnostic only; hidden Excellent evidence is unavailable.
+final compact parser passed five consecutive 1,000-process runs with p99
+17.939-18.154 ms, satisfying the original 20 ms gate. Public score remains
+88/100 because public Agent performance is diagnostic only; hidden Excellent
+evidence is unavailable.
 
 All public `aecLaunch` Kernel IDs work. ASan+UBSan and successful non-PIE TSan
 runs are clean. The final ELF is little-endian x86-64 with 36 public C functions
@@ -33,11 +34,12 @@ files and all 34 images. The current device library hash is
 `b96b09e88ae160b659cf72bd079da8bc647d2bc55d377297a649d77c30ddcb0a`.
 
 The independent audit is preserved at commit `631f2a7`. Its Stream constructor
-race, strict-package loading failure, empty candidate-ID rejection, and flaky
-20 ms custom threshold are fixed. Its DMA `concurrency=65` finding was a false
-positive because the immutable schema sets a maximum of 64. A strict three-file
-directory now passes the fresh official grader, and five concurrency/fault
-requirements passed 50 rounds each after remediation.
+race, strict-package loading failure, and empty candidate-ID rejection are
+fixed. A later completion audit replaced the temporary 250 ms latency workaround
+with a compact parser that passes the original 20 ms gate. The DMA
+`concurrency=65` finding was a false positive because the immutable schema sets
+a maximum of 64. A strict three-file directory passes the fresh official grader,
+and five concurrency/fault requirements passed 50 rounds each after remediation.
 
 ## Where to review
 
@@ -48,6 +50,7 @@ requirements passed 50 rounds each after remediation.
 5. `reports/device_update_public_report.json` for the current machine-readable grader result.
 6. `reports/kernel_oracle_summary.json` and
    `reports/kernel_policy_report.json` for the Kernel full-domain certificate.
+7. `reports/kernel_ac6_latency_report.json` for the final latency gate evidence.
 
 ## Handoff
 

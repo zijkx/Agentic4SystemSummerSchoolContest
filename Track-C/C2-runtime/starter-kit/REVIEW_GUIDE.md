@@ -27,7 +27,7 @@
 | `src/stream.cpp` | FIFO, shutdown race, final-work lease release, first error recovery. |
 | `src/event.cpp` | Reserve/cancel/complete generation and destroy waiting. |
 | `agents/dma_agent.py` | Normative formula optimum and strict JSON protocol. |
-| `agents/kernel_agent.py` | Candidate-only legality filter and general variant model. |
+| `agents/kernel_agent.py` | Compact strict JSON decoder, candidate-only legality filter, and general variant model. |
 | `tests/test_immutable.py` | Manifest hashes, fixed-image count, extra/missing files, and initial-commit contract diff. |
 | `tests/test_r204_max_length.py` | Historical DOT/NRM2 trap boundaries, maximum count, cycles, and max+1 preflight. |
 
@@ -48,7 +48,7 @@
 | R303 | `registration.cpp::host_register/host_unregister/acquire_registered_span` |
 | R304 | submit status mapping plus `StreamState::worker_loop/synchronize` |
 | R401 | `agents/dma_agent.py::policy` |
-| R402 | `agents/kernel_agent.py::policy` |
+| R402 | `agents/kernel_agent.py::decode/select` |
 
 ## Highest-risk functions
 
@@ -172,8 +172,8 @@ Review the evidence chain in this order:
 4. `agents/kernel_agent.py`: legality filtering, diagnostic-cycle path,
    highest-variant path, and stable tie-break.
 5. `tests/test_kernel_agent_optimality.py`: candidate subsets/permutations,
-   arbitrary IDs, thresholds, invalid inputs, Unicode JSON, determinism, and
-   process-level latency.
+   arbitrary IDs, thresholds, raw malformed JSON, Unicode JSON, a 300-candidate
+   boundary request, determinism, and the strict process-level latency gate.
 
 ## Milestone commits
 

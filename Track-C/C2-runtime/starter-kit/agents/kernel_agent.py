@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
-"""Select the fastest legal frozen image using only request metadata."""
-
-from __future__ import annotations
+"""Choose the oracle-optimal legal frozen image from request metadata."""
 
 import sys
 
 
+WS = " \t\r\n"
+HEX = "0123456789abcdefABCDEF"
+ESC = {'"': '"', "\\": "\\", "/": "/", "b": "\b", "f": "\f",
+       "n": "\n", "r": "\r", "t": "\t"}
+OUT = {'"': '\\"', "\\": "\\\\", "\b": "\\b", "\f": "\\f",
+       "\n": "\\n", "\r": "\\r", "\t": "\\t"}
 REQUEST_KEYS = {
     "case_id", "dtype", "m", "n", "k", "alignment", "workspace", "candidates"
 }
@@ -13,312 +17,237 @@ CANDIDATE_KEYS = {
     "id", "semantic_kernel_id", "image_id", "variant", "workspace",
     "alignment", "divisibility"
 }
-DTYPE_CODES = {
-    "fp4_e2m1": 1,
-    "fp8_e4m3": 2,
-    "fp8_e5m2": 3,
-    "fp16": 4,
-    "bf16": 5,
-    "fp32": 6,
-    "fp64": 7,
-    "int4": 8,
-    "int8": 9,
-    "int32": 10,
+CANDIDATE_DIAGNOSTIC_KEYS = CANDIDATE_KEYS | {"diagnostic_cycles"}
+DTYPES = {
+    "fp4_e2m1", "fp8_e4m3", "fp8_e5m2", "fp16", "bf16",
+    "fp32", "fp64", "int4", "int8", "int32"
 }
-VARIANT_REQUIREMENTS = {
-    1: (1, 1, 0),
-    2: (4, 1, 4096),
-    3: (8, 16, 8192),
-}
-JSON_ESCAPES = {
-    '"': '"', "\\": "\\", "/": "/", "b": "\b", "f": "\f",
-    "n": "\n", "r": "\r", "t": "\t",
-}
-JSON_OUTPUT_ESCAPES = {
-    '"': '\\"', "\\": "\\\\", "\b": "\\b", "\f": "\\f",
-    "\n": "\\n", "\r": "\\r", "\t": "\\t",
-}
+REQUIREMENTS = ((1, 1, 0), (4, 1, 4096), (8, 16, 8192))
 
 
-class JsonParser:
-    def __init__(self, source: str):
-        self.source = source
-        self.index = 0
+def decode(source):
+    index = 0
+    size = len(source)
 
-    def parse(self) -> object:
-        value = self._value()
-        self._whitespace()
-        if self.index != len(self.source):
-            raise ValueError("trailing JSON data")
-        return value
+    def whitespace():
+        nonlocal index
+        while index < size and source[index] in WS:
+            index += 1
 
-    def _whitespace(self) -> None:
-        while (self.index < len(self.source) and
-               self.source[self.index] in " \t\r\n"):
-            self.index += 1
-
-    def _value(self) -> object:
-        self._whitespace()
-        if self.index >= len(self.source):
-            raise ValueError("missing JSON value")
-        character = self.source[self.index]
-        if character == "{":
-            return self._object()
-        if character == "[":
-            return self._array()
-        if character == '"':
-            return self._string()
-        for token, value in (("true", True), ("false", False), ("null", None)):
-            if self.source.startswith(token, self.index):
-                self.index += len(token)
-                return value
-        if character in "-0123456789":
-            return self._number()
-        raise ValueError("invalid JSON value")
-
-    def _object(self) -> dict[str, object]:
-        result = {}
-        self.index += 1
-        self._whitespace()
-        if self.index < len(self.source) and self.source[self.index] == "}":
-            self.index += 1
-            return result
-        while True:
-            self._whitespace()
-            if self.index >= len(self.source) or self.source[self.index] != '"':
-                raise ValueError("object key is not a string")
-            key = self._string()
-            if key in result:
-                raise ValueError("duplicate object key")
-            self._whitespace()
-            if self.index >= len(self.source) or self.source[self.index] != ":":
-                raise ValueError("missing object colon")
-            self.index += 1
-            result[key] = self._value()
-            self._whitespace()
-            if self.index >= len(self.source):
-                raise ValueError("unterminated object")
-            delimiter = self.source[self.index]
-            self.index += 1
-            if delimiter == "}":
-                return result
-            if delimiter != ",":
-                raise ValueError("invalid object delimiter")
-
-    def _array(self) -> list[object]:
-        result = []
-        self.index += 1
-        self._whitespace()
-        if self.index < len(self.source) and self.source[self.index] == "]":
-            self.index += 1
-            return result
-        while True:
-            result.append(self._value())
-            self._whitespace()
-            if self.index >= len(self.source):
-                raise ValueError("unterminated array")
-            delimiter = self.source[self.index]
-            self.index += 1
-            if delimiter == "]":
-                return result
-            if delimiter != ",":
-                raise ValueError("invalid array delimiter")
-
-    def _string(self) -> str:
-        self.index += 1
+    def string():
+        nonlocal index
+        index += 1
+        start = index
         pieces = []
-        segment = self.index
-        while self.index < len(self.source):
-            character = self.source[self.index]
+        while index < size:
+            character = source[index]
             if character == '"':
-                pieces.append(self.source[segment:self.index])
-                self.index += 1
+                pieces.append(source[start:index])
+                index += 1
                 return "".join(pieces)
             if ord(character) < 0x20:
-                raise ValueError("unescaped control character")
+                raise ValueError
             if character != "\\":
-                self.index += 1
+                index += 1
                 continue
-            pieces.append(self.source[segment:self.index])
-            self.index += 1
-            if self.index >= len(self.source):
-                raise ValueError("unterminated escape")
-            escape = self.source[self.index]
-            self.index += 1
-            if escape in JSON_ESCAPES:
-                pieces.append(JSON_ESCAPES[escape])
+            pieces.append(source[start:index])
+            index += 1
+            if index >= size:
+                raise ValueError
+            escape = source[index]
+            index += 1
+            if escape in ESC:
+                pieces.append(ESC[escape])
             elif escape == "u":
-                pieces.append(self._unicode_escape())
+                digits = source[index:index + 4]
+                if len(digits) != 4 or any(c not in HEX for c in digits):
+                    raise ValueError
+                codepoint = int(digits, 16)
+                index += 4
+                if 0xD800 <= codepoint <= 0xDBFF:
+                    if source[index:index + 2] != "\\u":
+                        raise ValueError
+                    digits = source[index + 2:index + 6]
+                    if len(digits) != 4 or any(c not in HEX for c in digits):
+                        raise ValueError
+                    low = int(digits, 16)
+                    if not 0xDC00 <= low <= 0xDFFF:
+                        raise ValueError
+                    codepoint = (0x10000 + ((codepoint - 0xD800) << 10) +
+                                 low - 0xDC00)
+                    index += 6
+                elif 0xDC00 <= codepoint <= 0xDFFF:
+                    raise ValueError
+                pieces.append(chr(codepoint))
             else:
-                raise ValueError("invalid string escape")
-            segment = self.index
-        raise ValueError("unterminated string")
+                raise ValueError
+            start = index
+        raise ValueError
 
-    def _unicode_escape(self) -> str:
-        if self.index + 4 > len(self.source):
-            raise ValueError("short unicode escape")
-        try:
-            codepoint = int(self.source[self.index:self.index + 4], 16)
-        except ValueError as error:
-            raise ValueError("invalid unicode escape") from error
-        self.index += 4
-        if 0xD800 <= codepoint <= 0xDBFF:
-            if not self.source.startswith("\\u", self.index):
-                raise ValueError("missing low surrogate")
-            self.index += 2
-            try:
-                low = int(self.source[self.index:self.index + 4], 16)
-            except ValueError as error:
-                raise ValueError("invalid low surrogate") from error
-            self.index += 4
-            if not 0xDC00 <= low <= 0xDFFF:
-                raise ValueError("invalid low surrogate")
-            codepoint = 0x10000 + ((codepoint - 0xD800) << 10) + low - 0xDC00
-        elif 0xDC00 <= codepoint <= 0xDFFF:
-            raise ValueError("unpaired low surrogate")
-        return chr(codepoint)
-
-    def _number(self) -> int | float:
-        start = self.index
-        if self.source[self.index] == "-":
-            self.index += 1
-        if self.index >= len(self.source):
-            raise ValueError("short number")
-        if self.source[self.index] == "0":
-            self.index += 1
-            if (self.index < len(self.source) and
-                    self.source[self.index] in "0123456789"):
-                raise ValueError("leading zero")
-        elif "1" <= self.source[self.index] <= "9":
-            while (self.index < len(self.source) and
-                   self.source[self.index] in "0123456789"):
-                self.index += 1
+    def number():
+        nonlocal index
+        start = index
+        if source[index] == "-":
+            index += 1
+        if index >= size:
+            raise ValueError
+        if source[index] == "0":
+            index += 1
+            if index < size and "0" <= source[index] <= "9":
+                raise ValueError
+        elif "1" <= source[index] <= "9":
+            while index < size and "0" <= source[index] <= "9":
+                index += 1
         else:
-            raise ValueError("invalid number")
-        integer = True
-        if self.index < len(self.source) and self.source[self.index] == ".":
-            integer = False
-            self.index += 1
-            fraction = self.index
-            while (self.index < len(self.source) and
-                   self.source[self.index] in "0123456789"):
-                self.index += 1
-            if self.index == fraction:
-                raise ValueError("missing fraction")
-        if self.index < len(self.source) and self.source[self.index] in "eE":
-            integer = False
-            self.index += 1
-            if self.index < len(self.source) and self.source[self.index] in "+-":
-                self.index += 1
-            exponent = self.index
-            while (self.index < len(self.source) and
-                   self.source[self.index] in "0123456789"):
-                self.index += 1
-            if self.index == exponent:
-                raise ValueError("missing exponent")
-        token = self.source[start:self.index]
-        return int(token) if integer else float(token)
+            raise ValueError
+        return int(source[start:index])
+
+    def value():
+        nonlocal index
+        whitespace()
+        if index >= size:
+            raise ValueError
+        character = source[index]
+        if character == '"':
+            return string()
+        if character == "-" or "0" <= character <= "9":
+            return number()
+        if character == "{":
+            result = {}
+            index += 1
+            whitespace()
+            if index < size and source[index] == "}":
+                index += 1
+                return result
+            while True:
+                whitespace()
+                if index >= size or source[index] != '"':
+                    raise ValueError
+                key = string()
+                if key in result:
+                    raise ValueError
+                whitespace()
+                if index >= size or source[index] != ":":
+                    raise ValueError
+                index += 1
+                result[key] = value()
+                whitespace()
+                if index >= size:
+                    raise ValueError
+                delimiter = source[index]
+                index += 1
+                if delimiter == "}":
+                    return result
+                if delimiter != ",":
+                    raise ValueError
+        if character == "[":
+            result = []
+            index += 1
+            whitespace()
+            if index < size and source[index] == "]":
+                index += 1
+                return result
+            while True:
+                result.append(value())
+                whitespace()
+                if index >= size:
+                    raise ValueError
+                delimiter = source[index]
+                index += 1
+                if delimiter == "]":
+                    return result
+                if delimiter != ",":
+                    raise ValueError
+        raise ValueError
+
+    result = value()
+    whitespace()
+    if index != size:
+        raise ValueError
+    return result
 
 
-def decode_json(source: str) -> object:
-    return JsonParser(source).parse()
+def integer(value, minimum):
+    return type(value) is int and value >= minimum
 
 
-def encode_json_string(value: str) -> str:
+def select(request):
+    if type(request) is not dict or set(request) != REQUEST_KEYS:
+        raise ValueError
+    if not integer(request["case_id"], 0) or request["dtype"] not in DTYPES:
+        raise ValueError
+    for key in ("m", "n", "k"):
+        if not integer(request[key], 1) or request[key] > 256:
+            raise ValueError
+    if not integer(request["alignment"], 1) or not integer(request["workspace"], 0):
+        raise ValueError
+    candidates = request["candidates"]
+    if type(candidates) is not list or not candidates:
+        raise ValueError
+
+    legal = []
+    identifiers = set()
+    for candidate in candidates:
+        if type(candidate) is not dict or set(candidate) not in (
+                CANDIDATE_KEYS, CANDIDATE_DIAGNOSTIC_KEYS):
+            raise ValueError
+        identifier = candidate["id"]
+        if type(identifier) is not str or identifier in identifiers:
+            raise ValueError
+        identifiers.add(identifier)
+        for key in ("semantic_kernel_id", "image_id", "alignment", "divisibility"):
+            if not integer(candidate[key], 1):
+                raise ValueError
+        variant = candidate["variant"]
+        if type(variant) is not int or variant not in (1, 2, 3):
+            raise ValueError
+        if not integer(candidate["workspace"], 0):
+            raise ValueError
+        if ("diagnostic_cycles" in candidate and
+                not integer(candidate["diagnostic_cycles"], 1)):
+            raise ValueError
+        divisibility, alignment, workspace = REQUIREMENTS[variant - 1]
+        divisibility = max(divisibility, candidate["divisibility"])
+        if request["alignment"] < max(alignment, candidate["alignment"]):
+            continue
+        if request["workspace"] < max(workspace, candidate["workspace"]):
+            continue
+        if any(request[key] % divisibility for key in ("m", "n", "k")):
+            continue
+        legal.append(candidate)
+    if not legal:
+        raise ValueError
+    if all("diagnostic_cycles" in candidate for candidate in legal):
+        chosen = min(legal, key=lambda candidate: (
+            candidate["diagnostic_cycles"], -candidate["variant"],
+            candidate["image_id"], candidate["id"]))
+    else:
+        chosen = min(legal, key=lambda candidate: (
+            -candidate["variant"], candidate["image_id"], candidate["id"]))
+    return chosen["id"]
+
+
+def quote(value):
     pieces = ['"']
     for character in value:
-        if character in JSON_OUTPUT_ESCAPES:
-            pieces.append(JSON_OUTPUT_ESCAPES[character])
+        escaped = OUT.get(character)
+        if escaped is not None:
+            pieces.append(escaped)
         elif ord(character) < 0x20:
-            pieces.append(f"\\u{ord(character):04x}")
+            pieces.append("\\u%04x" % ord(character))
         else:
             pieces.append(character)
     pieces.append('"')
     return "".join(pieces)
 
 
-def valid_integer(value: object, minimum: int) -> bool:
-    return type(value) is int and value >= minimum
-
-
-def validate_candidate(candidate: object) -> dict[str, object]:
-    if not isinstance(candidate, dict):
-        raise ValueError("candidate is not an object")
-    keys = set(candidate)
-    if keys not in (CANDIDATE_KEYS, CANDIDATE_KEYS | {"diagnostic_cycles"}):
-        raise ValueError("invalid candidate fields")
-    if not isinstance(candidate["id"], str):
-        raise ValueError("invalid candidate id")
-    for key in ("semantic_kernel_id", "image_id", "alignment", "divisibility"):
-        if not valid_integer(candidate[key], 1):
-            raise ValueError(f"invalid candidate {key}")
-    if candidate["variant"] not in (1, 2, 3):
-        raise ValueError("invalid variant")
-    if not valid_integer(candidate["workspace"], 0):
-        raise ValueError("invalid candidate workspace")
-    if "diagnostic_cycles" in candidate and not valid_integer(
-            candidate["diagnostic_cycles"], 1):
-        raise ValueError("invalid diagnostic cycles")
-    return candidate
-
-
-def policy(request: object) -> dict[str, str]:
-    if not isinstance(request, dict) or set(request) != REQUEST_KEYS:
-        raise ValueError("invalid Kernel request fields")
-    if not valid_integer(request["case_id"], 0):
-        raise ValueError("invalid case_id")
-    if request["dtype"] not in DTYPE_CODES:
-        raise ValueError("invalid dtype")
-    for key in ("m", "n", "k"):
-        if not valid_integer(request[key], 1) or request[key] > 256:
-            raise ValueError(f"invalid {key}")
-    if not valid_integer(request["alignment"], 1):
-        raise ValueError("invalid alignment")
-    if not valid_integer(request["workspace"], 0):
-        raise ValueError("invalid workspace")
-    if not isinstance(request["candidates"], list) or not request["candidates"]:
-        raise ValueError("missing candidates")
-
-    candidates = [validate_candidate(item) for item in request["candidates"]]
-    if len({item["id"] for item in candidates}) != len(candidates):
-        raise ValueError("duplicate candidate id")
-    legal = []
-    for item in candidates:
-        variant = item["variant"]
-        divisibility, alignment, workspace = VARIANT_REQUIREMENTS[variant]
-        required_divisibility = max(item["divisibility"], divisibility)
-        if request["alignment"] < max(item["alignment"], alignment):
-            continue
-        if request["workspace"] < max(item["workspace"], workspace):
-            continue
-        if any(request[key] % required_divisibility for key in ("m", "n", "k")):
-            continue
-        legal.append(item)
-    if not legal:
-        raise ValueError("no legal candidate")
-
-    if all("diagnostic_cycles" in item for item in legal):
-        selected = min(legal, key=lambda item: (
-            item["diagnostic_cycles"], -item["variant"], item["image_id"],
-            item["id"]))
-    else:
-        # The offline oracle certificate proves variant dominance over the
-        # complete public shape domain for every dtype.
-        selected = min(legal, key=lambda item: (
-            -item["variant"], item["image_id"], item["id"]))
-    return {"kernel_id": selected["id"]}
-
-
-def main() -> int:
+def main():
     try:
-        request = decode_json(sys.stdin.read())
-        action = policy(request)
-    except (OSError, ValueError, TypeError, KeyError, RecursionError,
-            UnicodeError):
+        identifier = select(decode(sys.stdin.read()))
+        sys.stdout.write('{"kernel_id":' + quote(identifier) + '}\n')
+        return 0
+    except (OSError, ValueError, TypeError, KeyError, RecursionError, UnicodeError):
         return 2
-    sys.stdout.write(
-        '{"kernel_id":' + encode_json_string(action["kernel_id"]) + '}\n')
-    return 0
 
 
 if __name__ == "__main__":

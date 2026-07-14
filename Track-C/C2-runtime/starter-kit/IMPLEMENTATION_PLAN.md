@@ -127,6 +127,8 @@ The audit passes for all 73 immutable manifest entries.
 - [x] Verify arbitrary candidate IDs, every candidate subset/permutation,
   strict invalid-input handling, 1,000-run determinism, offline static
   compliance, and process-level p99 below 20 ms.
+- [x] Re-audit the latency gate with the submitted source parser: restore the
+  strict 20 ms assertion and pass five consecutive 1,000-process runs.
 
 ## Baseline
 
@@ -150,6 +152,11 @@ The only unavailable gate is hidden Agent performance. The released public
 grader cannot establish the Excellent gate, so it remains explicitly unclaimed.
 The missing `file` utility is an inspection-tool limitation only; `readelf`,
 `objdump`, and `ldd` provide the required Linux artifact evidence.
+
+The final compact strict JSON decoder passed five consecutive 1,000-process
+latency runs with p99 values 18.018, 17.964, 18.154, 17.939, and 18.142 ms. A 45,199-byte
+request containing 300 legal candidates had p99 26.305 ms over 200 processes,
+well below the official one-second timeout.
 
 ## Kernel Agent full-domain certificate
 

@@ -66,6 +66,21 @@ def run_agent(path: Path, request: object, *, valid: bool = True,
     return output
 
 
+def run_raw_agent(path: Path, payload: str,
+                  expected: dict | None = None) -> None:
+    result = subprocess.run(
+        [sys.executable, str(path)], input=payload, text=True,
+        capture_output=True, timeout=1, check=False,
+        env={"PATH": "", "PYTHONHASHSEED": "0", "PYTHONDONTWRITEBYTECODE": "1"})
+    assert not result.stderr, result.stderr
+    assert len(result.stdout) + len(result.stderr) < 65536
+    if expected is None:
+        assert result.returncode != 0 and result.stdout == ""
+    else:
+        assert result.returncode == 0
+        assert json.loads(result.stdout) == expected
+
+
 def request(dtype_name: str, shape: tuple[int, int, int],
             candidates: list[dict], *, case_id: int = 1,
             alignment: int = 64, workspace: int = 8192) -> dict:
@@ -175,6 +190,36 @@ def main() -> int:
         "fp32", (8, 8, 8), [candidate(dtype, escaped_id, 3)])) == {
             "kernel_id": escaped_id}
 
+    reordered = dict(reversed(list(base.items())))
+    reordered["candidates"] = [
+        dict(reversed(list(item.items()))) for item in base_candidates
+    ]
+    run_raw_agent(
+        agent, json.dumps(reordered, ensure_ascii=True, indent=2), baseline)
+    base_payload = json.dumps(base, ensure_ascii=True)
+    invalid_payloads = (
+        '{"case_id":1,' + base_payload[1:],
+        base_payload + " trailing",
+        base_payload.replace('"case_id": 1', '"case_id": 01', 1),
+        base_payload.replace('"case_id": 1', '"case_id": 1.0', 1),
+        base_payload.replace('"case_id": 1', '"case_id": true', 1),
+        base_payload.replace('"case_id": 1', '"case_id": null', 1),
+        base_payload.replace('"case_id": 1', '"case_id": NaN', 1),
+        base_payload.replace('"candidate-1"', '"\\uD800"', 1),
+        base_payload.replace('"candidate-1"', '"\\u12xz"', 1),
+    )
+    for payload in invalid_payloads:
+        run_raw_agent(agent, payload)
+
+    large_candidates = [
+        candidate(dtype, f"large-{index:03d}-" + "x" * 24, index % 3 + 1)
+        for index in range(300)
+    ]
+    large_request = request("fp32", (256, 256, 256), large_candidates)
+    assert len(json.dumps(large_request, separators=(",", ":")).encode()) < 65536
+    assert run_agent(agent, large_request) == {
+        "kernel_id": "large-002-" + "x" * 24}
+
     invalid_requests = [
         {}, dict(base, dtype="unknown"), dict(base, m=0), dict(base, n=257),
         dict(base, alignment=0), dict(base, workspace=-1),
@@ -206,7 +251,7 @@ def main() -> int:
     ordered = sorted(durations)
     p99_index = max(0, int(len(ordered) * 0.99) - 1)
     p99_ms = ordered[p99_index]
-    assert p99_ms < 250.0, f"Kernel Agent p99 is {p99_ms:.3f} ms"
+    assert p99_ms < 20.0, f"Kernel Agent p99 is {p99_ms:.3f} ms"
     print(
         "PASS Kernel Agent optimality: full-domain certificate "
         f"calls={EXPECTED_ORACLE_CALLS}, subset/permutation cases={subprocess_cases}, "

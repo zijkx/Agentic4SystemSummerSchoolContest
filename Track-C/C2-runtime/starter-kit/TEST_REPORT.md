@@ -512,6 +512,33 @@ library. TSan on this host intermittently aborts before program startup with
 and produced no race finding.
 
 Audit F-003 required no code change. Contrary to the finding, the immutable
-`schemas/dma_input.schema.json` contains `maximum: 64` for `concurrency`, so 65
+`schemas/dma_agent_input.schema.json` contains `maximum: 64` for `concurrency`, so 65
 is schema-invalid. F-001, F-002, F-004, and F-005 are remediated; the follow-up
 audit records formal closure against the committed remediation SHA.
+
+## Kernel Agent AC-6 completion correction (2026-07-14)
+
+The final completion audit compared the implementation against
+`kernel_agent_full_score_plan.md` and found one contradicted acceptance
+criterion: the post-audit test had relaxed the required p99 threshold from
+20 ms to 250 ms. The submitted parser was compacted and the original threshold
+was restored before final packaging.
+
+| Verification | Exit | Result |
+|---|---:|---|
+| Policy certificate regeneration | 0 | Agent SHA `ca7f936c...939052`; 5,570,560 calls, zero mismatch, 100% argmin accuracy, zero regret. |
+| Five consecutive optimality runs | 0 | Each used 550 subset/permutation cases and 1,000 timed processes; p99 18.018 / 17.964 / 18.154 / 17.939 / 18.142 ms. |
+| Raw JSON protocol suite | 0 | Reordered valid objects passed; duplicate/trailing/number/literal/Unicode-invalid payloads failed cleanly. |
+| Old/new Agent differential | 0 | 500 seeded dtype/shape/threshold/subset/order/Unicode/diagnostic requests produced byte-identical status, stdout, and stderr. |
+| Large candidate boundary | 0 | 300 candidates, 45,199 bytes, 200 processes; median 22.628 ms, p99 26.305 ms, max 26.901 ms. |
+| `tests/test_agents.py` | 0 | 120 DMA and 80 Kernel oracle optima passed. |
+| Public R402 | 0 | Correctness PASS and diagnostic 1.0. |
+| `make public-cases` | 0 | 16/16 passed. |
+| Public grader | 0 | 88/100 Good; all correctness requirements pass; hidden Agent performance unavailable. |
+| Remaining custom Python scripts | 0 | All 18 passed under the official device preload contract. |
+| Immutable audit | 0 | 73 manifest files, 34 images, and official static diff clean. |
+| Standalone serialization | 0 | Compile and execution passed without warnings. |
+
+Machine-readable latency evidence is in
+`reports/kernel_ac6_latency_report.json`; the matching public grader report is
+`reports/kernel_ac6_public_report.json`.
