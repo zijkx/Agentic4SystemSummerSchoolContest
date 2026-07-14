@@ -27,7 +27,7 @@
 | `src/stream.cpp` | FIFO, shutdown race, final-work lease release, first error recovery. |
 | `src/event.cpp` | Reserve/cancel/complete generation and destroy waiting. |
 | `agents/dma_agent.py` | Normative formula optimum and strict JSON protocol. |
-| `agents/kernel_agent.py` | Compact strict JSON decoder, candidate-only legality filter, and general variant model. |
+| `agents/kernel_agent.py` | Compact structural JSON decoder using standard `_json` string primitives, candidate legality, and variant model. |
 | `tests/test_immutable.py` | Manifest hashes, fixed-image count, extra/missing files, and initial-commit contract diff. |
 | `tests/test_r204_max_length.py` | Historical DOT/NRM2 trap boundaries, maximum count, cycles, and max+1 preflight. |
 

@@ -15,9 +15,10 @@ Both Agents pass correctness with public performance diagnostic 1.0. The DMA
 policy matched 120 brute-force optima. The Kernel policy now has a full-domain
 certificate: 5,570,560 official evaluator calls over all 10 dtypes produced
 zero dominance violations, zero mismatches, 100% argmin accuracy, and zero
-regret. Candidate subset/permutation tests and 1,000-run determinism passed; the
-final compact parser passed five consecutive 1,000-process runs with p99
-17.939-18.154 ms, satisfying the original 20 ms gate. Public score remains
+regret. Candidate subset/permutation tests and 1,000-run determinism passed. The
+final 5,854-byte parser passed five development-tree trials at p99
+17.401-19.050 ms and three detached clean-commit ext4 trials at p99
+17.309-17.359 ms, satisfying the original 20 ms gate. Public score remains
 88/100 because public Agent performance is diagnostic only; hidden Excellent
 evidence is unavailable.
 

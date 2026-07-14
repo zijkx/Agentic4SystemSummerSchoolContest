@@ -273,3 +273,25 @@
   regret zero. R402 diagnostic remains 1.0.
 - Re-ran 16/16 public cases, the public grader, immutable audit, all custom
   scripts, and standalone serialization without regression.
+
+## 2026-07-14 - Final clean-worktree latency hardening
+
+- A detached audit worktree under `/tmp` initially exceeded 20 ms while the
+  host load average was above 70; a minimal empty Agent in the same overlay
+  environment also measured p99 23.406 ms. This was recorded as an environment
+  diagnostic rather than treated as evidence that the Agent passed.
+- Further reduced the strict parser from 8,520 to 5,854 bytes by simplifying
+  integer/object handling and using CPython's standard `_json` string
+  scan/encode primitives. Duplicate keys, malformed numbers, invalid Unicode,
+  empty/illegal inputs, and output escaping remain covered by negative tests.
+- Agent SHA is now `610378d3...e8e7ed`; the offline certificate still reports
+  5,570,560 calls, zero mismatch, 100% argmin accuracy, and zero regret.
+- Five 1,000-process trials in the development tree passed at p99 17.511,
+  17.681, 17.401, 18.257, and 19.050 ms.
+- Three 1,000-process trials from detached commit `dc59a3f` on the formal ext4
+  filesystem passed at p99 17.323, 17.309, and 17.359 ms.
+- The 45,199-byte/300-candidate boundary improved to median 21.330 ms, p99
+  24.848 ms, and max 26.093 ms over 200 processes. The 500-request old/new
+  differential remained byte-identical.
+- A strict three-file artifact built from `dc59a3f` passed the pristine official
+  grader and all 16 official case wrappers.

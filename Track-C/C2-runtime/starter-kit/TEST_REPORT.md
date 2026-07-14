@@ -542,3 +542,25 @@ was restored before final packaging.
 Machine-readable latency evidence is in
 `reports/kernel_ac6_latency_report.json`; the matching public grader report is
 `reports/kernel_ac6_public_report.json`.
+
+## Final clean-commit Kernel latency audit (2026-07-14)
+
+Commit `dc59a3f3ece954a4aba74abcec27bed863d86522` further reduces parser startup
+cost while preserving the same policy and protocol behavior.
+
+| Verification | Exit | Result |
+|---|---:|---|
+| Policy certificate | 0 | Agent SHA `610378d3...e8e7ed`; 5,570,560 calls, zero mismatch, 100% argmin accuracy, zero regret. |
+| Development-tree latency | 0 | Five 1,000-process trials: p99 17.511 / 17.681 / 17.401 / 18.257 / 19.050 ms. |
+| Detached clean-commit latency on ext4 | 0 | Three 1,000-process trials: p99 17.323 / 17.309 / 17.359 ms. |
+| Overlay/high-load diagnostic | N/A | Host load exceeded 70 and empty-Agent p99 was 23.406 ms; these runs were excluded from acceptance evidence. |
+| Large candidate boundary | 0 | 300 candidates, 45,199 bytes, 200 runs; median 21.330 ms, p99 24.848 ms, max 26.093 ms. |
+| Old/new differential | 0 | 500 seeded valid/invalid request families produced byte-identical status/stdout/stderr. |
+| Protected-file comparison | 0 | All protected paths byte-identical to official `b2997a2`. |
+| Minimal environment build/examples | 0 | Clean build and all six examples passed. |
+| Strict three-file pristine grader | 0 | 88/100 Good; all R101-R402 requirements pass; both Agent diagnostics 1.0. |
+| Pristine official case wrappers | 0 | 16/16 passed. |
+
+The official score still omits hidden Agent performance. The latency criterion
+is a development acceptance gate; formal scoring uses virtual cycles and a
+one-second process timeout.
