@@ -136,6 +136,11 @@ def main() -> int:
         candidate("v", 3, 8192, 16, 8, 200),
     ])
     assert run_agent(kernel, diagnostic_request) == {"kernel_id": "t"}
+    empty_id_request = dict(
+        base_request,
+        candidates=[candidate("", 1, 0, 1, 1)],
+    )
+    assert run_agent(kernel, empty_id_request) == {"kernel_id": ""}
     expected = run_agent(kernel, base_request)
     assert [run_agent(kernel, base_request) for _ in range(5)] == [expected] * 5
     run_agent(kernel, {}, valid=False)

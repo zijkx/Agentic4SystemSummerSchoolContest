@@ -20,13 +20,14 @@ EXAMPLES := \
 all: $(RUNTIME)
 
 $(RUNTIME): $(RUNTIME_SOURCES) $(RUNTIME_HEADERS) $(RUNTIME_MAP) lib/libaec_device.so
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -shared $(RUNTIME_SOURCES) -o $@ -Llib -laec_device -pthread \
-		-Wl,-rpath,'$$ORIGIN/lib' -Wl,--version-script=$(RUNTIME_MAP)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -shared $(RUNTIME_SOURCES) -o $@ -pthread \
+		-Wl,--version-script=$(RUNTIME_MAP)
 
 bin/%: examples/%.c $(RUNTIME)
 	mkdir -p $(@D)
 	$(CC) $(CPPFLAGS) -O2 -g -std=c11 -Wall -Wextra -Wpedantic $< -o $@ \
-		-L. -laec -Wl,-rpath,'$$ORIGIN/..'
+		-L. -laec -Llib -Wl,--no-as-needed -laec_device -Wl,--as-needed \
+		-Wl,-rpath,'$$ORIGIN/..' -Wl,-rpath,'$$ORIGIN/../lib'
 
 examples: $(EXAMPLES)
 

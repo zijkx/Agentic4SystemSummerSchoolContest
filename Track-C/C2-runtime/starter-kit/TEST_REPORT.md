@@ -470,3 +470,48 @@ Machine-readable evidence:
 
 - `reports/kernel_oracle_summary.json`
 - `reports/kernel_policy_report.json`
+
+## Independent audit remediation verification (2026-07-14)
+
+The independent audit snapshot is preserved in `../AUDIT_REPORT.md` and
+`../AUDIT_EVIDENCE/`. This section records the separate remediation run. The
+official upstream HEAD was rechecked as
+`b2997a228d9446ff254cb324225b731df66c7546`; no newer release appeared during
+the run.
+
+| Verification | Exit | Result |
+|---|---:|---|
+| Forced release rebuild | 0 | Warning-free build after deferring worker start and changing the loader contract. |
+| `readelf -d libaec.so` | 0 | No `libaec_device.so` `DT_NEEDED` and no RUNPATH; only declared platform C/C++ runtime dependencies remain. |
+| `make -B examples` and six binaries | 0 | Examples link the development device explicitly and all six run successfully. |
+| Fresh official grader against strict three-file directory | 0 | 88/100 public; 16/16 requirements PASS; Runtime/compute/driver 80/80 and both Agent correctness checks 4/4. |
+| Fresh official `cases/run_all.py` against strict directory | 0 | 16/16 cases passed. |
+| `tests/test_agents.py` | 0 | 120 DMA optima, 80 Kernel optima, and empty candidate-ID round trip passed. |
+| `tests/test_kernel_agent_optimality.py` | 0 | Certificate, 550 subset/permutation cases, and 1,000 runs passed; median 17.121 ms, p99 31.838 ms. |
+| Runtime-focused custom tests with official preload contract | 0 | Launch plus R101-R106, R201-R204, and R301-R304 all passed. |
+| Maximum reduction | 0 | DOT/NRM2 count 1,048,576 passed; cycles 46,137,368 / 33,554,466. |
+| Maximum GEMM matrix | 0 | All ten dtypes passed at M=N=K=256. |
+| Stream/fault stress | 0 | R105/R106/R302/R303/R304 each passed 50 rounds, 250 case processes total. |
+| Non-PIE TSan driver | 0 | Three complete instrumented executions had no data-race report. |
+| ASan+UBSan official grader | 0 | Full public grader completed with both sanitizers set to halt on error and no diagnostics. |
+| Standalone serialization | 0 | Compile and execution both passed without warnings. |
+
+The custom runtime tests load `libaec.so` directly, while the official grader
+first loads `libaec_device.so` with `RTLD_GLOBAL`. After removing the forbidden
+submission dependency, equivalent local invocations use:
+
+```bash
+env LD_PRELOAD="$PWD/lib/libaec_device.so" \
+  python3 tests/test_r105_extra.py --submission .
+```
+
+This preload is test infrastructure only. The strict artifact contains exactly
+the three allowed files, and the official grader supplies the controlled device
+library. TSan on this host intermittently aborts before program startup with
+`unexpected memory mapping`; successful non-PIE runs are reported separately
+and produced no race finding.
+
+Audit F-003 required no code change. Contrary to the finding, the immutable
+`schemas/dma_input.schema.json` contains `maximum: 64` for `concurrency`, so 65
+is schema-invalid. F-001, F-002, F-004, and F-005 are remediated; the follow-up
+audit records formal closure against the committed remediation SHA.

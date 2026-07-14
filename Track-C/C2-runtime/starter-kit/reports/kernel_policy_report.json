@@ -1,6 +1,6 @@
 {
   "agent_path": "agents/kernel_agent.py",
-  "agent_sha256": "01af660d23774897c10e56262f501f7ecbe2661c18e7def5b0601619b563bc79",
+  "agent_sha256": "36a81aed760c54a11c8968f504fa5c856105c852f45f2761801532240844ca2c",
   "argmin_accuracy": 1.0,
   "certified_multi_candidate_shapes": 2621440,
   "certified_shape_count": 167772160,

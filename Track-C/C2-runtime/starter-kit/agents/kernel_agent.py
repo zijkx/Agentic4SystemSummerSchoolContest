@@ -247,7 +247,7 @@ def validate_candidate(candidate: object) -> dict[str, object]:
     keys = set(candidate)
     if keys not in (CANDIDATE_KEYS, CANDIDATE_KEYS | {"diagnostic_cycles"}):
         raise ValueError("invalid candidate fields")
-    if not isinstance(candidate["id"], str) or not candidate["id"]:
+    if not isinstance(candidate["id"], str):
         raise ValueError("invalid candidate id")
     for key in ("semantic_kernel_id", "image_id", "alignment", "divisibility"):
         if not valid_integer(candidate[key], 1):

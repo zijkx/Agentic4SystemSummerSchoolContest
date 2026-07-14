@@ -22,7 +22,9 @@ namespace {
 class StreamState {
 public:
     explicit StreamState(uint64_t stable_id)
-        : stable_id_(stable_id), worker_([this] { worker_loop(); }) {}
+        : stable_id_(stable_id) {
+        worker_ = std::thread([this] { worker_loop(); });
+    }
 
     StreamState(const StreamState &) = delete;
     StreamState &operator=(const StreamState &) = delete;

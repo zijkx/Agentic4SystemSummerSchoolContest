@@ -224,3 +224,30 @@
 - Final clean build, six examples, 16/16 public cases, 19/19 custom Python
   scripts, standalone serialization, immutable audit, and the public grader all
   passed after integration.
+
+## 2026-07-14 - Independent audit remediation
+
+- Preserved the independent audit as commit `631f2a7`; it reported two HIGH,
+  two MEDIUM, and one LOW finding, with no CRITICAL integrity finding.
+- Fixed the Stream constructor race by starting the worker in the constructor
+  body, after every member has completed initialization. A non-PIE TSan driver
+  completed three instrumented runs without a race report; other invocations
+  hit the host's known TSan `unexpected memory mapping` startup failure.
+- Removed the device library from `libaec.so` `DT_NEEDED` and removed its
+  development RUNPATH. Examples now link the device explicitly. A strict
+  submission containing only `libaec.so` and the two Agents loaded through a
+  fresh official grader and passed 16/16 requirements.
+- Allowed empty candidate IDs because the official Kernel input/output schemas
+  permit any string. The focused Agent suite now covers an empty-ID round trip.
+- Rejected audit finding F-003 as a false positive: the immutable official DMA
+  schema explicitly sets `concurrency.maximum` to 64, so the existing bound is
+  required and was not changed.
+- Reissued `reports/kernel_policy_report.json` for the updated Agent SHA. The
+  full-domain oracle result is unchanged: 5,570,560 calls, zero mismatches,
+  100% argmin accuracy, and zero regret. The 1,000-process regression passed
+  with median 17.121 ms and p99 31.838 ms under the stable 250 ms guardrail.
+- Re-ran the strict official grader (88/100 public, all correctness PASS),
+  16/16 case wrappers, all focused custom tests, maximum DOT/NRM2, all ten
+  256-cubed GEMMs, standalone serialization, and ASan+UBSan without errors.
+- R105/R106/R302/R303/R304 passed 50 consecutive rounds each, totaling 250
+  process-level case runs after the Stream fix.

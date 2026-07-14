@@ -26,8 +26,10 @@ and the exact commands/results are recorded.
 
 ## Status
 
-All six delivery stages and released completion gates are complete. Final
-evidence is in `TEST_REPORT.md` and `reports/device_update_public_report.json`.
-The official `c30b3f9` device update is included and maximum-length DOT/NRM2
-passes without traps. Hidden Agent performance is outside the released profile
-and remains unclaimed.
+All six delivery stages, the official-device update, and the independent-audit
+remediation are complete. Final evidence is in `TEST_REPORT.md`,
+`reports/device_update_public_report.json`, and the audit/follow-up reports.
+The official `c30b3f9` device update is included, maximum-length DOT/NRM2 passes
+without traps, and a strict three-file submission passes every public
+requirement. Hidden Agent performance is outside the released profile and
+remains unclaimed.
