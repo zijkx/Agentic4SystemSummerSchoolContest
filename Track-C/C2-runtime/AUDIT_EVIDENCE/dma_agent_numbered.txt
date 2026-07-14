@@ -1,0 +1,56 @@
+     1	#!/usr/bin/env python3
+     2	"""Deterministic DMA policy derived from the normative virtual-cycle model."""
+     3	
+     4	import json
+     5	import sys
+     6	
+     7	
+     8	REQUIRED_KEYS = {
+     9	    "case_id", "direction", "bytes", "alignment", "registered", "concurrency"
+    10	}
+    11	
+    12	
+    13	def valid_integer(value: object, minimum: int, maximum: int | None = None) -> bool:
+    14	    return (type(value) is int and value >= minimum and
+    15	            (maximum is None or value <= maximum))
+    16	
+    17	
+    18	def policy(request: object) -> dict[str, object]:
+    19	    if not isinstance(request, dict) or set(request) != REQUIRED_KEYS:
+    20	        raise ValueError("invalid DMA request fields")
+    21	    if not valid_integer(request["case_id"], 0):
+    22	        raise ValueError("invalid case_id")
+    23	    if request["direction"] not in ("h2d", "d2h"):
+    24	        raise ValueError("invalid direction")
+    25	    if not valid_integer(request["bytes"], 1):
+    26	        raise ValueError("invalid bytes")
+    27	    if not valid_integer(request["alignment"], 1):
+    28	        raise ValueError("invalid alignment")
+    29	    if type(request["registered"]) is not bool:
+    30	        raise ValueError("invalid registered flag")
+    31	    if not valid_integer(request["concurrency"], 1, 64):
+    32	        raise ValueError("invalid concurrency")
+    33	
+    34	    # The model has no large-chunk penalty, and parallelism is capped at two.
+    35	    # Registered zero-copy always reduces setup by 55 cycles.
+    36	    return {
+    37	        "channel": 0 if request["direction"] == "h2d" else 1,
+    38	        "chunk_bytes": 1048576,
+    39	        "queue_depth": 2 if request["concurrency"] >= 2 else 1,
+    40	        "use_zero_copy": request["registered"],
+    41	    }
+    42	
+    43	
+    44	def main() -> int:
+    45	    try:
+    46	        request = json.load(sys.stdin)
+    47	        action = policy(request)
+    48	    except (OSError, ValueError, TypeError, json.JSONDecodeError):
+    49	        return 2
+    50	    json.dump(action, sys.stdout, sort_keys=True, separators=(",", ":"))
+    51	    sys.stdout.write("\n")
+    52	    return 0
+    53	
+    54	
+    55	if __name__ == "__main__":
+    56	    raise SystemExit(main())

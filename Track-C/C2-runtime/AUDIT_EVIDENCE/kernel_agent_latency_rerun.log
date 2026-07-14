@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/tmp/c2-candidate-clean-a4c3a47/Track-C/C2-runtime/starter-kit/tests/test_kernel_agent_optimality.py", line 219, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/tmp/c2-candidate-clean-a4c3a47/Track-C/C2-runtime/starter-kit/tests/test_kernel_agent_optimality.py", line 209, in main
+    assert p99_ms < 20.0, f"Kernel Agent p99 is {p99_ms:.3f} ms"
+           ^^^^^^^^^^^^^
+AssertionError: Kernel Agent p99 is 22.096 ms
+exit=1

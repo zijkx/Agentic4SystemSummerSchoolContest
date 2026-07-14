@@ -1,0 +1,549 @@
+ELF Header:
+  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF64
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              DYN (Shared object file)
+  Machine:                           Advanced Micro Devices X86-64
+  Version:                           0x1
+  Entry point address:               0x0
+  Start of program headers:          64 (bytes into file)
+  Start of section headers:          1445080 (bytes into file)
+  Flags:                             0x0
+  Size of this header:               64 (bytes)
+  Size of program headers:           56 (bytes)
+  Number of program headers:         12
+  Size of section headers:           64 (bytes)
+  Number of section headers:         42
+  Section header string table index: 41
+
+Dynamic section at offset 0x14d78 contains 31 entries:
+  Tag        Type                         Name/Value
+ 0x0000000000000001 (NEEDED)             Shared library: [libaec_device.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libstdc++.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [libgcc_s.so.1]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [ld-linux-x86-64.so.2]
+ 0x000000000000001d (RUNPATH)            Library runpath: [$ORIGIN/lib]
+ 0x000000000000000c (INIT)               0x3000
+ 0x000000000000000d (FINI)               0xf534
+ 0x0000000000000019 (INIT_ARRAY)         0x15a30
+ 0x000000000000001b (INIT_ARRAYSZ)       8 (bytes)
+ 0x000000000000001a (FINI_ARRAY)         0x15a38
+ 0x000000000000001c (FINI_ARRAYSZ)       8 (bytes)
+ 0x000000006ffffef5 (GNU_HASH)           0x328
+ 0x0000000000000005 (STRTAB)             0xd20
+ 0x0000000000000006 (SYMTAB)             0x480
+ 0x000000000000000a (STRSZ)              2177 (bytes)
+ 0x000000000000000b (SYMENT)             24 (bytes)
+ 0x0000000000000003 (PLTGOT)             0x15fe8
+ 0x0000000000000002 (PLTRELSZ)           1056 (bytes)
+ 0x0000000000000014 (PLTREL)             RELA
+ 0x0000000000000017 (JMPREL)             0x21b8
+ 0x0000000000000007 (RELA)               0x17c8
+ 0x0000000000000008 (RELASZ)             2544 (bytes)
+ 0x0000000000000009 (RELAENT)            24 (bytes)
+ 0x000000006ffffffc (VERDEF)             0x1660
+ 0x000000006ffffffd (VERDEFNUM)          2
+ 0x000000006ffffffe (VERNEED)            0x1698
+ 0x000000006fffffff (VERNEEDNUM)         4
+ 0x000000006ffffff0 (VERSYM)             0x15a2
+ 0x000000006ffffff9 (RELACOUNT)          81
+ 0x0000000000000000 (NULL)               0x0
+
+Symbol table '.dynsym' contains 92 entries:
+   Num:    Value          Size Type    Bind   Vis      Ndx Name
+     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND 
+     1: 0000000000000000     0 OBJECT  GLOBAL DEFAULT  UND _ZTINSt6thread6_StateE@GLIBCXX_3.4.22 (3)
+     2: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND aecDeviceResolveKernel
+     3: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZSt29_Rb_tree_insert_and_rebalancebPSt18_Rb_tree_node_baseS0_RS_@GLIBCXX_3.4 (4)
+     4: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZSt9terminatev@GLIBCXX_3.4 (4)
+     5: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZNSt18condition_variable4waitERSt11unique_lockISt5mutexE@GLIBCXX_3.4.30 (5)
+     6: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZSt17__throw_bad_allocv@GLIBCXX_3.4 (4)
+     7: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZSt25__throw_bad_function_callv@GLIBCXX_3.4.14 (6)
+     8: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND aecDeviceResetStats
+     9: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __cxa_begin_catch@CXXABI_1.3 (7)
+    10: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND aecDeviceSubmit
+    11: 0000000000000000     0 FUNC    WEAK   DEFAULT  UND __cxa_finalize@GLIBC_2.2.5 (8)
+    12: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZNSt6thread6_StateD2Ev@GLIBCXX_3.4.22 (3)
+    13: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND aecDeviceGetStats
+    14: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZSt20__throw_length_errorPKc@GLIBCXX_3.4 (4)
+    15: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND memset@GLIBC_2.2.5 (8)
+    16: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZSt28_Rb_tree_rebalance_for_erasePSt18_Rb_tree_node_baseRS_@GLIBCXX_3.4 (4)
+    17: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __cxa_guard_release@CXXABI_1.3 (7)
+    18: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZSt20__throw_system_errori@GLIBCXX_3.4.11 (9)
+    19: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZSt18_Rb_tree_incrementPSt18_Rb_tree_node_base@GLIBCXX_3.4 (4)
+    20: 0000000000000000     0 OBJECT  GLOBAL DEFAULT  UND _ZTVN10__cxxabiv117__class_type_infoE@CXXABI_1.3 (7)
+    21: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND pthread_mutex_unlock@GLIBC_2.2.5 (8)
+    22: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZSt28__throw_bad_array_new_lengthv@GLIBCXX_3.4.29 (10)
+    23: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND memcpy@GLIBC_2.14 (11)
+    24: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND aecDeviceAlloc
+    25: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __cxa_atexit@GLIBC_2.2.5 (8)
+    26: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND pthread_self@GLIBC_2.2.5 (8)
+    27: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZNSt6thread15_M_start_threadESt10unique_ptrINS_6_StateESt14default_deleteIS1_EEPFvvE@GLIBCXX_3.4.22 (3)
+    28: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _Znwm@GLIBCXX_3.4 (4)
+    29: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZdlPvm@CXXABI_1.3.9 (12)
+    30: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZSt18_Rb_tree_decrementPSt18_Rb_tree_node_base@GLIBCXX_3.4 (4)
+    31: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __stack_chk_fail@GLIBC_2.4 (13)
+    32: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND aecDeviceGetCaps
+    33: 0000000000000000     0 OBJECT  GLOBAL DEFAULT  UND __libc_single_threaded@GLIBC_2.32 (14)
+    34: 0000000000000000     0 OBJECT  GLOBAL DEFAULT  UND _ZTISt9bad_alloc@GLIBCXX_3.4 (4)
+    35: 0000000000000000     0 OBJECT  GLOBAL DEFAULT  UND _ZTVN10__cxxabiv120__si_class_type_infoE@CXXABI_1.3 (7)
+    36: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZNKSt8__detail20_Prime_rehash_policy14_M_need_rehashEmmm@GLIBCXX_3.4.18 (15)
+    37: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND aecDeviceFree
+    38: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND strcmp@GLIBC_2.2.5 (8)
+    39: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZNSt18condition_variableC1Ev@GLIBCXX_3.4.11 (9)
+    40: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZSt20__throw_out_of_rangePKc@GLIBCXX_3.4 (4)
+    41: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __cxa_rethrow@CXXABI_1.3 (7)
+    42: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND pthread_mutex_lock@GLIBC_2.2.5 (8)
+    43: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND memmove@GLIBC_2.2.5 (8)
+    44: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __cxa_end_catch@CXXABI_1.3 (7)
+    45: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __gxx_personality_v0@CXXABI_1.3 (7)
+    46: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __tls_get_addr@GLIBC_2.3 (16)
+    47: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZNSt18condition_variable10notify_allEv@GLIBCXX_3.4.11 (9)
+    48: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZNSt6thread4joinEv@GLIBCXX_3.4.11 (9)
+    49: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND _ITM_deregisterTMCloneTable
+    50: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _Unwind_Resume@GCC_3.0 (17)
+    51: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __cxa_guard_acquire@CXXABI_1.3 (7)
+    52: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZNSt18condition_variableD1Ev@GLIBCXX_3.4.11 (9)
+    53: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND __gmon_start__
+    54: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND _ITM_registerTMCloneTable
+    55: 0000000000004eb0    52 FUNC    GLOBAL DEFAULT   15 aecMatmulI32@@AEC_2
+    56: 0000000000004e30    52 FUNC    GLOBAL DEFAULT   15 aecMatmulI4@@AEC_2
+    57: 0000000000004d30    52 FUNC    GLOBAL DEFAULT   15 aecMatmulF16@@AEC_2
+    58: 0000000000004e70    52 FUNC    GLOBAL DEFAULT   15 aecMatmulI8@@AEC_2
+    59: 0000000000004980    33 FUNC    GLOBAL DEFAULT   15 aecStreamSync@@AEC_2
+    60: 0000000000004ef0    33 FUNC    GLOBAL DEFAULT   15 aecAxpy@@AEC_2
+    61: 0000000000004c10    40 FUNC    GLOBAL DEFAULT   15 aecResetRuntimeStats@@AEC_2
+    62: 0000000000004c40    53 FUNC    GLOBAL DEFAULT   15 aecLaunch@@AEC_2
+    63: 0000000000004950    33 FUNC    GLOBAL DEFAULT   15 aecStreamDestroy@@AEC_2
+    64: 0000000000004a10    33 FUNC    GLOBAL DEFAULT   15 aecEventRecord@@AEC_2
+    65: 0000000000004c80    52 FUNC    GLOBAL DEFAULT   15 aecMatmulF4@@AEC_2
+    66: 0000000000000000     0 OBJECT  GLOBAL DEFAULT  ABS AEC_2
+    67: 0000000000004cc0   102 FUNC    GLOBAL DEFAULT   15 aecMatmulF8@@AEC_2
+    68: 0000000000004f50    33 FUNC    GLOBAL DEFAULT   15 aecNrm2@@AEC_2
+    69: 0000000000004a70    33 FUNC    GLOBAL DEFAULT   15 aecEventQuery@@AEC_2
+    70: 0000000000004df0    52 FUNC    GLOBAL DEFAULT   15 aecMatmulF64@@AEC_2
+    71: 0000000000004ad0    33 FUNC    GLOBAL DEFAULT   15 aecHostRegister@@AEC_2
+    72: 0000000000004890    33 FUNC    GLOBAL DEFAULT   15 aecCopyH2D@@AEC_2
+    73: 0000000000004860    33 FUNC    GLOBAL DEFAULT   15 aecFree@@AEC_2
+    74: 0000000000004810     9 FUNC    GLOBAL DEFAULT   15 aecPeekAtLastError@@AEC_2
+    75: 0000000000004b30   219 FUNC    GLOBAL DEFAULT   15 aecGetRuntimeStats@@AEC_2
+    76: 00000000000048f0    33 FUNC    GLOBAL DEFAULT   15 aecCopyAsync@@AEC_2
+    77: 0000000000004830    33 FUNC    GLOBAL DEFAULT   15 aecAlloc@@AEC_2
+    78: 0000000000004d70    52 FUNC    GLOBAL DEFAULT   15 aecMatmulBF16@@AEC_2
+    79: 00000000000049b0    33 FUNC    GLOBAL DEFAULT   15 aecEventCreate@@AEC_2
+    80: 0000000000004db0    52 FUNC    GLOBAL DEFAULT   15 aecMatmulF32@@AEC_2
+    81: 00000000000049e0    33 FUNC    GLOBAL DEFAULT   15 aecEventDestroy@@AEC_2
+    82: 0000000000004f20    33 FUNC    GLOBAL DEFAULT   15 aecDot@@AEC_2
+    83: 0000000000004800     9 FUNC    GLOBAL DEFAULT   15 aecGetLastError@@AEC_2
+    84: 0000000000004920    33 FUNC    GLOBAL DEFAULT   15 aecStreamCreate@@AEC_2
+    85: 00000000000046f0   268 FUNC    GLOBAL DEFAULT   15 aecDeviceInfo@@AEC_2
+    86: 00000000000048c0    33 FUNC    GLOBAL DEFAULT   15 aecCopyD2H@@AEC_2
+    87: 0000000000004a40    33 FUNC    GLOBAL DEFAULT   15 aecEventSynchronize@@AEC_2
+    88: 0000000000004650   155 FUNC    GLOBAL DEFAULT   15 aecDeviceCount@@AEC_2
+    89: 0000000000004820     9 FUNC    GLOBAL DEFAULT   15 aecGetErrorName@@AEC_2
+    90: 0000000000004b00    33 FUNC    GLOBAL DEFAULT   15 aecHostUnregister@@AEC_2
+    91: 0000000000004aa0    33 FUNC    GLOBAL DEFAULT   15 aecEventElapsedCycles@@AEC_2
+
+Symbol table '.symtab' contains 397 entries:
+   Num:    Value          Size Type    Bind   Vis      Ndx Name
+     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND 
+     1: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS aec_runtime.cpp
+     2: 00000000000035c0    81 FUNC    LOCAL  DEFAULT   15 aecDeviceCount.cold
+     3: 0000000000003611    81 FUNC    LOCAL  DEFAULT   15 aecDeviceInfo.cold
+     4: 0000000000003662    56 FUNC    LOCAL  DEFAULT   15 aecAlloc.cold
+     5: 000000000000369a    56 FUNC    LOCAL  DEFAULT   15 aecFree.cold
+     6: 00000000000036d2    56 FUNC    LOCAL  DEFAULT   15 aecCopyH2D.cold
+     7: 000000000000370a    56 FUNC    LOCAL  DEFAULT   15 aecCopyD2H.cold
+     8: 0000000000003742    56 FUNC    LOCAL  DEFAULT   15 aecCopyAsync.cold
+     9: 000000000000377a    56 FUNC    LOCAL  DEFAULT   15 aecStreamCreate.cold
+    10: 00000000000037b2    56 FUNC    LOCAL  DEFAULT   15 aecStreamDestroy.cold
+    11: 00000000000037ea    56 FUNC    LOCAL  DEFAULT   15 aecStreamSync.cold
+    12: 0000000000003822    56 FUNC    LOCAL  DEFAULT   15 aecEventCreate.cold
+    13: 000000000000385a    56 FUNC    LOCAL  DEFAULT   15 aecEventDestroy.cold
+    14: 0000000000003892    56 FUNC    LOCAL  DEFAULT   15 aecEventRecord.cold
+    15: 00000000000038ca    56 FUNC    LOCAL  DEFAULT   15 aecEventSynchronize.cold
+    16: 0000000000003902    56 FUNC    LOCAL  DEFAULT   15 aecEventQuery.cold
+    17: 000000000000393a    56 FUNC    LOCAL  DEFAULT   15 aecEventElapsedCycles.cold
+    18: 0000000000003972    56 FUNC    LOCAL  DEFAULT   15 aecHostRegister.cold
+    19: 00000000000039aa    56 FUNC    LOCAL  DEFAULT   15 aecHostUnregister.cold
+    20: 00000000000039e2    81 FUNC    LOCAL  DEFAULT   15 aecGetRuntimeStats.cold
+    21: 0000000000003a33    56 FUNC    LOCAL  DEFAULT   15 aecResetRuntimeStats.cold
+    22: 0000000000003a6b    60 FUNC    LOCAL  DEFAULT   15 aecLaunch.cold
+    23: 0000000000003aa7    60 FUNC    LOCAL  DEFAULT   15 aecMatmulF4.cold
+    24: 0000000000003ae3    60 FUNC    LOCAL  DEFAULT   15 aecMatmulF8.cold
+    25: 0000000000003b1f    60 FUNC    LOCAL  DEFAULT   15 aecMatmulF16.cold
+    26: 0000000000003b5b    60 FUNC    LOCAL  DEFAULT   15 aecMatmulBF16.cold
+    27: 0000000000003b97    60 FUNC    LOCAL  DEFAULT   15 aecMatmulF32.cold
+    28: 0000000000003bd3    60 FUNC    LOCAL  DEFAULT   15 aecMatmulF64.cold
+    29: 0000000000003c0f    60 FUNC    LOCAL  DEFAULT   15 aecMatmulI4.cold
+    30: 0000000000003c4b    60 FUNC    LOCAL  DEFAULT   15 aecMatmulI8.cold
+    31: 0000000000003c87    60 FUNC    LOCAL  DEFAULT   15 aecMatmulI32.cold
+    32: 0000000000003cc3    56 FUNC    LOCAL  DEFAULT   15 aecAxpy.cold
+    33: 0000000000003cfb    56 FUNC    LOCAL  DEFAULT   15 aecDot.cold
+    34: 0000000000003d33    56 FUNC    LOCAL  DEFAULT   15 aecNrm2.cold
+    35: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS allocation.cpp
+    36: 0000000000004f80   185 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_18registryEv
+    37: 0000000000016200    88 OBJECT  LOCAL  DEFAULT   29 _ZZN3aec12_GLOBAL__N_18registryEvE5value
+    38: 00000000000161e0     8 OBJECT  LOCAL  DEFAULT   29 _ZGVZN3aec12_GLOBAL__N_18registryEvE5value
+    39: 0000000000005c90   190 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_118AllocationRegistryD1Ev
+    40: 0000000000006380   146 FUNC    LOCAL  DEFAULT   15 _ZNSt8_Rb_treeImSt4pairIKmSt10shared_ptrIN3aec16AllocationRecordEEESt10_Select1stIS6_ESt4lessImESaIS6_EE24_M_get_insert_unique_posERS1_.isra.0
+    41: 0000000000003d6b    74 FUNC    LOCAL  DEFAULT   15 _ZN3aec11free_deviceEm.cold
+    42: 0000000000005650  1593 FUNC    LOCAL  DEFAULT   15 _ZNSt8_Rb_treeImSt4pairIKmSt10shared_ptrIN3aec16AllocationRecordEEESt10_Select1stIS6_ESt4lessImESaIS6_EE8_M_eraseEPSt13_Rb_tree_nodeIS6_E.isra.0
+    43: 0000000000005c90   190 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_118AllocationRegistryD2Ev
+    44: 0000000000003db5    37 FUNC    LOCAL  DEFAULT   15 _ZN3aec19acquire_device_spanEmmRNS_15AllocationLeaseE.cold
+    45: 0000000000003dda   105 FUNC    LOCAL  DEFAULT   15 _ZN3aec15allocate_deviceEPmm.cold
+    46: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS command.cpp
+    47: 0000000000016180    56 OBJECT  LOCAL  DEFAULT   28 _ZZN3aec12_GLOBAL__N_112submit_stateEvE5state
+    48: 0000000000003e43    37 FUNC    LOCAL  DEFAULT   15 _ZN3aec30submit_and_validate_completionER16aecDeviceCommandP19aecDeviceCompletion.cold
+    49: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS copy.cpp
+    50: 00000000000069e0     5 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIZN3aec10copy_asyncEmPvmiP15aecStreamOpaqueE9AsyncCopySaIvELN9__gnu_cxx12_Lock_policyE2EED2Ev
+    51: 00000000000069e0     5 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIZN3aec10copy_asyncEmPvmiP15aecStreamOpaqueE9AsyncCopySaIvELN9__gnu_cxx12_Lock_policyE2EED1Ev
+    52: 00000000000069f0    71 FUNC    LOCAL  DEFAULT   15 _ZNSt17_Function_handlerIF8aecErrormEZN3aec10copy_asyncEmPvmiP15aecStreamOpaqueEUlmE_E9_M_invokeERKSt9_Any_dataOm
+    53: 0000000000006a40   276 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_19copy_syncEmPvm16aecCopyDirection
+    54: 0000000000003e68    45 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_19copy_syncEmPvm16aecCopyDirection.cold
+    55: 0000000000006b60    27 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIZN3aec10copy_asyncEmPvmiP15aecStreamOpaqueE9AsyncCopySaIvELN9__gnu_cxx12_Lock_policyE2EE10_M_disposeEv
+    56: 0000000000006b80    14 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIZN3aec10copy_asyncEmPvmiP15aecStreamOpaqueE9AsyncCopySaIvELN9__gnu_cxx12_Lock_policyE2EED0Ev
+    57: 0000000000006b90    14 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIZN3aec10copy_asyncEmPvmiP15aecStreamOpaqueE9AsyncCopySaIvELN9__gnu_cxx12_Lock_policyE2EE10_M_destroyEv
+    58: 0000000000006ba0    71 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIZN3aec10copy_asyncEmPvmiP15aecStreamOpaqueE9AsyncCopySaIvELN9__gnu_cxx12_Lock_policyE2EE14_M_get_deleterERKSt9type_info
+    59: 0000000000015a78    56 OBJECT  LOCAL  DEFAULT   24 _ZTVSt23_Sp_counted_ptr_inplaceIZN3aec10copy_asyncEmPvmiP15aecStreamOpaqueE9AsyncCopySaIvELN9__gnu_cxx12_Lock_policyE2EE
+    60: 0000000000006ea0   307 FUNC    LOCAL  DEFAULT   15 _ZNSt17_Function_handlerIF8aecErrormEZN3aec10copy_asyncEmPvmiP15aecStreamOpaqueEUlmE_E10_M_managerERSt9_Any_dataRKS8_St18_Manager_operation
+    61: 0000000000003e95    65 FUNC    LOCAL  DEFAULT   15 _ZN3aec10copy_asyncEmPvmiP15aecStreamOpaque.cold
+    62: 0000000000015c68    16 OBJECT  LOCAL  DEFAULT   24 _ZTIZN3aec10copy_asyncEmPvmiP15aecStreamOpaqueEUlmE_
+    63: 0000000000010140    50 OBJECT  LOCAL  DEFAULT   17 _ZTSZN3aec10copy_asyncEmPvmiP15aecStreamOpaqueEUlmE_
+    64: 0000000000015c78    24 OBJECT  LOCAL  DEFAULT   24 _ZTISt23_Sp_counted_ptr_inplaceIZN3aec10copy_asyncEmPvmiP15aecStreamOpaqueE9AsyncCopySaIvELN9__gnu_cxx12_Lock_policyE2EE
+    65: 0000000000010180   118 OBJECT  LOCAL  DEFAULT   17 _ZTSSt23_Sp_counted_ptr_inplaceIZN3aec10copy_asyncEmPvmiP15aecStreamOpaqueE9AsyncCopySaIvELN9__gnu_cxx12_Lock_policyE2EE
+    66: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS event.cpp
+    67: 0000000000007170     5 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_110EventStateESaIvELN9__gnu_cxx12_Lock_policyE2EED2Ev
+    68: 0000000000007170     5 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_110EventStateESaIvELN9__gnu_cxx12_Lock_policyE2EED1Ev
+    69: 0000000000007180    14 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_110EventStateESaIvELN9__gnu_cxx12_Lock_policyE2EED0Ev
+    70: 0000000000007190    14 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_110EventStateESaIvELN9__gnu_cxx12_Lock_policyE2EE10_M_destroyEv
+    71: 00000000000071a0   229 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_18registryEv
+    72: 0000000000016280   128 OBJECT  LOCAL  DEFAULT   29 _ZZN3aec12_GLOBAL__N_18registryEvE5value
+    73: 0000000000016260     8 OBJECT  LOCAL  DEFAULT   29 _ZGVZN3aec12_GLOBAL__N_18registryEvE5value
+    74: 00000000000076a0   345 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_113EventRegistryD1Ev
+    75: 0000000000007290    71 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_110EventStateESaIvELN9__gnu_cxx12_Lock_policyE2EE14_M_get_deleterERKSt9type_info
+    76: 00000000000072e0   139 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_110EventStateESaIvELN9__gnu_cxx12_Lock_policyE2EE10_M_disposeEv
+    77: 0000000000007370   140 FUNC    LOCAL  DEFAULT   15 _ZNSt10_HashtableIP14aecEventOpaqueSt4pairIKS1_St10shared_ptrIN3aec12_GLOBAL__N_110EventStateEEESaIS9_ENSt8__detail10_Select1stESt8equal_toIS1_ESt4hashIS1_ENSB_18_Mod_range_hashingENSB_20_Default_ranged_hashENSB_20_Prime_rehash_policyENSB_17_Hashtable_traitsILb0ELb0ELb1EEEE4findERS3_.isra.0
+    78: 0000000000007400   158 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_110find_eventEP14aecEventOpaque
+    79: 00000000000074a0   140 FUNC    LOCAL  DEFAULT   15 _ZNSt10_HashtableImSt4pairIKmN3aec12_GLOBAL__N_115EventCompletionEESaIS5_ENSt8__detail10_Select1stESt8equal_toImESt4hashImENS7_18_Mod_range_hashingENS7_20_Default_ranged_hashENS7_20_Prime_rehash_policyENS7_17_Hashtable_traitsILb0ELb0ELb1EEEE4findERS1_.isra.0
+    80: 0000000000007530   356 FUNC    LOCAL  DEFAULT   15 _ZNSt17_Function_handlerIF8aecErrormEZN3aec12event_recordEP14aecEventOpaqueP15aecStreamOpaqueEUlmE_E9_M_invokeERKSt9_Any_dataOm
+    81: 0000000000003ed6    37 FUNC    LOCAL  DEFAULT   15 _ZNSt17_Function_handlerIF8aecErrormEZN3aec12event_recordEP14aecEventOpaqueP15aecStreamOpaqueEUlmE_E9_M_invokeERKSt9_Any_dataOm.cold
+    82: 00000000000076a0   345 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_113EventRegistryD2Ev
+    83: 0000000000003efb    44 FUNC    LOCAL  DEFAULT   15 _ZN3aec11event_queryEP14aecEventOpaque.cold
+    84: 00000000000086a0   315 FUNC    LOCAL  DEFAULT   15 _ZNSt17_Function_handlerIF8aecErrormEZN3aec12event_recordEP14aecEventOpaqueP15aecStreamOpaqueEUlmE_E10_M_managerERSt9_Any_dataRKS9_St18_Manager_operation
+    85: 0000000000003f27   166 FUNC    LOCAL  DEFAULT   15 _ZN3aec12event_recordEP14aecEventOpaqueP15aecStreamOpaque.cold
+    86: 0000000000003fcd    59 FUNC    LOCAL  DEFAULT   15 _ZN3aec20event_elapsed_cyclesEP14aecEventOpaqueS1_Pm.cold
+    87: 0000000000015c90    16 OBJECT  LOCAL  DEFAULT   24 _ZTIZN3aec12event_recordEP14aecEventOpaqueP15aecStreamOpaqueEUlmE_
+    88: 0000000000004008    57 FUNC    LOCAL  DEFAULT   15 _ZN3aec13event_destroyEP14aecEventOpaque.cold
+    89: 0000000000004041    61 FUNC    LOCAL  DEFAULT   15 _ZN3aec17event_synchronizeEP14aecEventOpaque.cold
+    90: 0000000000015ab0    56 OBJECT  LOCAL  DEFAULT   24 _ZTVSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_110EventStateESaIvELN9__gnu_cxx12_Lock_policyE2EE
+    91: 000000000000407e   149 FUNC    LOCAL  DEFAULT   15 _ZN3aec12event_createEPP14aecEventOpaque.cold
+    92: 0000000000010380    64 OBJECT  LOCAL  DEFAULT   17 _ZTSZN3aec12event_recordEP14aecEventOpaqueP15aecStreamOpaqueEUlmE_
+    93: 0000000000015ca0    24 OBJECT  LOCAL  DEFAULT   24 _ZTISt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_110EventStateESaIvELN9__gnu_cxx12_Lock_policyE2EE
+    94: 00000000000103c0    97 OBJECT  LOCAL  DEFAULT   17 _ZTSSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_110EventStateESaIvELN9__gnu_cxx12_Lock_policyE2EE
+    95: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS kernel.cpp
+    96: 0000000000009530     5 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_114PreparedLaunchESaIvELN9__gnu_cxx12_Lock_policyE2EED2Ev
+    97: 0000000000009530     5 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_114PreparedLaunchESaIvELN9__gnu_cxx12_Lock_policyE2EED1Ev
+    98: 0000000000009540    33 FUNC    LOCAL  DEFAULT   15 _ZNSt17_Function_handlerIF8aecErrormEZN3aec6launchEi7aecDim3S3_PKvmP15aecStreamOpaqueEUlmE_E9_M_invokeERKSt9_Any_dataOm
+    99: 0000000000009570    45 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_114PreparedLaunchESaIvELN9__gnu_cxx12_Lock_policyE2EE10_M_disposeEv
+   100: 00000000000095a0    14 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_114PreparedLaunchESaIvELN9__gnu_cxx12_Lock_policyE2EED0Ev
+   101: 00000000000095b0    14 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_114PreparedLaunchESaIvELN9__gnu_cxx12_Lock_policyE2EE10_M_destroyEv
+   102: 00000000000095c0    71 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_114PreparedLaunchESaIvELN9__gnu_cxx12_Lock_policyE2EE14_M_get_deleterERKSt9type_info
+   103: 0000000000009970   315 FUNC    LOCAL  DEFAULT   15 _ZNSt17_Function_handlerIF8aecErrormEZN3aec6launchEi7aecDim3S3_PKvmP15aecStreamOpaqueEUlmE_E10_M_managerERSt9_Any_dataRKSA_St18_Manager_operation
+   104: 0000000000015cb8    16 OBJECT  LOCAL  DEFAULT   24 _ZTIZN3aec6launchEi7aecDim3S0_PKvmP15aecStreamOpaqueEUlmE_
+   105: 0000000000015ae8    56 OBJECT  LOCAL  DEFAULT   24 _ZTVSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_114PreparedLaunchESaIvELN9__gnu_cxx12_Lock_policyE2EE
+   106: 0000000000004113    62 FUNC    LOCAL  DEFAULT   15 _ZN3aec6launchEi7aecDim3S0_PKvmP15aecStreamOpaque.cold
+   107: 0000000000010440    56 OBJECT  LOCAL  DEFAULT   17 _ZTSZN3aec6launchEi7aecDim3S0_PKvmP15aecStreamOpaqueEUlmE_
+   108: 0000000000015cc8    24 OBJECT  LOCAL  DEFAULT   24 _ZTISt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_114PreparedLaunchESaIvELN9__gnu_cxx12_Lock_policyE2EE
+   109: 0000000000010480   101 OBJECT  LOCAL  DEFAULT   17 _ZTSSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_114PreparedLaunchESaIvELN9__gnu_cxx12_Lock_policyE2EE
+   110: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS library_ops.cpp
+   111: 000000000000a210     5 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_116PreparedVectorOpESaIvELN9__gnu_cxx12_Lock_policyE2EED2Ev
+   112: 000000000000a210     5 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_116PreparedVectorOpESaIvELN9__gnu_cxx12_Lock_policyE2EED1Ev
+   113: 000000000000a220    45 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_116PreparedVectorOpESaIvELN9__gnu_cxx12_Lock_policyE2EE10_M_disposeEv
+   114: 000000000000a250    14 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_116PreparedVectorOpESaIvELN9__gnu_cxx12_Lock_policyE2EED0Ev
+   115: 000000000000a260    33 FUNC    LOCAL  DEFAULT   15 _ZNSt17_Function_handlerIF8aecErrormEZN3aec12_GLOBAL__N_118execute_or_enqueueERKSt10shared_ptrINS3_16PreparedVectorOpEES0_P15aecStreamOpaqueEUlmE_E9_M_invokeERKSt9_Any_dataOm
+   116: 000000000000a290    14 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_116PreparedVectorOpESaIvELN9__gnu_cxx12_Lock_policyE2EE10_M_destroyEv
+   117: 000000000000a2a0    71 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_116PreparedVectorOpESaIvELN9__gnu_cxx12_Lock_policyE2EE14_M_get_deleterERKSt9type_info
+   118: 000000000000a2f0   423 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_112prepare_axpyEmmmf7aecDim3S1_RNS0_16PreparedVectorOpE
+   119: 000000000000a4a0   402 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_112prepare_nrm2Emmm7aecDim3S1_RNS0_16PreparedVectorOpE
+   120: 000000000000a640   543 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_111prepare_dotEmmmm7aecDim3S1_RNS0_16PreparedVectorOpE
+   121: 000000000000a860   690 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_118execute_or_enqueueERKSt10shared_ptrINS0_16PreparedVectorOpEE8aecErrorP15aecStreamOpaque
+   122: 000000000000b420   315 FUNC    LOCAL  DEFAULT   15 _ZNSt17_Function_handlerIF8aecErrormEZN3aec12_GLOBAL__N_118execute_or_enqueueERKSt10shared_ptrINS3_16PreparedVectorOpEES0_P15aecStreamOpaqueEUlmE_E10_M_managerERSt9_Any_dataRKSD_St18_Manager_operation
+   123: 0000000000004151    60 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_118execute_or_enqueueERKSt10shared_ptrINS0_16PreparedVectorOpEE8aecErrorP15aecStreamOpaque.cold
+   124: 0000000000015b20    56 OBJECT  LOCAL  DEFAULT   24 _ZTVSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_116PreparedVectorOpESaIvELN9__gnu_cxx12_Lock_policyE2EE
+   125: 000000000000418d    36 FUNC    LOCAL  DEFAULT   15 _ZN3aec4axpyEmmmfP15aecStreamOpaque.cold
+   126: 00000000000041b1    36 FUNC    LOCAL  DEFAULT   15 _ZN3aec3dotEmmmmP15aecStreamOpaque.cold
+   127: 00000000000041d5    36 FUNC    LOCAL  DEFAULT   15 _ZN3aec4nrm2EmmmP15aecStreamOpaque.cold
+   128: 00000000000041f9    36 FUNC    LOCAL  DEFAULT   15 _ZN3aec10launch_dotE7aecDim3S0_RK10aecDotArgsP15aecStreamOpaque.cold
+   129: 000000000000421d    36 FUNC    LOCAL  DEFAULT   15 _ZN3aec11launch_nrm2E7aecDim3S0_RK11aecNrm2ArgsP15aecStreamOpaque.cold
+   130: 0000000000004241    36 FUNC    LOCAL  DEFAULT   15 _ZN3aec11launch_axpyE7aecDim3S0_RK11aecAxpyArgsP15aecStreamOpaque.cold
+   131: 0000000000015ce0    16 OBJECT  LOCAL  DEFAULT   24 _ZTIZN3aec12_GLOBAL__N_118execute_or_enqueueERKSt10shared_ptrINS0_16PreparedVectorOpEE8aecErrorP15aecStreamOpaqueEUlmE_
+   132: 0000000000010500   117 OBJECT  LOCAL  DEFAULT   17 _ZTSZN3aec12_GLOBAL__N_118execute_or_enqueueERKSt10shared_ptrINS0_16PreparedVectorOpEE8aecErrorP15aecStreamOpaqueEUlmE_
+   133: 0000000000015cf0    24 OBJECT  LOCAL  DEFAULT   24 _ZTISt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_116PreparedVectorOpESaIvELN9__gnu_cxx12_Lock_policyE2EE
+   134: 0000000000010580   103 OBJECT  LOCAL  DEFAULT   17 _ZTSSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_116PreparedVectorOpESaIvELN9__gnu_cxx12_Lock_policyE2EE
+   135: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS numeric.cpp
+   136: 000000000000b560     5 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_114PreparedMatmulESaIvELN9__gnu_cxx12_Lock_policyE2EED2Ev
+   137: 000000000000b560     5 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_114PreparedMatmulESaIvELN9__gnu_cxx12_Lock_policyE2EED1Ev
+   138: 000000000000b570    45 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_114PreparedMatmulESaIvELN9__gnu_cxx12_Lock_policyE2EE10_M_disposeEv
+   139: 000000000000b5a0    14 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_114PreparedMatmulESaIvELN9__gnu_cxx12_Lock_policyE2EED0Ev
+   140: 000000000000b5b0    33 FUNC    LOCAL  DEFAULT   15 _ZNSt17_Function_handlerIF8aecErrormEZN3aec12_GLOBAL__N_118execute_or_enqueueERKSt10shared_ptrINS3_14PreparedMatmulEES0_P15aecStreamOpaqueEUlmE_E9_M_invokeERKSt9_Any_dataOm
+   141: 000000000000b5e0     9 FUNC    LOCAL  DEFAULT   15 _ZN3aec14ParameterBlockILm64EE7put_u32Emj.part.0
+   142: 000000000000b5f0    14 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_114PreparedMatmulESaIvELN9__gnu_cxx12_Lock_policyE2EE10_M_destroyEv
+   143: 000000000000b600   156 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_113storage_bytesEm11aecDataTypebRm.constprop.0
+   144: 000000000000b6a0    71 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_114PreparedMatmulESaIvELN9__gnu_cxx12_Lock_policyE2EE14_M_get_deleterERKSt9type_info
+   145: 000000000000b6f0   988 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_114prepare_matmulEmmmjjj11aecDataTypejj7aecDim3S2_RNS0_14PreparedMatmulE
+   146: 000000000000bad0   690 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_118execute_or_enqueueERKSt10shared_ptrINS0_14PreparedMatmulEE8aecErrorP15aecStreamOpaque
+   147: 000000000000bf70   315 FUNC    LOCAL  DEFAULT   15 _ZNSt17_Function_handlerIF8aecErrormEZN3aec12_GLOBAL__N_118execute_or_enqueueERKSt10shared_ptrINS3_14PreparedMatmulEES0_P15aecStreamOpaqueEUlmE_E10_M_managerERSt9_Any_dataRKSD_St18_Manager_operation
+   148: 0000000000004265    60 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_118execute_or_enqueueERKSt10shared_ptrINS0_14PreparedMatmulEE8aecErrorP15aecStreamOpaque.cold
+   149: 0000000000015b58    56 OBJECT  LOCAL  DEFAULT   24 _ZTVSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_114PreparedMatmulESaIvELN9__gnu_cxx12_Lock_policyE2EE
+   150: 00000000000042a1    36 FUNC    LOCAL  DEFAULT   15 _ZN3aec6matmulEmmmjjj11aecDataTypeP15aecStreamOpaque.cold
+   151: 0000000000015d08    16 OBJECT  LOCAL  DEFAULT   24 _ZTIZN3aec12_GLOBAL__N_118execute_or_enqueueERKSt10shared_ptrINS0_14PreparedMatmulEE8aecErrorP15aecStreamOpaqueEUlmE_
+   152: 00000000000042c5    36 FUNC    LOCAL  DEFAULT   15 _ZN3aec13launch_matmulE11aecKernelId7aecDim3S1_RK11aecGemmArgsP15aecStreamOpaque.cold
+   153: 0000000000010640   115 OBJECT  LOCAL  DEFAULT   17 _ZTSZN3aec12_GLOBAL__N_118execute_or_enqueueERKSt10shared_ptrINS0_14PreparedMatmulEE8aecErrorP15aecStreamOpaqueEUlmE_
+   154: 0000000000015d18    24 OBJECT  LOCAL  DEFAULT   24 _ZTISt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_114PreparedMatmulESaIvELN9__gnu_cxx12_Lock_policyE2EE
+   155: 00000000000106c0   101 OBJECT  LOCAL  DEFAULT   17 _ZTSSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_114PreparedMatmulESaIvELN9__gnu_cxx12_Lock_policyE2EE
+   156: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS registration.cpp
+   157: 000000000000c2a0   185 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_18registryEv
+   158: 0000000000016320    88 OBJECT  LOCAL  DEFAULT   29 _ZZN3aec12_GLOBAL__N_18registryEvE5value
+   159: 0000000000016300     8 OBJECT  LOCAL  DEFAULT   29 _ZGVZN3aec12_GLOBAL__N_18registryEvE5value
+   160: 000000000000cfa0   190 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_120RegistrationRegistryD1Ev
+   161: 000000000000d660   146 FUNC    LOCAL  DEFAULT   15 _ZNSt8_Rb_treeImSt4pairIKmSt10shared_ptrIN3aec18RegistrationRecordEEESt10_Select1stIS6_ESt4lessImESaIS6_EE24_M_get_insert_unique_posERS1_.isra.0
+   162: 00000000000042e9    74 FUNC    LOCAL  DEFAULT   15 _ZN3aec15host_unregisterEPv.cold
+   163: 000000000000c960  1593 FUNC    LOCAL  DEFAULT   15 _ZNSt8_Rb_treeImSt4pairIKmSt10shared_ptrIN3aec18RegistrationRecordEEESt10_Select1stIS6_ESt4lessImESaIS6_EE8_M_eraseEPSt13_Rb_tree_nodeIS6_E.isra.0
+   164: 000000000000cfa0   190 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_120RegistrationRegistryD2Ev
+   165: 0000000000004333    37 FUNC    LOCAL  DEFAULT   15 _ZN3aec23acquire_registered_spanEPvmRNS_17RegistrationLeaseERb.cold
+   166: 0000000000004358    59 FUNC    LOCAL  DEFAULT   15 _ZN3aec13host_registerEPvm.cold
+   167: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS stream.cpp
+   168: 000000000000d980     5 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_111StreamStateESaIvELN9__gnu_cxx12_Lock_policyE2EED2Ev
+   169: 000000000000d980     5 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_111StreamStateESaIvELN9__gnu_cxx12_Lock_policyE2EED1Ev
+   170: 000000000000d990    14 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_111StreamStateESaIvELN9__gnu_cxx12_Lock_policyE2EED0Ev
+   171: 000000000000d9a0    19 FUNC    LOCAL  DEFAULT   15 _ZNSt6thread11_State_implINS_8_InvokerISt5tupleIJZN3aec12_GLOBAL__N_111StreamStateC4EmEUlvE_EEEEED2Ev
+   172: 0000000000015bc8    40 OBJECT  LOCAL  DEFAULT   24 _ZTVNSt6thread11_State_implINS_8_InvokerISt5tupleIJZN3aec12_GLOBAL__N_111StreamStateC4EmEUlvE_EEEEEE
+   173: 000000000000d9a0    19 FUNC    LOCAL  DEFAULT   15 _ZNSt6thread11_State_implINS_8_InvokerISt5tupleIJZN3aec12_GLOBAL__N_111StreamStateC4EmEUlvE_EEEEED1Ev
+   174: 000000000000d9c0    37 FUNC    LOCAL  DEFAULT   15 _ZNSt6thread11_State_implINS_8_InvokerISt5tupleIJZN3aec12_GLOBAL__N_111StreamStateC4EmEUlvE_EEEEED0Ev
+   175: 000000000000d9f0   229 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_18registryEv
+   176: 00000000000163a0   128 OBJECT  LOCAL  DEFAULT   29 _ZZN3aec12_GLOBAL__N_18registryEvE5value
+   177: 0000000000016380     8 OBJECT  LOCAL  DEFAULT   29 _ZGVZN3aec12_GLOBAL__N_18registryEvE5value
+   178: 000000000000dfc0   456 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_114StreamRegistryD1Ev
+   179: 000000000000dae0    71 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_111StreamStateESaIvELN9__gnu_cxx12_Lock_policyE2EE14_M_get_deleterERKSt9type_info
+   180: 000000000000db30    14 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_111StreamStateESaIvELN9__gnu_cxx12_Lock_policyE2EE10_M_destroyEv
+   181: 000000000000db40   140 FUNC    LOCAL  DEFAULT   15 _ZNSt10_HashtableIP15aecStreamOpaqueSt4pairIKS1_St10shared_ptrIN3aec12_GLOBAL__N_111StreamStateEEESaIS9_ENSt8__detail10_Select1stESt8equal_toIS1_ESt4hashIS1_ENSB_18_Mod_range_hashingENSB_20_Default_ranged_hashENSB_20_Prime_rehash_policyENSB_17_Hashtable_traitsILb0ELb0ELb1EEEE4findERS3_.isra.0
+   182: 000000000000dbd0   158 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_111find_streamEP15aecStreamOpaque
+   183: 000000000000dc70   848 FUNC    LOCAL  DEFAULT   15 _ZNSt6thread11_State_implINS_8_InvokerISt5tupleIJZN3aec12_GLOBAL__N_111StreamStateC4EmEUlvE_EEEEE6_M_runEv
+   184: 0000000000004394    48 FUNC    LOCAL  DEFAULT   15 _ZNSt6thread11_State_implINS_8_InvokerISt5tupleIJZN3aec12_GLOBAL__N_111StreamStateC4EmEUlvE_EEEEE6_M_runEv.cold
+   185: 000000000000dfc0   456 FUNC    LOCAL  DEFAULT   15 _ZN3aec12_GLOBAL__N_114StreamRegistryD2Ev
+   186: 00000000000043c4    66 FUNC    LOCAL  DEFAULT   15 _ZN3aec11stream_syncEP15aecStreamOpaque.cold
+   187: 0000000000004406    77 FUNC    LOCAL  DEFAULT   15 _ZN3aec19enqueue_stream_workEP15aecStreamOpaqueSt8functionIF8aecErrormEE.cold
+   188: 000000000000eb10   146 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_111StreamStateESaIvELN9__gnu_cxx12_Lock_policyE2EE10_M_disposeEv
+   189: 0000000000015bf0    56 OBJECT  LOCAL  DEFAULT   24 _ZTVSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_111StreamStateESaIvELN9__gnu_cxx12_Lock_policyE2EE
+   190: 0000000000004453   317 FUNC    LOCAL  DEFAULT   15 _ZN3aec13stream_createEPP15aecStreamOpaque.cold
+   191: 0000000000015d48    24 OBJECT  LOCAL  DEFAULT   24 _ZTINSt6thread11_State_implINS_8_InvokerISt5tupleIJZN3aec12_GLOBAL__N_111StreamStateC4EmEUlvE_EEEEEE
+   192: 00000000000107e0    98 OBJECT  LOCAL  DEFAULT   17 _ZTSNSt6thread11_State_implINS_8_InvokerISt5tupleIJZN3aec12_GLOBAL__N_111StreamStateC4EmEUlvE_EEEEEE
+   193: 0000000000015d60    24 OBJECT  LOCAL  DEFAULT   24 _ZTISt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_111StreamStateESaIvELN9__gnu_cxx12_Lock_policyE2EE
+   194: 0000000000010860    98 OBJECT  LOCAL  DEFAULT   17 _ZTSSt23_Sp_counted_ptr_inplaceIN3aec12_GLOBAL__N_111StreamStateESaIvELN9__gnu_cxx12_Lock_policyE2EE
+   195: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS crtstuff.c
+   196: 0000000000004590     0 FUNC    LOCAL  DEFAULT   15 deregister_tm_clones
+   197: 00000000000045c0     0 FUNC    LOCAL  DEFAULT   15 register_tm_clones
+   198: 0000000000004600     0 FUNC    LOCAL  DEFAULT   15 __do_global_dtors_aux
+   199: 00000000000161c0     1 OBJECT  LOCAL  DEFAULT   29 completed.0
+   200: 0000000000015a38     0 OBJECT  LOCAL  DEFAULT   23 __do_global_dtors_aux_fini_array_entry
+   201: 0000000000004640     0 FUNC    LOCAL  DEFAULT   15 frame_dummy
+   202: 0000000000015a30     0 OBJECT  LOCAL  DEFAULT   22 __frame_dummy_init_array_entry
+   203: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS error.cpp
+   204: 0000000000000000     4 TLS     LOCAL  DEFAULT   21 _ZN3aec12_GLOBAL__N_110last_errorE
+   205: 0000000000010360    32 OBJECT  LOCAL  DEFAULT   17 CSWTCH.6
+   206: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS crtstuff.c
+   207: 00000000000136a4     0 OBJECT  LOCAL  DEFAULT   19 __FRAME_END__
+   208: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS 
+   209: 0000000000006c20   632 FUNC    LOCAL  DEFAULT   15 _ZN3aec10copy_asyncEmPvmiP15aecStreamOpaque
+   210: 0000000000009350    43 FUNC    LOCAL  DEFAULT   15 _ZNSt11unique_lockISt5mutexE6unlockEv
+   211: 000000000000acb0   385 FUNC    LOCAL  DEFAULT   15 _ZN3aec3dotEmmmmP15aecStreamOpaque
+   212: 0000000000006fe0    33 FUNC    LOCAL  DEFAULT   15 _ZNSt14_Function_baseD1Ev
+   213: 00000000000052c0   908 FUNC    LOCAL  DEFAULT   15 _ZN3aec11free_deviceEm
+   214: 000000000000ae40   369 FUNC    LOCAL  DEFAULT   15 _ZN3aec4nrm2EmmmP15aecStreamOpaque
+   215: 000000000000c390    34 FUNC    LOCAL  DEFAULT   15 _ZN3aec17RegistrationLeaseC1EOS0_
+   216: 0000000000006470    76 FUNC    LOCAL  DEFAULT   15 _ZNSt16_Sp_counted_baseILN9__gnu_cxx12_Lock_policyE2EE24_M_release_last_use_coldEv
+   217: 000000000000d640    14 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec18RegistrationRecordESaIvELN9__gnu_cxx12_Lock_policyE2EED0Ev
+   218: 000000000000d620     5 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec18RegistrationRecordESaIvELN9__gnu_cxx12_Lock_policyE2EED2Ev
+   219: 000000000000f1e0   421 FUNC    LOCAL  DEFAULT   15 _ZNSt5dequeISt8functionIF8aecErrormEESaIS3_EED1Ev
+   220: 00000000000108c4     0 NOTYPE  LOCAL  DEFAULT   18 __GNU_EH_FRAME_HDR
+   221: 000000000000e190   377 FUNC    LOCAL  DEFAULT   15 _ZN3aec11stream_syncEP15aecStreamOpaque
+   222: 00000000000050a0   219 FUNC    LOCAL  DEFAULT   15 _ZN3aec15AllocationLease7releaseEv
+   223: 0000000000016168     8 OBJECT  LOCAL  DEFAULT   28 DW.ref._ZTISt9bad_alloc
+   224: 00000000000087e0  1036 FUNC    LOCAL  DEFAULT   15 _ZN3aec13event_destroyEP14aecEventOpaque
+   225: 0000000000010080    52 OBJECT  LOCAL  DEFAULT   17 _ZTSSt16_Sp_counted_baseILN9__gnu_cxx12_Lock_policyE2EE
+   226: 0000000000015a40    56 OBJECT  LOCAL  DEFAULT   24 _ZTVSt23_Sp_counted_ptr_inplaceIN3aec16AllocationRecordESaIvELN9__gnu_cxx12_Lock_policyE2EE
+   227: 0000000000005070    34 FUNC    LOCAL  DEFAULT   15 _ZN3aec15AllocationLeaseC2EOS0_
+   228: 0000000000007a10  1850 FUNC    LOCAL  DEFAULT   15 _ZN3aec12event_recordEP14aecEventOpaqueP15aecStreamOpaque
+   229: 0000000000006350    13 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec16AllocationRecordESaIvELN9__gnu_cxx12_Lock_policyE2EE10_M_disposeEv
+   230: 0000000000007090   192 FUNC    LOCAL  DEFAULT   15 _ZN3aec10error_nameEi
+   231: 0000000000006340     5 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec16AllocationRecordESaIvELN9__gnu_cxx12_Lock_policyE2EED2Ev
+   232: 0000000000015d30    24 OBJECT  LOCAL  DEFAULT   24 _ZTISt23_Sp_counted_ptr_inplaceIN3aec18RegistrationRecordESaIvELN9__gnu_cxx12_Lock_policyE2EE
+   233: 000000000000d700    71 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec18RegistrationRecordESaIvELN9__gnu_cxx12_Lock_policyE2EE14_M_get_deleterERKSt9type_info
+   234: 000000000000ab20   393 FUNC    LOCAL  DEFAULT   15 _ZN3aec4axpyEmmmfP15aecStreamOpaque
+   235: 0000000000016160     0 OBJECT  LOCAL  DEFAULT   28 __dso_handle
+   236: 0000000000009380   418 FUNC    LOCAL  DEFAULT   15 _ZNSt6vectorISt10unique_ptrI14aecEventOpaqueSt14default_deleteIS1_EESaIS4_EE17_M_realloc_insertIJS4_EEEvN9__gnu_cxx17__normal_iteratorIPS4_S6_EEDpOT_
+   237: 0000000000015b90    56 OBJECT  LOCAL  DEFAULT   24 _ZTVSt23_Sp_counted_ptr_inplaceIN3aec18RegistrationRecordESaIvELN9__gnu_cxx12_Lock_policyE2EE
+   238: 000000000000c4a0   137 FUNC    LOCAL  DEFAULT   15 _ZN3aec17RegistrationLeaseD1Ev
+   239: 000000000000c530   170 FUNC    LOCAL  DEFAULT   15 _ZN3aec17RegistrationLeaseaSEOS0_
+   240: 000000000000f1e0   421 FUNC    LOCAL  DEFAULT   15 _ZNSt5dequeISt8functionIF8aecErrormEESaIS3_EED2Ev
+   241: 0000000000015c38    24 OBJECT  LOCAL  DEFAULT   24 _ZTISt16_Sp_counted_baseILN9__gnu_cxx12_Lock_policyE2EE
+   242: 0000000000005d50   710 FUNC    LOCAL  DEFAULT   15 _ZN3aec19acquire_device_spanEmmRNS_15AllocationLeaseE
+   243: 000000000000d630    13 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec18RegistrationRecordESaIvELN9__gnu_cxx12_Lock_policyE2EE10_M_disposeEv
+   244: 000000000000d750   557 FUNC    LOCAL  DEFAULT   15 _ZNSt8_Rb_treeImSt4pairIKmSt10shared_ptrIN3aec18RegistrationRecordEEESt10_Select1stIS6_ESt4lessImESaIS6_EE22_M_emplace_hint_uniqueIJRS1_S5_EEESt17_Rb_tree_iteratorIS6_ESt23_Rb_tree_const_iteratorIS6_EDpOT_
+   245: 0000000000016170     8 OBJECT  LOCAL  DEFAULT   28 DW.ref.__gxx_personality_v0
+   246: 00000000000068d0   272 FUNC    LOCAL  DEFAULT   15 _ZN3aec10submit_dmaEmPvm16aecCopyDirectionmht
+   247: 0000000000006fe0    33 FUNC    LOCAL  DEFAULT   15 _ZNSt14_Function_baseD2Ev
+   248: 000000000000b290   385 FUNC    LOCAL  DEFAULT   15 _ZN3aec11launch_axpyE7aecDim3S0_RK11aecAxpyArgsP15aecStreamOpaque
+   249: 000000000000e310  1262 FUNC    LOCAL  DEFAULT   15 _ZN3aec19enqueue_stream_workEP15aecStreamOpaqueSt8functionIF8aecErrormEE
+   250: 000000000000f534     0 FUNC    LOCAL  DEFAULT   16 _fini
+   251: 0000000000005180   137 FUNC    LOCAL  DEFAULT   15 _ZN3aec15AllocationLeaseD1Ev
+   252: 0000000000005070    34 FUNC    LOCAL  DEFAULT   15 _ZN3aec15AllocationLeaseC1EOS0_
+   253: 0000000000008bf0   548 FUNC    LOCAL  DEFAULT   15 _ZN3aec17event_synchronizeEP14aecEventOpaque
+   254: 000000000000c360    34 FUNC    LOCAL  DEFAULT   15 _ZN3aec17RegistrationLeaseC1ESt10shared_ptrINS_18RegistrationRecordEE
+   255: 00000000000064c0   133 FUNC    LOCAL  DEFAULT   15 _ZNSt16_Sp_counted_baseILN9__gnu_cxx12_Lock_policyE2EE10_M_releaseEv
+   256: 000000000000d620     5 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec18RegistrationRecordESaIvELN9__gnu_cxx12_Lock_policyE2EED1Ev
+   257: 000000000000ebb0  1560 FUNC    LOCAL  DEFAULT   15 _ZN3aec13stream_createEPP15aecStreamOpaque
+   258: 000000000000afc0   353 FUNC    LOCAL  DEFAULT   15 _ZN3aec10launch_dotE7aecDim3S0_RK10aecDotArgsP15aecStreamOpaque
+   259: 0000000000010050    24 OBJECT  LOCAL  DEFAULT   17 _ZTSSt19_Sp_make_shared_tag
+   260: 0000000000007070    31 FUNC    LOCAL  DEFAULT   15 _ZN3aec15peek_last_errorEv
+   261: 000000000000f390   418 FUNC    LOCAL  DEFAULT   15 _ZNSt6vectorISt10unique_ptrI15aecStreamOpaqueSt14default_deleteIS1_EESaIS4_EE17_M_realloc_insertIJS4_EEEvN9__gnu_cxx17__normal_iteratorIPS4_S6_EEDpOT_
+   262: 0000000000006420    71 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec16AllocationRecordESaIvELN9__gnu_cxx12_Lock_policyE2EE14_M_get_deleterERKSt9type_info
+   263: 000000000000c390    34 FUNC    LOCAL  DEFAULT   15 _ZN3aec17RegistrationLeaseC2EOS0_
+   264: 0000000000003000     0 FUNC    LOCAL  DEFAULT   11 _init
+   265: 0000000000015d78     0 OBJECT  LOCAL  DEFAULT   25 _DYNAMIC
+   266: 0000000000005180   137 FUNC    LOCAL  DEFAULT   15 _ZN3aec15AllocationLeaseD2Ev
+   267: 00000000000161b8     0 OBJECT  LOCAL  DEFAULT   28 __TMC_END__
+   268: 0000000000015c50    24 OBJECT  LOCAL  DEFAULT   24 _ZTISt23_Sp_counted_ptr_inplaceIN3aec16AllocationRecordESaIvELN9__gnu_cxx12_Lock_policyE2EE
+   269: 000000000000bd90   468 FUNC    LOCAL  DEFAULT   15 _ZN3aec6matmulEmmmjjj11aecDataTypeP15aecStreamOpaque
+   270: 000000000000f1d0     5 FUNC    LOCAL  DEFAULT   15 _ZNSt6thread24_M_thread_deps_never_runEv
+   271: 0000000000006020   793 FUNC    LOCAL  DEFAULT   15 _ZN3aec15allocate_deviceEPmm
+   272: 0000000000007150    27 FUNC    LOCAL  DEFAULT   15 _ZN3aec17map_device_statusE15aecDeviceStatus
+   273: 000000000000c5e0   893 FUNC    LOCAL  DEFAULT   15 _ZN3aec15host_unregisterEPv
+   274: 0000000000006c00    23 FUNC    LOCAL  DEFAULT   15 _ZN3aec8copy_d2hEPvmm
+   275: 0000000000015c28    16 OBJECT  LOCAL  DEFAULT   24 _ZTISt11_Mutex_baseILN9__gnu_cxx12_Lock_policyE2EE
+   276: 0000000000010740    90 OBJECT  LOCAL  DEFAULT   17 _ZTSSt23_Sp_counted_ptr_inplaceIN3aec18RegistrationRecordESaIvELN9__gnu_cxx12_Lock_policyE2EE
+   277: 0000000000008e20  1320 FUNC    LOCAL  DEFAULT   15 _ZN3aec12event_createEPP14aecEventOpaque
+   278: 0000000000010020    47 OBJECT  LOCAL  DEFAULT   17 _ZTSSt11_Mutex_baseILN9__gnu_cxx12_Lock_policyE2EE
+   279: 000000000000c4a0   137 FUNC    LOCAL  DEFAULT   15 _ZN3aec17RegistrationLeaseD2Ev
+   280: 0000000000005040    34 FUNC    LOCAL  DEFAULT   15 _ZN3aec15AllocationLeaseC2ESt10shared_ptrINS_16AllocationRecordEE
+   281: 000000000000c0b0   481 FUNC    LOCAL  DEFAULT   15 _ZN3aec13launch_matmulE11aecKernelId7aecDim3S1_RK11aecGemmArgsP15aecStreamOpaque
+   282: 0000000000009610   850 FUNC    LOCAL  DEFAULT   15 _ZN3aec17build_isa_commandEjjj7aecDim3S0_PKhjR16aecDeviceCommand
+   283: 0000000000007800   524 FUNC    LOCAL  DEFAULT   15 _ZN3aec11event_queryEP14aecEventOpaque
+   284: 00000000000100c0    88 OBJECT  LOCAL  DEFAULT   17 _ZTSSt23_Sp_counted_ptr_inplaceIN3aec16AllocationRecordESaIvELN9__gnu_cxx12_Lock_policyE2EE
+   285: 0000000000007010    33 FUNC    LOCAL  DEFAULT   15 _ZN3aec6finishE8aecError
+   286: 0000000000006360    14 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec16AllocationRecordESaIvELN9__gnu_cxx12_Lock_policyE2EED0Ev
+   287: 000000000000d650    14 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec18RegistrationRecordESaIvELN9__gnu_cxx12_Lock_policyE2EE10_M_destroyEv
+   288: 0000000000006340     5 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec16AllocationRecordESaIvELN9__gnu_cxx12_Lock_policyE2EED1Ev
+   289: 0000000000005210   170 FUNC    LOCAL  DEFAULT   15 _ZN3aec15AllocationLeaseaSEOS0_
+   290: 0000000000010118    16 OBJECT  LOCAL  DEFAULT   17 _ZZNSt19_Sp_make_shared_tag5_S_tiEvE5__tag
+   291: 000000000000c3c0   219 FUNC    LOCAL  DEFAULT   15 _ZN3aec17RegistrationLease7releaseEv
+   292: 0000000000006550   557 FUNC    LOCAL  DEFAULT   15 _ZNSt8_Rb_treeImSt4pairIKmSt10shared_ptrIN3aec16AllocationRecordEEESt10_Select1stIS6_ESt4lessImESaIS6_EE22_M_emplace_hint_uniqueIJRmS5_EEESt17_Rb_tree_iteratorIS6_ESt23_Rb_tree_const_iteratorIS6_EDpOT_
+   293: 0000000000006780   324 FUNC    LOCAL  DEFAULT   15 _ZN3aec30submit_and_validate_completionER16aecDeviceCommandP19aecDeviceCompletion
+   294: 000000000000d340   726 FUNC    LOCAL  DEFAULT   15 _ZN3aec13host_registerEPvm
+   295: 0000000000007040    43 FUNC    LOCAL  DEFAULT   15 _ZN3aec14get_last_errorEv
+   296: 000000000000d060   724 FUNC    LOCAL  DEFAULT   15 _ZN3aec23acquire_registered_spanEPvmRNS_17RegistrationLeaseERb
+   297: 0000000000008150  1357 FUNC    LOCAL  DEFAULT   15 _ZN3aec20event_elapsed_cyclesEP14aecEventOpaqueS1_Pm
+   298: 000000000000e800   784 FUNC    LOCAL  DEFAULT   15 _ZN3aec14stream_destroyEP15aecStreamOpaque
+   299: 0000000000015fe8     0 OBJECT  LOCAL  DEFAULT   27 _GLOBAL_OFFSET_TABLE_
+   300: 000000000000c360    34 FUNC    LOCAL  DEFAULT   15 _ZN3aec17RegistrationLeaseC2ESt10shared_ptrINS_18RegistrationRecordEE
+   301: 000000000000b130   337 FUNC    LOCAL  DEFAULT   15 _ZN3aec11launch_nrm2E7aecDim3S0_RK11aecNrm2ArgsP15aecStreamOpaque
+   302: 0000000000006370    14 FUNC    LOCAL  DEFAULT   15 _ZNSt23_Sp_counted_ptr_inplaceIN3aec16AllocationRecordESaIvELN9__gnu_cxx12_Lock_policyE2EE10_M_destroyEv
+   303: 0000000000006bf0    14 FUNC    LOCAL  DEFAULT   15 _ZN3aec8copy_h2dEmPKvm
+   304: 0000000000005040    34 FUNC    LOCAL  DEFAULT   15 _ZN3aec15AllocationLeaseC1ESt10shared_ptrINS_16AllocationRecordEE
+   305: 0000000000009ab0  1880 FUNC    LOCAL  DEFAULT   15 _ZN3aec6launchEi7aecDim3S0_PKvmP15aecStreamOpaque
+   306: 0000000000004650   155 FUNC    GLOBAL DEFAULT   15 aecDeviceCount
+   307: 0000000000000000     0 OBJECT  GLOBAL DEFAULT  UND _ZTINSt6thread6_StateE@GLIBCXX_3.4.22
+   308: 0000000000004820     9 FUNC    GLOBAL DEFAULT   15 aecGetErrorName
+   309: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND aecDeviceResolveKernel
+   310: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZSt29_Rb_tree_insert_and_rebalancebPSt18_Rb_tree_node_baseS0_RS_@GLIBCXX_3.4
+   311: 0000000000004eb0    52 FUNC    GLOBAL DEFAULT   15 aecMatmulI32
+   312: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZSt9terminatev@GLIBCXX_3.4
+   313: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZNSt18condition_variable4waitERSt11unique_lockISt5mutexE@GLIBCXX_3.4.30
+   314: 0000000000004950    33 FUNC    GLOBAL DEFAULT   15 aecStreamDestroy
+   315: 0000000000004920    33 FUNC    GLOBAL DEFAULT   15 aecStreamCreate
+   316: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZSt17__throw_bad_allocv@GLIBCXX_3.4
+   317: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZSt25__throw_bad_function_callv@GLIBCXX_3.4.14
+   318: 0000000000004cc0   102 FUNC    GLOBAL DEFAULT   15 aecMatmulF8
+   319: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND aecDeviceResetStats
+   320: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __cxa_begin_catch@CXXABI_1.3
+   321: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND aecDeviceSubmit
+   322: 0000000000000000     0 FUNC    WEAK   DEFAULT  UND __cxa_finalize@GLIBC_2.2.5
+   323: 0000000000004e70    52 FUNC    GLOBAL DEFAULT   15 aecMatmulI8
+   324: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZNSt6thread6_StateD2Ev@GLIBCXX_3.4.22
+   325: 0000000000004c10    40 FUNC    GLOBAL DEFAULT   15 aecResetRuntimeStats
+   326: 0000000000004f50    33 FUNC    GLOBAL DEFAULT   15 aecNrm2
+   327: 0000000000004d30    52 FUNC    GLOBAL DEFAULT   15 aecMatmulF16
+   328: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND aecDeviceGetStats
+   329: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZSt20__throw_length_errorPKc@GLIBCXX_3.4
+   330: 0000000000004a40    33 FUNC    GLOBAL DEFAULT   15 aecEventSynchronize
+   331: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND memset@GLIBC_2.2.5
+   332: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZSt28_Rb_tree_rebalance_for_erasePSt18_Rb_tree_node_baseRS_@GLIBCXX_3.4
+   333: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __cxa_guard_release@CXXABI_1.3
+   334: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZSt20__throw_system_errori@GLIBCXX_3.4.11
+   335: 0000000000000000     0 OBJECT  GLOBAL DEFAULT  ABS AEC_2
+   336: 0000000000004db0    52 FUNC    GLOBAL DEFAULT   15 aecMatmulF32
+   337: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZSt18_Rb_tree_incrementPSt18_Rb_tree_node_base@GLIBCXX_3.4
+   338: 0000000000000000     0 OBJECT  GLOBAL DEFAULT  UND _ZTVN10__cxxabiv117__class_type_infoE@CXXABI_1.3
+   339: 0000000000004890    33 FUNC    GLOBAL DEFAULT   15 aecCopyH2D
+   340: 0000000000004980    33 FUNC    GLOBAL DEFAULT   15 aecStreamSync
+   341: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND pthread_mutex_unlock@GLIBC_2.2.5
+   342: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZSt28__throw_bad_array_new_lengthv@GLIBCXX_3.4.29
+   343: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND memcpy@GLIBC_2.14
+   344: 00000000000049e0    33 FUNC    GLOBAL DEFAULT   15 aecEventDestroy
+   345: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND aecDeviceAlloc
+   346: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __cxa_atexit@GLIBC_2.2.5
+   347: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND pthread_self@GLIBC_2.2.5
+   348: 0000000000004a70    33 FUNC    GLOBAL DEFAULT   15 aecEventQuery
+   349: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZNSt6thread15_M_start_threadESt10unique_ptrINS_6_StateESt14default_deleteIS1_EEPFvvE@GLIBCXX_3.4.22
+   350: 0000000000004a10    33 FUNC    GLOBAL DEFAULT   15 aecEventRecord
+   351: 0000000000004aa0    33 FUNC    GLOBAL DEFAULT   15 aecEventElapsedCycles
+   352: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _Znwm@GLIBCXX_3.4
+   353: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZdlPvm@CXXABI_1.3.9
+   354: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZSt18_Rb_tree_decrementPSt18_Rb_tree_node_base@GLIBCXX_3.4
+   355: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __stack_chk_fail@GLIBC_2.4
+   356: 0000000000004810     9 FUNC    GLOBAL DEFAULT   15 aecPeekAtLastError
+   357: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND aecDeviceGetCaps
+   358: 0000000000004d70    52 FUNC    GLOBAL DEFAULT   15 aecMatmulBF16
+   359: 00000000000048f0    33 FUNC    GLOBAL DEFAULT   15 aecCopyAsync
+   360: 0000000000000000     0 OBJECT  GLOBAL DEFAULT  UND __libc_single_threaded@GLIBC_2.32
+   361: 0000000000000000     0 OBJECT  GLOBAL DEFAULT  UND _ZTISt9bad_alloc@GLIBCXX_3.4
+   362: 0000000000000000     0 OBJECT  GLOBAL DEFAULT  UND _ZTVN10__cxxabiv120__si_class_type_infoE@CXXABI_1.3
+   363: 0000000000004ad0    33 FUNC    GLOBAL DEFAULT   15 aecHostRegister
+   364: 0000000000004b00    33 FUNC    GLOBAL DEFAULT   15 aecHostUnregister
+   365: 0000000000004ef0    33 FUNC    GLOBAL DEFAULT   15 aecAxpy
+   366: 0000000000004c40    53 FUNC    GLOBAL DEFAULT   15 aecLaunch
+   367: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZNKSt8__detail20_Prime_rehash_policy14_M_need_rehashEmmm@GLIBCXX_3.4.18
+   368: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND aecDeviceFree
+   369: 0000000000004c80    52 FUNC    GLOBAL DEFAULT   15 aecMatmulF4
+   370: 0000000000004830    33 FUNC    GLOBAL DEFAULT   15 aecAlloc
+   371: 0000000000004800     9 FUNC    GLOBAL DEFAULT   15 aecGetLastError
+   372: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND strcmp@GLIBC_2.2.5
+   373: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZNSt18condition_variableC1Ev@GLIBCXX_3.4.11
+   374: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZSt20__throw_out_of_rangePKc@GLIBCXX_3.4
+   375: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __cxa_rethrow@CXXABI_1.3
+   376: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND pthread_mutex_lock@GLIBC_2.2.5
+   377: 0000000000004860    33 FUNC    GLOBAL DEFAULT   15 aecFree
+   378: 00000000000049b0    33 FUNC    GLOBAL DEFAULT   15 aecEventCreate
+   379: 0000000000004df0    52 FUNC    GLOBAL DEFAULT   15 aecMatmulF64
+   380: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND memmove@GLIBC_2.2.5
+   381: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __cxa_end_catch@CXXABI_1.3
+   382: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __gxx_personality_v0@CXXABI_1.3
+   383: 00000000000046f0   268 FUNC    GLOBAL DEFAULT   15 aecDeviceInfo
+   384: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __tls_get_addr@GLIBC_2.3
+   385: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZNSt18condition_variable10notify_allEv@GLIBCXX_3.4.11
+   386: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZNSt6thread4joinEv@GLIBCXX_3.4.11
+   387: 0000000000004e30    52 FUNC    GLOBAL DEFAULT   15 aecMatmulI4
+   388: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND _ITM_deregisterTMCloneTable
+   389: 00000000000048c0    33 FUNC    GLOBAL DEFAULT   15 aecCopyD2H
+   390: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _Unwind_Resume@GCC_3.0
+   391: 0000000000004f20    33 FUNC    GLOBAL DEFAULT   15 aecDot
+   392: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __cxa_guard_acquire@CXXABI_1.3
+   393: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND _ZNSt18condition_variableD1Ev@GLIBCXX_3.4.11
+   394: 0000000000004b30   219 FUNC    GLOBAL DEFAULT   15 aecGetRuntimeStats
+   395: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND __gmon_start__
+   396: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND _ITM_registerTMCloneTable

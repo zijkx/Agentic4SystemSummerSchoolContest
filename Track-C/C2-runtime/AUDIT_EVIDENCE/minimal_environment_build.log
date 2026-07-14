@@ -1,0 +1,27 @@
+COMMAND: env -i HOME=... PATH=/usr/local/bin:/usr/bin:/bin LANG=C.UTF-8 make clean
+rm -rf bin libaec.so
+EXIT: 0
+COMMAND: env -i HOME=... PATH=/usr/local/bin:/usr/bin:/bin LANG=C.UTF-8 make -j2
+g++ -Iinclude -O2 -g -std=c++17 -fPIC -Wall -Wextra -Wpedantic -ffp-contract=off -fvisibility=hidden -shared src/aec_runtime.cpp src/allocation.cpp src/command.cpp src/copy.cpp src/error.cpp src/event.cpp src/kernel.cpp src/library_ops.cpp src/numeric.cpp src/registration.cpp src/stream.cpp -o libaec.so -Llib -laec_device -pthread \
+	-Wl,-rpath,'$ORIGIN/lib' -Wl,--version-script=src/libaec.map
+EXIT: 0
+COMMAND: env -i HOME=... PATH=/usr/local/bin:/usr/bin:/bin LANG=C.UTF-8 make examples
+mkdir -p bin
+cc -Iinclude -O2 -g -std=c11 -Wall -Wextra -Wpedantic examples/01_device_query.c -o bin/01_device_query \
+	-L. -laec -Wl,-rpath,'$ORIGIN/..'
+mkdir -p bin
+cc -Iinclude -O2 -g -std=c11 -Wall -Wextra -Wpedantic examples/02_isa_encoding.c -o bin/02_isa_encoding \
+	-L. -laec -Wl,-rpath,'$ORIGIN/..'
+mkdir -p bin
+cc -Iinclude -O2 -g -std=c11 -Wall -Wextra -Wpedantic examples/03_vector_add.c -o bin/03_vector_add \
+	-L. -laec -Wl,-rpath,'$ORIGIN/..'
+mkdir -p bin
+cc -Iinclude -O2 -g -std=c11 -Wall -Wextra -Wpedantic examples/04_stream_event.c -o bin/04_stream_event \
+	-L. -laec -Wl,-rpath,'$ORIGIN/..'
+mkdir -p bin
+cc -Iinclude -O2 -g -std=c11 -Wall -Wextra -Wpedantic examples/05_fp32_gemm.c -o bin/05_fp32_gemm \
+	-L. -laec -Wl,-rpath,'$ORIGIN/..'
+mkdir -p bin
+cc -Iinclude -O2 -g -std=c11 -Wall -Wextra -Wpedantic examples/06_registered_copy.c -o bin/06_registered_copy \
+	-L. -laec -Wl,-rpath,'$ORIGIN/..'
+EXIT: 0

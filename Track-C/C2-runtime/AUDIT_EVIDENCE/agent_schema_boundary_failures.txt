@@ -1,0 +1,159 @@
+DMA schema:
+     1	{
+     2	  "$schema": "https://json-schema.org/draft/2020-12/schema",
+     3	  "additionalProperties": false,
+     4	  "properties": {
+     5	    "alignment": {
+     6	      "minimum": 1,
+     7	      "type": "integer"
+     8	    },
+     9	    "bytes": {
+    10	      "minimum": 1,
+    11	      "type": "integer"
+    12	    },
+    13	    "case_id": {
+    14	      "minimum": 0,
+    15	      "type": "integer"
+    16	    },
+    17	    "concurrency": {
+    18	      "maximum": 64,
+    19	      "minimum": 1,
+    20	      "type": "integer"
+    21	    },
+    22	    "direction": {
+    23	      "enum": [
+    24	        "h2d",
+    25	        "d2h"
+    26	      ]
+    27	    },
+    28	    "registered": {
+    29	      "type": "boolean"
+    30	    }
+    31	  },
+    32	  "required": [
+    33	    "case_id",
+    34	    "direction",
+    35	    "bytes",
+    36	    "alignment",
+    37	    "registered",
+    38	    "concurrency"
+    39	  ],
+    40	  "title": "AEC DMA Agent input",
+    41	  "type": "object"
+    42	}
+Kernel schemas:
+     1	{
+     2	  "$schema": "https://json-schema.org/draft/2020-12/schema",
+     3	  "additionalProperties": false,
+     4	  "properties": {
+     5	    "alignment": {
+     6	      "minimum": 1,
+     7	      "type": "integer"
+     8	    },
+     9	    "candidates": {
+    10	      "items": {
+    11	        "additionalProperties": false,
+    12	        "properties": {
+    13	          "alignment": {
+    14	            "minimum": 1,
+    15	            "type": "integer"
+    16	          },
+    17	          "diagnostic_cycles": {
+    18	            "minimum": 1,
+    19	            "type": "integer"
+    20	          },
+    21	          "divisibility": {
+    22	            "minimum": 1,
+    23	            "type": "integer"
+    24	          },
+    25	          "id": {
+    26	            "type": "string"
+    27	          },
+    28	          "image_id": {
+    29	            "minimum": 1,
+    30	            "type": "integer"
+    31	          },
+    32	          "semantic_kernel_id": {
+    33	            "minimum": 1,
+    34	            "type": "integer"
+    35	          },
+    36	          "variant": {
+    37	            "enum": [
+    38	              1,
+    39	              2,
+    40	              3
+    41	            ]
+    42	          },
+    43	          "workspace": {
+    44	            "minimum": 0,
+    45	            "type": "integer"
+    46	          }
+    47	        },
+    48	        "required": [
+    49	          "id",
+    50	          "semantic_kernel_id",
+    51	          "image_id",
+    52	          "variant",
+    53	          "workspace",
+    54	          "alignment",
+    55	          "divisibility"
+    56	        ],
+    57	        "type": "object"
+    58	      },
+    59	      "minItems": 1,
+    60	      "type": "array"
+    61	    },
+    62	    "case_id": {
+    63	      "minimum": 0,
+    64	      "type": "integer"
+    65	    },
+    66	    "dtype": {
+    67	      "type": "string"
+    68	    },
+    69	    "k": {
+    70	      "minimum": 1,
+    71	      "type": "integer"
+    72	    },
+    73	    "m": {
+    74	      "minimum": 1,
+    75	      "type": "integer"
+    76	    },
+    77	    "n": {
+    78	      "minimum": 1,
+    79	      "type": "integer"
+    80	    },
+    81	    "workspace": {
+    82	      "minimum": 0,
+    83	      "type": "integer"
+    84	    }
+    85	  },
+    86	  "required": [
+    87	    "case_id",
+    88	    "dtype",
+    89	    "m",
+    90	    "n",
+    91	    "k",
+    92	    "alignment",
+    93	    "workspace",
+    94	    "candidates"
+    95	  ],
+    96	  "title": "AEC Kernel Agent input",
+    97	  "type": "object"
+    98	}
+     1	{
+     2	  "$schema": "https://json-schema.org/draft/2020-12/schema",
+     3	  "additionalProperties": false,
+     4	  "properties": {
+     5	    "kernel_id": {
+     6	      "type": "string"
+     7	    }
+     8	  },
+     9	  "required": [
+    10	    "kernel_id"
+    11	  ],
+    12	  "title": "AEC Kernel Agent output",
+    13	  "type": "object"
+    14	}
+Observed Agent behavior:
+dma_concurrency_65 exit 2 stdout '' stderr ''
+kernel_empty_id exit 2 stdout '' stderr ''

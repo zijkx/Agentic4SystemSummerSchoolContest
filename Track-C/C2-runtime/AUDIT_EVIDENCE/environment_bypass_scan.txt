@@ -1,0 +1,26 @@
+Track-C/C2-runtime/starter-kit/tools/kernel_policy_generate.py:22:    "ctypes", "os", "pathlib", "socket", "subprocess", "urllib", "requests",
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION.md:347:library, read external files, invoke subprocesses, or access the network.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:162:- Exhaustively matched 120 DMA requests against all legal action combinations and matched 80 dtype/shape Kernel requests against the official read-only evaluator's minimum cycles.
+Track-C/C2-runtime/starter-kit/REVIEW_GUIDE.md:5:1. `IMPLEMENTATION_PLAN.md`: environment, frozen contracts, requirement status, and invariants.
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:13:import subprocess
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:160:        configured = os.environ.get("AEC_DEVICE_LIBRARY")
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:992:    environment = {"PATH": os.environ.get("PATH", ""), "PYTHONHASHSEED": "0"}
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:993:    result = subprocess.run(
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:999:        env=environment,
+Track-C/C2-runtime/starter-kit/cases/run_case.py:8:import subprocess
+Track-C/C2-runtime/starter-kit/cases/run_case.py:24:        result = subprocess.run(command, cwd=ROOT, text=True, check=False)
+Track-C/C2-runtime/starter-kit/tests/test_agents.py:11:import subprocess
+Track-C/C2-runtime/starter-kit/tests/test_agents.py:31:    result = subprocess.run(
+Track-C/C2-runtime/starter-kit/tests/test_immutable.py:9:import subprocess
+Track-C/C2-runtime/starter-kit/tests/test_immutable.py:107:    git_root_result = subprocess.run(
+Track-C/C2-runtime/starter-kit/tests/test_immutable.py:114:    diff = subprocess.run(
+Track-C/C2-runtime/starter-kit/tests/test_kernel_agent_optimality.py:12:import subprocess
+Track-C/C2-runtime/starter-kit/tests/test_kernel_agent_optimality.py:51:    result = subprocess.run(
+Track-C/C2-runtime/starter-kit/tests/test_kernel_agent_optimality.py:89:    assert not imports & {"ctypes", "os", "pathlib", "socket", "subprocess",
+Track-C/C2-runtime/starter-kit/tests/test_kernel_agent_optimality.py:90:                          "urllib", "requests"}
+Track-C/C2-runtime/starter-kit/tests/test_kernel_agent_optimality.py:119:    subprocess_cases = 0
+Track-C/C2-runtime/starter-kit/tests/test_kernel_agent_optimality.py:143:                        subprocess_cases += 1
+Track-C/C2-runtime/starter-kit/tests/test_kernel_agent_optimality.py:178:    invalid_requests = [
+Track-C/C2-runtime/starter-kit/tests/test_kernel_agent_optimality.py:187:    for invalid in invalid_requests:
+Track-C/C2-runtime/starter-kit/tests/test_kernel_agent_optimality.py:195:        result = subprocess.run(
+Track-C/C2-runtime/starter-kit/tests/test_kernel_agent_optimality.py:212:        f"calls={EXPECTED_ORACLE_CALLS}, subset/permutation cases={subprocess_cases}, "

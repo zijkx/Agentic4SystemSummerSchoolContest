@@ -1,0 +1,12 @@
+Track-C/C2-runtime/starter-kit/src/serialization.h:16:        for (size_t index = 0; index < 4; ++index) {
+Track-C/C2-runtime/starter-kit/src/serialization.h:24:        for (size_t index = 0; index < 8; ++index) {
+Track-C/C2-runtime/starter-kit/src/serialization.h:33:        std::memcpy(&bits, &value, sizeof(bits));
+Track-C/C2-runtime/starter-kit/src/aec_runtime.cpp:62:    std::memcpy(&error_value, &error, sizeof(error_value));
+Track-C/C2-runtime/starter-kit/src/aec_runtime.cpp:82:    std::memcpy(&direction_value, &direction, sizeof(direction_value));
+Track-C/C2-runtime/starter-kit/src/aec_runtime.cpp:133:        std::memcpy(stats, &device_stats, sizeof(*stats));
+Track-C/C2-runtime/starter-kit/src/aec_runtime.cpp:149:    std::memcpy(&kernel_value, &kernel, sizeof(kernel_value));
+Track-C/C2-runtime/starter-kit/src/aec_runtime.cpp:166:    std::memcpy(&format_value, &format, sizeof(format_value));
+Track-C/C2-runtime/starter-kit/src/stream.cpp:68:        for (;;) {
+Track-C/C2-runtime/starter-kit/src/stream.cpp:121:        for (auto &entry : live) {
+Track-C/C2-runtime/starter-kit/src/kernel.cpp:31:    std::memcpy(&field, raw + offset, sizeof(field));
+Track-C/C2-runtime/starter-kit/src/kernel.cpp:135:    std::memcpy(command.parameters, parameters, parameter_bytes);

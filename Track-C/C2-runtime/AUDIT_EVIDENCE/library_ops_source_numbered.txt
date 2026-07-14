@@ -1,0 +1,185 @@
+     1	#include "library_ops.h"
+     2	
+     3	#include "aec_device_abi.h"
+     4	#include "aec_isa.h"
+     5	#include "allocation.h"
+     6	#include "command.h"
+     7	#include "kernel.h"
+     8	#include "serialization.h"
+     9	#include "stream.h"
+    10	
+    11	#include <limits>
+    12	#include <memory>
+    13	
+    14	namespace aec {
+    15	namespace {
+    16	
+    17	constexpr uint64_t kMaxVectorElements = 1048576;
+    18	
+    19	struct PreparedVectorOp {
+    20	    aecDeviceCommand command{};
+    21	    AllocationLease first;
+    22	    AllocationLease second;
+    23	    AllocationLease output;
+    24	};
+    25	
+    26	bool spans_overlap(aecDevicePtr left, uint64_t left_bytes,
+    27	                   aecDevicePtr right, uint64_t right_bytes) noexcept {
+    28	    if (left <= right) return right - left < left_bytes;
+    29	    return left - right < right_bytes;
+    30	}
+    31	
+    32	aecError_t vector_bytes(uint64_t count, uint64_t &bytes) noexcept {
+    33	    if (count == 0 || count > kMaxVectorElements ||
+    34	        count > std::numeric_limits<uint64_t>::max() / sizeof(float)) {
+    35	        return AEC_ERROR_INVALID_ARGUMENT;
+    36	    }
+    37	    bytes = count * sizeof(float);
+    38	    return AEC_SUCCESS;
+    39	}
+    40	
+    41	aecError_t execute_or_enqueue(const std::shared_ptr<PreparedVectorOp> &prepared,
+    42	                              aecError_t preflight, aecStream_t stream) {
+    43	    if (stream == nullptr) {
+    44	        if (preflight != AEC_SUCCESS) return preflight;
+    45	        return submit_and_validate_completion(prepared->command);
+    46	    }
+    47	    return enqueue_stream_work(stream, [prepared, preflight](uint64_t stream_id) {
+    48	        if (preflight != AEC_SUCCESS) return preflight;
+    49	        prepared->command.stream_id = stream_id;
+    50	        return submit_and_validate_completion(prepared->command);
+    51	    });
+    52	}
+    53	
+    54	aecError_t prepare_axpy(aecDevicePtr x, aecDevicePtr y, uint64_t count,
+    55	                        float alpha, aecDim3 grid, aecDim3 block,
+    56	                        PreparedVectorOp &prepared) {
+    57	    uint64_t bytes = 0;
+    58	    aecError_t status = vector_bytes(count, bytes);
+    59	    if (status != AEC_SUCCESS) return status;
+    60	    if (x != y && spans_overlap(x, bytes, y, bytes)) {
+    61	        return AEC_ERROR_INVALID_ARGUMENT;
+    62	    }
+    63	    status = acquire_device_span(x, bytes, prepared.first);
+    64	    if (status != AEC_SUCCESS) return status;
+    65	    status = acquire_device_span(y, bytes, prepared.output);
+    66	    if (status != AEC_SUCCESS) return status;
+    67	
+    68	    ParameterBlock<AEC_DEVICE_MAX_PARAM_BYTES> parameters;
+    69	    if (!parameters.put_u64(0, x) || !parameters.put_u64(8, y) ||
+    70	        !parameters.put_u64(16, count) || !parameters.put_f32(24, alpha)) {
+    71	        return AEC_ERROR_INTERNAL;
+    72	    }
+    73	    return build_isa_command(
+    74	        AEC_KERNEL_AXPY_F32, AEC_DTYPE_FP32, AEC_KERNEL_VARIANT_DEFAULT,
+    75	        grid, block, parameters.data(), AEC_KERNEL_PARAM_AXPY_BYTES,
+    76	        prepared.command);
+    77	}
+    78	
+    79	aecError_t prepare_dot(aecDevicePtr x, aecDevicePtr y, aecDevicePtr result,
+    80	                       uint64_t count, aecDim3 grid, aecDim3 block,
+    81	                       PreparedVectorOp &prepared) {
+    82	    uint64_t bytes = 0;
+    83	    aecError_t status = vector_bytes(count, bytes);
+    84	    if (status != AEC_SUCCESS) return status;
+    85	    if (spans_overlap(result, sizeof(float), x, bytes) ||
+    86	        spans_overlap(result, sizeof(float), y, bytes)) {
+    87	        return AEC_ERROR_INVALID_ARGUMENT;
+    88	    }
+    89	    status = acquire_device_span(x, bytes, prepared.first);
+    90	    if (status != AEC_SUCCESS) return status;
+    91	    status = acquire_device_span(y, bytes, prepared.second);
+    92	    if (status != AEC_SUCCESS) return status;
+    93	    status = acquire_device_span(result, sizeof(float), prepared.output);
+    94	    if (status != AEC_SUCCESS) return status;
+    95	
+    96	    ParameterBlock<AEC_DEVICE_MAX_PARAM_BYTES> parameters;
+    97	    if (!parameters.put_u64(0, x) || !parameters.put_u64(8, y) ||
+    98	        !parameters.put_u64(16, result) ||
+    99	        !parameters.put_u64(24, count)) {
+   100	        return AEC_ERROR_INTERNAL;
+   101	    }
+   102	    return build_isa_command(
+   103	        AEC_KERNEL_DOT_F32, AEC_DTYPE_FP32, AEC_KERNEL_VARIANT_DEFAULT,
+   104	        grid, block, parameters.data(), AEC_KERNEL_PARAM_DOT_BYTES,
+   105	        prepared.command);
+   106	}
+   107	
+   108	aecError_t prepare_nrm2(aecDevicePtr x, aecDevicePtr result, uint64_t count,
+   109	                        aecDim3 grid, aecDim3 block,
+   110	                        PreparedVectorOp &prepared) {
+   111	    uint64_t bytes = 0;
+   112	    aecError_t status = vector_bytes(count, bytes);
+   113	    if (status != AEC_SUCCESS) return status;
+   114	    if (spans_overlap(result, sizeof(float), x, bytes)) {
+   115	        return AEC_ERROR_INVALID_ARGUMENT;
+   116	    }
+   117	    status = acquire_device_span(x, bytes, prepared.first);
+   118	    if (status != AEC_SUCCESS) return status;
+   119	    status = acquire_device_span(result, sizeof(float), prepared.output);
+   120	    if (status != AEC_SUCCESS) return status;
+   121	
+   122	    ParameterBlock<AEC_DEVICE_MAX_PARAM_BYTES> parameters;
+   123	    if (!parameters.put_u64(0, x) || !parameters.put_u64(8, result) ||
+   124	        !parameters.put_u64(16, count)) {
+   125	        return AEC_ERROR_INTERNAL;
+   126	    }
+   127	    return build_isa_command(
+   128	        AEC_KERNEL_NRM2_F32, AEC_DTYPE_FP32, AEC_KERNEL_VARIANT_DEFAULT,
+   129	        grid, block, parameters.data(), AEC_KERNEL_PARAM_NRM2_BYTES,
+   130	        prepared.command);
+   131	}
+   132	
+   133	} // namespace
+   134	
+   135	aecError_t axpy(aecDevicePtr x, aecDevicePtr y, uint64_t count, float alpha,
+   136	                aecStream_t stream) {
+   137	    auto prepared = std::make_shared<PreparedVectorOp>();
+   138	    const uint32_t grid_x = static_cast<uint32_t>((count + 31) / 32);
+   139	    const aecError_t status = prepare_axpy(
+   140	        x, y, count, alpha, {grid_x, 1, 1}, {32, 1, 1}, *prepared);
+   141	    return execute_or_enqueue(prepared, status, stream);
+   142	}
+   143	
+   144	aecError_t dot(aecDevicePtr x, aecDevicePtr y, aecDevicePtr result,
+   145	               uint64_t count, aecStream_t stream) {
+   146	    auto prepared = std::make_shared<PreparedVectorOp>();
+   147	    const aecError_t status = prepare_dot(
+   148	        x, y, result, count, {1, 1, 1}, {1, 1, 1}, *prepared);
+   149	    return execute_or_enqueue(prepared, status, stream);
+   150	}
+   151	
+   152	aecError_t nrm2(aecDevicePtr x, aecDevicePtr result, uint64_t count,
+   153	                aecStream_t stream) {
+   154	    auto prepared = std::make_shared<PreparedVectorOp>();
+   155	    const aecError_t status = prepare_nrm2(
+   156	        x, result, count, {1, 1, 1}, {1, 1, 1}, *prepared);
+   157	    return execute_or_enqueue(prepared, status, stream);
+   158	}
+   159	
+   160	aecError_t launch_axpy(aecDim3 grid, aecDim3 block, const aecAxpyArgs &args,
+   161	                       aecStream_t stream) {
+   162	    if (args.reserved != 0) return AEC_ERROR_INVALID_ARGUMENT;
+   163	    auto prepared = std::make_shared<PreparedVectorOp>();
+   164	    const aecError_t status = prepare_axpy(
+   165	        args.x, args.y, args.count, args.alpha, grid, block, *prepared);
+   166	    return execute_or_enqueue(prepared, status, stream);
+   167	}
+   168	
+   169	aecError_t launch_dot(aecDim3 grid, aecDim3 block, const aecDotArgs &args,
+   170	                      aecStream_t stream) {
+   171	    auto prepared = std::make_shared<PreparedVectorOp>();
+   172	    const aecError_t status = prepare_dot(
+   173	        args.x, args.y, args.result, args.count, grid, block, *prepared);
+   174	    return execute_or_enqueue(prepared, status, stream);
+   175	}
+   176	
+   177	aecError_t launch_nrm2(aecDim3 grid, aecDim3 block, const aecNrm2Args &args,
+   178	                       aecStream_t stream) {
+   179	    auto prepared = std::make_shared<PreparedVectorOp>();
+   180	    const aecError_t status = prepare_nrm2(
+   181	        args.x, args.result, args.count, grid, block, *prepared);
+   182	    return execute_or_enqueue(prepared, status, stream);
+   183	}
+   184	
+   185	} // namespace aec

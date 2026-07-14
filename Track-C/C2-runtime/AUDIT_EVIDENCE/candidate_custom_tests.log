@@ -1,0 +1,15 @@
+COMMAND: python3 tests/test_agents.py --submission .
+PASS custom Agents: schema/purity + 120 DMA optima + 80 Kernel optima
+EXIT: 0
+COMMAND: python3 tests/test_immutable.py --submission .
+PASS immutable audit: 73 manifest files, 34 fixed images, official release/static diff clean
+EXIT: 0
+COMMAND: python3 tests/test_kernel_agent_optimality.py --submission .
+Traceback (most recent call last):
+  File "/tmp/c2-candidate-clean-a4c3a47/Track-C/C2-runtime/starter-kit/tests/test_kernel_agent_optimality.py", line 219, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/tmp/c2-candidate-clean-a4c3a47/Track-C/C2-runtime/starter-kit/tests/test_kernel_agent_optimality.py", line 209, in main
+    assert p99_ms < 20.0, f"Kernel Agent p99 is {p99_ms:.3f} ms"
+           ^^^^^^^^^^^^^
+AssertionError: Kernel Agent p99 is 21.474 ms

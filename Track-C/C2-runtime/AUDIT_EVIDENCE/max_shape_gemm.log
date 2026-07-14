@@ -1,0 +1,11 @@
+PASS fp4_e2m1: bytes=32768/32768/32768, cycles=491667, retired=288076
+PASS fp8_e4m3: bytes=65536/65536/65536, cycles=491667, retired=288076
+PASS fp8_e5m2: bytes=65536/65536/65536, cycles=491667, retired=288076
+PASS fp16: bytes=131072/131072/131072, cycles=491667, retired=288076
+PASS bf16: bytes=131072/131072/131072, cycles=491667, retired=288076
+PASS fp32: bytes=262144/262144/262144, cycles=491667, retired=288076
+PASS fp64: bytes=524288/524288/524288, cycles=491667, retired=288076
+PASS int4: bytes=32768/32768/262144, cycles=491667, retired=288076
+PASS int8: bytes=65536/65536/262144, cycles=491667, retired=288076
+PASS int32: bytes=262144/262144/262144, cycles=491667, retired=288076
+exit=0

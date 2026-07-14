@@ -1,0 +1,44 @@
+Track-C/C2-runtime/starter-kit/src/command.cpp:24:aecError_t submit_and_validate_completion(
+Track-C/C2-runtime/starter-kit/src/command.cpp:42:    const aecDeviceStatus submit_status = aecDeviceSubmit(&command, &completion);
+Track-C/C2-runtime/starter-kit/src/command.cpp:89:    return submit_and_validate_completion(command);
+Track-C/C2-runtime/starter-kit/src/aec_runtime.cpp:145:aecError_t aecLaunch(aecKernelId kernel, aecDim3 grid, aecDim3 block,
+Track-C/C2-runtime/starter-kit/src/aec_runtime.cpp:154:aecError_t aecMatmulF4(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+Track-C/C2-runtime/starter-kit/src/aec_runtime.cpp:161:aecError_t aecMatmulF8(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+Track-C/C2-runtime/starter-kit/src/aec_runtime.cpp:179:aecError_t aecMatmulF16(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+Track-C/C2-runtime/starter-kit/src/aec_runtime.cpp:186:aecError_t aecMatmulBF16(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+Track-C/C2-runtime/starter-kit/src/aec_runtime.cpp:193:aecError_t aecMatmulF32(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+Track-C/C2-runtime/starter-kit/src/aec_runtime.cpp:200:aecError_t aecMatmulF64(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+Track-C/C2-runtime/starter-kit/src/aec_runtime.cpp:207:aecError_t aecMatmulI4(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+Track-C/C2-runtime/starter-kit/src/aec_runtime.cpp:214:aecError_t aecMatmulI8(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+Track-C/C2-runtime/starter-kit/src/aec_runtime.cpp:221:aecError_t aecMatmulI32(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+Track-C/C2-runtime/starter-kit/src/aec_runtime.cpp:228:aecError_t aecAxpy(aecDevicePtr x, aecDevicePtr y, uint64_t count,
+Track-C/C2-runtime/starter-kit/src/aec_runtime.cpp:234:aecError_t aecDot(aecDevicePtr x, aecDevicePtr y, aecDevicePtr result,
+Track-C/C2-runtime/starter-kit/src/aec_runtime.cpp:240:aecError_t aecNrm2(aecDevicePtr x, aecDevicePtr result, uint64_t count,
+Track-C/C2-runtime/starter-kit/src/kernel.cpp:63:    const aecError_t status = map_device_status(aecDeviceResolveKernel(
+Track-C/C2-runtime/starter-kit/src/kernel.cpp:101:    return build_isa_command(
+Track-C/C2-runtime/starter-kit/src/kernel.cpp:109:aecError_t build_isa_command(uint32_t semantic_kernel, uint32_t dtype,
+Track-C/C2-runtime/starter-kit/src/kernel.cpp:128:    command.opcode = AEC_DEVICE_OP_ISA_LAUNCH;
+Track-C/C2-runtime/starter-kit/src/kernel.cpp:163:            return submit_and_validate_completion(prepared->command);
+Track-C/C2-runtime/starter-kit/src/kernel.cpp:169:                return submit_and_validate_completion(prepared->command);
+Track-C/C2-runtime/starter-kit/src/kernel.h:11:aecError_t build_isa_command(uint32_t semantic_kernel, uint32_t dtype,
+Track-C/C2-runtime/starter-kit/src/command.h:11:aecError_t submit_and_validate_completion(
+Track-C/C2-runtime/starter-kit/src/numeric.cpp:70:aecError_t prepare_matmul(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+Track-C/C2-runtime/starter-kit/src/numeric.cpp:119:    const aecError_t command_status = build_isa_command(
+Track-C/C2-runtime/starter-kit/src/numeric.cpp:135:        return submit_and_validate_completion(prepared->command);
+Track-C/C2-runtime/starter-kit/src/numeric.cpp:140:        return submit_and_validate_completion(prepared->command);
+Track-C/C2-runtime/starter-kit/src/numeric.cpp:155:    const aecError_t status = prepare_matmul(
+Track-C/C2-runtime/starter-kit/src/numeric.cpp:178:    const aecError_t status = prepare_matmul(
+Track-C/C2-runtime/starter-kit/src/library_ops.cpp:45:        return submit_and_validate_completion(prepared->command);
+Track-C/C2-runtime/starter-kit/src/library_ops.cpp:50:        return submit_and_validate_completion(prepared->command);
+Track-C/C2-runtime/starter-kit/src/library_ops.cpp:54:aecError_t prepare_axpy(aecDevicePtr x, aecDevicePtr y, uint64_t count,
+Track-C/C2-runtime/starter-kit/src/library_ops.cpp:73:    return build_isa_command(
+Track-C/C2-runtime/starter-kit/src/library_ops.cpp:79:aecError_t prepare_dot(aecDevicePtr x, aecDevicePtr y, aecDevicePtr result,
+Track-C/C2-runtime/starter-kit/src/library_ops.cpp:102:    return build_isa_command(
+Track-C/C2-runtime/starter-kit/src/library_ops.cpp:108:aecError_t prepare_nrm2(aecDevicePtr x, aecDevicePtr result, uint64_t count,
+Track-C/C2-runtime/starter-kit/src/library_ops.cpp:127:    return build_isa_command(
+Track-C/C2-runtime/starter-kit/src/library_ops.cpp:139:    const aecError_t status = prepare_axpy(
+Track-C/C2-runtime/starter-kit/src/library_ops.cpp:147:    const aecError_t status = prepare_dot(
+Track-C/C2-runtime/starter-kit/src/library_ops.cpp:155:    const aecError_t status = prepare_nrm2(
+Track-C/C2-runtime/starter-kit/src/library_ops.cpp:164:    const aecError_t status = prepare_axpy(
+Track-C/C2-runtime/starter-kit/src/library_ops.cpp:172:    const aecError_t status = prepare_dot(
+Track-C/C2-runtime/starter-kit/src/library_ops.cpp:180:    const aecError_t status = prepare_nrm2(

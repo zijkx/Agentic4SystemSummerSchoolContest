@@ -1,0 +1,7 @@
+expected_count=36
+actual_count=36
+symbol_diff_lines=0
+runpath_lines:
+ 0x000000000000001d (RUNPATH)            Library runpath: [$ORIGIN/lib]
+unresolved_ldd_lines:
+absolute_path_strings:

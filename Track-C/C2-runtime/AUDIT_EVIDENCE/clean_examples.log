@@ -1,0 +1,22 @@
+COMMAND: bin/01_device_query
+AEC Deterministic Virtual Device: Runtime ABI 2, AEC ISA 2/profile 1, memory 67108864 bytes
+EXIT: 0
+COMMAND: bin/02_isa_encoding
+little-endian words: 00000004 00000003 00010002 00018003
+EXIT: 0
+COMMAND: bin/03_vector_add
+c[0] = 1.500
+c[1] = 0.000
+c[2] = 2.000
+c[3] = 12.000
+c[4] = 0.000
+EXIT: 0
+COMMAND: bin/04_stream_event
+copy interval: 228 virtual cycles
+EXIT: 0
+COMMAND: bin/05_fp32_gemm
+0.000000 -4.250000 -4.875000 10.000000 13.500000 4.750000
+EXIT: 0
+COMMAND: bin/06_registered_copy
+zero-copy commands: 1
+EXIT: 0

@@ -1,0 +1,4 @@
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION.md:354:Codex/large-language-model assistance was used for implementation, test design,
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION.md:356:team responsibility; no third-party implementation was copied. Runtime code
+Track-C/C2-runtime/starter-kit/docs/06_提交与公开测试指南.md:122:赛事环境未声明的第三方动态库、绝对路径或网络服务。压缩包格式、大小上限、提交次数和
+Track-C/C2-runtime/starter-kit/tutorial/README.md:122:赛事环境未声明的第三方动态库、绝对路径或网络服务。压缩包格式、大小上限、提交次数和

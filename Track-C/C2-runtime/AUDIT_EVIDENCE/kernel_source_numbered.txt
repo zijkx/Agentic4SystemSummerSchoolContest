@@ -1,0 +1,224 @@
+     1	#include "kernel.h"
+     2	
+     3	#include "aec_device_abi.h"
+     4	#include "aec_isa.h"
+     5	#include "allocation.h"
+     6	#include "command.h"
+     7	#include "error.h"
+     8	#include "library_ops.h"
+     9	#include "numeric.h"
+    10	#include "serialization.h"
+    11	#include "stream.h"
+    12	
+    13	#include <cstring>
+    14	#include <limits>
+    15	#include <memory>
+    16	
+    17	namespace aec {
+    18	namespace {
+    19	
+    20	constexpr uint64_t kMaxVectorElements = 1048576;
+    21	
+    22	struct PreparedLaunch {
+    23	    aecDeviceCommand command{};
+    24	    AllocationLease first;
+    25	    AllocationLease second;
+    26	    AllocationLease output;
+    27	};
+    28	
+    29	template <typename Field>
+    30	void read_field(const uint8_t *raw, size_t offset, Field &field) noexcept {
+    31	    std::memcpy(&field, raw + offset, sizeof(field));
+    32	}
+    33	
+    34	bool spans_overlap(aecDevicePtr left, uint64_t left_bytes,
+    35	                   aecDevicePtr right, uint64_t right_bytes) noexcept {
+    36	    if (left <= right) return right - left < left_bytes;
+    37	    return left - right < right_bytes;
+    38	}
+    39	
+    40	aecError_t validate_dimensions(aecDim3 grid, aecDim3 block) {
+    41	    if (grid.x == 0 || grid.y == 0 || grid.z == 0 ||
+    42	        block.x == 0 || block.y == 0 || block.z == 0) {
+    43	        return AEC_ERROR_INVALID_ARGUMENT;
+    44	    }
+    45	    const uint64_t xy = static_cast<uint64_t>(block.x) * block.y;
+    46	    if (block.z != 0 && xy > std::numeric_limits<uint64_t>::max() / block.z) {
+    47	        return AEC_ERROR_INVALID_ARGUMENT;
+    48	    }
+    49	    const uint64_t volume = xy * block.z;
+    50	    aecDeviceCaps caps{};
+    51	    const aecError_t caps_status = map_device_status(aecDeviceGetCaps(&caps));
+    52	    if (caps_status != AEC_SUCCESS) return caps_status;
+    53	    if (caps.abi_version != AEC_DEVICE_ABI_VERSION ||
+    54	        volume > caps.max_threads_per_block) {
+    55	        return AEC_ERROR_INVALID_ARGUMENT;
+    56	    }
+    57	    return AEC_SUCCESS;
+    58	}
+    59	
+    60	aecError_t resolve_kernel(uint32_t semantic_kernel, uint32_t dtype,
+    61	                          uint32_t variant, uint32_t parameter_bytes,
+    62	                          aecDeviceKernelInfo &info) {
+    63	    const aecError_t status = map_device_status(aecDeviceResolveKernel(
+    64	        semantic_kernel, dtype, variant, &info));
+    65	    if (status != AEC_SUCCESS) return status;
+    66	    if (info.abi_version != AEC_DEVICE_ABI_VERSION ||
+    67	        info.isa_version != AEC_ISA_VERSION || info.handle == 0 ||
+    68	        info.parameter_bytes != parameter_bytes || info.instruction_hash == 0) {
+    69	        return AEC_ERROR_INTERNAL;
+    70	    }
+    71	    return AEC_SUCCESS;
+    72	}
+    73	
+    74	aecError_t prepare_vector_add(aecDim3 grid, aecDim3 block,
+    75	                              const aecVectorAddArgs &args,
+    76	                              PreparedLaunch &prepared) {
+    77	    if (args.count == 0 || args.count > kMaxVectorElements ||
+    78	        args.count > std::numeric_limits<uint64_t>::max() / sizeof(float)) {
+    79	        return AEC_ERROR_INVALID_ARGUMENT;
+    80	    }
+    81	    const uint64_t bytes = args.count * sizeof(float);
+    82	    if (spans_overlap(args.c, bytes, args.a, bytes) ||
+    83	        spans_overlap(args.c, bytes, args.b, bytes)) {
+    84	        return AEC_ERROR_INVALID_ARGUMENT;
+    85	    }
+    86	
+    87	    aecError_t status = acquire_device_span(args.a, bytes, prepared.first);
+    88	    if (status != AEC_SUCCESS) return status;
+    89	    status = acquire_device_span(args.b, bytes, prepared.second);
+    90	    if (status != AEC_SUCCESS) return status;
+    91	    status = acquire_device_span(args.c, bytes, prepared.output);
+    92	    if (status != AEC_SUCCESS) return status;
+    93	
+    94	    ParameterBlock<AEC_DEVICE_MAX_PARAM_BYTES> parameters;
+    95	    if (!parameters.put_u64(0, args.a) || !parameters.put_u64(8, args.b) ||
+    96	        !parameters.put_u64(16, args.c) ||
+    97	        !parameters.put_u64(24, args.count)) {
+    98	        return AEC_ERROR_INTERNAL;
+    99	    }
+   100	
+   101	    return build_isa_command(
+   102	        AEC_KERNEL_VECTOR_ADD_F32, AEC_DTYPE_FP32,
+   103	        AEC_KERNEL_VARIANT_DEFAULT, grid, block, parameters.data(),
+   104	        AEC_KERNEL_PARAM_VECTOR_ADD_BYTES, prepared.command);
+   105	}
+   106	
+   107	} // namespace
+   108	
+   109	aecError_t build_isa_command(uint32_t semantic_kernel, uint32_t dtype,
+   110	                             uint32_t variant, aecDim3 grid, aecDim3 block,
+   111	                             const uint8_t *parameters,
+   112	                             uint32_t parameter_bytes,
+   113	                             aecDeviceCommand &command) {
+   114	    const aecError_t dimension_status = validate_dimensions(grid, block);
+   115	    if (dimension_status != AEC_SUCCESS) return dimension_status;
+   116	    if (parameters == nullptr || parameter_bytes == 0 ||
+   117	        parameter_bytes > AEC_DEVICE_MAX_PARAM_BYTES) {
+   118	        return AEC_ERROR_INVALID_ARGUMENT;
+   119	    }
+   120	
+   121	    aecDeviceKernelInfo info{};
+   122	    const aecError_t resolve_status = resolve_kernel(
+   123	        semantic_kernel, dtype, variant, parameter_bytes, info);
+   124	    if (resolve_status != AEC_SUCCESS) return resolve_status;
+   125	
+   126	    command = {};
+   127	    command.abi_version = AEC_DEVICE_ABI_VERSION;
+   128	    command.opcode = AEC_DEVICE_OP_ISA_LAUNCH;
+   129	    command.kernel_handle = info.handle;
+   130	    command.isa_version = info.isa_version;
+   131	    command.entry_pc = info.entry_pc;
+   132	    command.grid = {grid.x, grid.y, grid.z};
+   133	    command.block = {block.x, block.y, block.z};
+   134	    command.parameter_bytes = info.parameter_bytes;
+   135	    std::memcpy(command.parameters, parameters, parameter_bytes);
+   136	    return AEC_SUCCESS;
+   137	}
+   138	
+   139	aecError_t launch(int kernel, aecDim3 grid, aecDim3 block,
+   140	                  const void *args, size_t args_size, aecStream_t stream) {
+   141	    const aecError_t dimension_status = validate_dimensions(grid, block);
+   142	    if (dimension_status != AEC_SUCCESS) return dimension_status;
+   143	    if (args == nullptr) return AEC_ERROR_INVALID_ARGUMENT;
+   144	
+   145	    // Read each native API field independently so caller alignment is not
+   146	    // assumed and native tail padding can never enter the wire parameter block.
+   147	    const auto *raw_args = static_cast<const uint8_t *>(args);
+   148	    if (kernel == AEC_KERNEL_VECTOR_ADD_F32) {
+   149	        if (args_size != sizeof(aecVectorAddArgs)) {
+   150	            return AEC_ERROR_INVALID_ARGUMENT;
+   151	        }
+   152	        aecVectorAddArgs vector_args{};
+   153	        read_field(raw_args, offsetof(aecVectorAddArgs, a), vector_args.a);
+   154	        read_field(raw_args, offsetof(aecVectorAddArgs, b), vector_args.b);
+   155	        read_field(raw_args, offsetof(aecVectorAddArgs, c), vector_args.c);
+   156	        read_field(raw_args, offsetof(aecVectorAddArgs, count),
+   157	                   vector_args.count);
+   158	        auto prepared = std::make_shared<PreparedLaunch>();
+   159	        const aecError_t status = prepare_vector_add(
+   160	            grid, block, vector_args, *prepared);
+   161	        if (stream == nullptr) {
+   162	            if (status != AEC_SUCCESS) return status;
+   163	            return submit_and_validate_completion(prepared->command);
+   164	        }
+   165	        return enqueue_stream_work(stream,
+   166	            [prepared, status](uint64_t stream_id) {
+   167	                if (status != AEC_SUCCESS) return status;
+   168	                prepared->command.stream_id = stream_id;
+   169	                return submit_and_validate_completion(prepared->command);
+   170	            });
+   171	    }
+   172	
+   173	    if (kernel == AEC_KERNEL_GEMM_NAIVE ||
+   174	        kernel == AEC_KERNEL_GEMM_TILED ||
+   175	        kernel == AEC_KERNEL_GEMM_VECTORIZED) {
+   176	        if (args_size != sizeof(aecGemmArgs)) return AEC_ERROR_INVALID_ARGUMENT;
+   177	        aecGemmArgs gemm_args{};
+   178	        read_field(raw_args, offsetof(aecGemmArgs, a), gemm_args.a);
+   179	        read_field(raw_args, offsetof(aecGemmArgs, b), gemm_args.b);
+   180	        read_field(raw_args, offsetof(aecGemmArgs, c), gemm_args.c);
+   181	        read_field(raw_args, offsetof(aecGemmArgs, m), gemm_args.m);
+   182	        read_field(raw_args, offsetof(aecGemmArgs, n), gemm_args.n);
+   183	        read_field(raw_args, offsetof(aecGemmArgs, k), gemm_args.k);
+   184	        read_field(raw_args, offsetof(aecGemmArgs, dtype), gemm_args.dtype);
+   185	        read_field(raw_args, offsetof(aecGemmArgs, reserved),
+   186	                   gemm_args.reserved);
+   187	        return launch_matmul(static_cast<aecKernelId>(kernel), grid, block,
+   188	                             gemm_args, stream);
+   189	    }
+   190	
+   191	    if (kernel == AEC_KERNEL_AXPY_F32) {
+   192	        if (args_size != sizeof(aecAxpyArgs)) return AEC_ERROR_INVALID_ARGUMENT;
+   193	        aecAxpyArgs axpy_args{};
+   194	        read_field(raw_args, offsetof(aecAxpyArgs, x), axpy_args.x);
+   195	        read_field(raw_args, offsetof(aecAxpyArgs, y), axpy_args.y);
+   196	        read_field(raw_args, offsetof(aecAxpyArgs, count), axpy_args.count);
+   197	        read_field(raw_args, offsetof(aecAxpyArgs, alpha), axpy_args.alpha);
+   198	        read_field(raw_args, offsetof(aecAxpyArgs, reserved),
+   199	                   axpy_args.reserved);
+   200	        return launch_axpy(grid, block, axpy_args, stream);
+   201	    }
+   202	
+   203	    if (kernel == AEC_KERNEL_DOT_F32) {
+   204	        if (args_size != sizeof(aecDotArgs)) return AEC_ERROR_INVALID_ARGUMENT;
+   205	        aecDotArgs dot_args{};
+   206	        read_field(raw_args, offsetof(aecDotArgs, x), dot_args.x);
+   207	        read_field(raw_args, offsetof(aecDotArgs, y), dot_args.y);
+   208	        read_field(raw_args, offsetof(aecDotArgs, result), dot_args.result);
+   209	        read_field(raw_args, offsetof(aecDotArgs, count), dot_args.count);
+   210	        return launch_dot(grid, block, dot_args, stream);
+   211	    }
+   212	
+   213	    if (kernel == AEC_KERNEL_NRM2_F32) {
+   214	        if (args_size != sizeof(aecNrm2Args)) return AEC_ERROR_INVALID_ARGUMENT;
+   215	        aecNrm2Args nrm2_args{};
+   216	        read_field(raw_args, offsetof(aecNrm2Args, x), nrm2_args.x);
+   217	        read_field(raw_args, offsetof(aecNrm2Args, result), nrm2_args.result);
+   218	        read_field(raw_args, offsetof(aecNrm2Args, count), nrm2_args.count);
+   219	        return launch_nrm2(grid, block, nrm2_args, stream);
+   220	    }
+   221	    return AEC_ERROR_INVALID_ARGUMENT;
+   222	}
+   223	
+   224	} // namespace aec

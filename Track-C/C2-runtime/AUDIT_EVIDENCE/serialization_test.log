@@ -1,0 +1,3 @@
+COMMAND: g++ -Iinclude -Isrc -std=c++17 -Wall -Wextra -Wpedantic tests/test_serialization.cpp -o /tmp/c2_audit_serialization
+compile_exit=0
+run_exit=0

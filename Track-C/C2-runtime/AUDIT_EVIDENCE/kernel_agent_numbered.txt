@@ -1,0 +1,325 @@
+     1	#!/usr/bin/env python3
+     2	"""Select the fastest legal frozen image using only request metadata."""
+     3	
+     4	from __future__ import annotations
+     5	
+     6	import sys
+     7	
+     8	
+     9	REQUEST_KEYS = {
+    10	    "case_id", "dtype", "m", "n", "k", "alignment", "workspace", "candidates"
+    11	}
+    12	CANDIDATE_KEYS = {
+    13	    "id", "semantic_kernel_id", "image_id", "variant", "workspace",
+    14	    "alignment", "divisibility"
+    15	}
+    16	DTYPE_CODES = {
+    17	    "fp4_e2m1": 1,
+    18	    "fp8_e4m3": 2,
+    19	    "fp8_e5m2": 3,
+    20	    "fp16": 4,
+    21	    "bf16": 5,
+    22	    "fp32": 6,
+    23	    "fp64": 7,
+    24	    "int4": 8,
+    25	    "int8": 9,
+    26	    "int32": 10,
+    27	}
+    28	VARIANT_REQUIREMENTS = {
+    29	    1: (1, 1, 0),
+    30	    2: (4, 1, 4096),
+    31	    3: (8, 16, 8192),
+    32	}
+    33	JSON_ESCAPES = {
+    34	    '"': '"', "\\": "\\", "/": "/", "b": "\b", "f": "\f",
+    35	    "n": "\n", "r": "\r", "t": "\t",
+    36	}
+    37	JSON_OUTPUT_ESCAPES = {
+    38	    '"': '\\"', "\\": "\\\\", "\b": "\\b", "\f": "\\f",
+    39	    "\n": "\\n", "\r": "\\r", "\t": "\\t",
+    40	}
+    41	
+    42	
+    43	class JsonParser:
+    44	    def __init__(self, source: str):
+    45	        self.source = source
+    46	        self.index = 0
+    47	
+    48	    def parse(self) -> object:
+    49	        value = self._value()
+    50	        self._whitespace()
+    51	        if self.index != len(self.source):
+    52	            raise ValueError("trailing JSON data")
+    53	        return value
+    54	
+    55	    def _whitespace(self) -> None:
+    56	        while (self.index < len(self.source) and
+    57	               self.source[self.index] in " \t\r\n"):
+    58	            self.index += 1
+    59	
+    60	    def _value(self) -> object:
+    61	        self._whitespace()
+    62	        if self.index >= len(self.source):
+    63	            raise ValueError("missing JSON value")
+    64	        character = self.source[self.index]
+    65	        if character == "{":
+    66	            return self._object()
+    67	        if character == "[":
+    68	            return self._array()
+    69	        if character == '"':
+    70	            return self._string()
+    71	        for token, value in (("true", True), ("false", False), ("null", None)):
+    72	            if self.source.startswith(token, self.index):
+    73	                self.index += len(token)
+    74	                return value
+    75	        if character in "-0123456789":
+    76	            return self._number()
+    77	        raise ValueError("invalid JSON value")
+    78	
+    79	    def _object(self) -> dict[str, object]:
+    80	        result = {}
+    81	        self.index += 1
+    82	        self._whitespace()
+    83	        if self.index < len(self.source) and self.source[self.index] == "}":
+    84	            self.index += 1
+    85	            return result
+    86	        while True:
+    87	            self._whitespace()
+    88	            if self.index >= len(self.source) or self.source[self.index] != '"':
+    89	                raise ValueError("object key is not a string")
+    90	            key = self._string()
+    91	            if key in result:
+    92	                raise ValueError("duplicate object key")
+    93	            self._whitespace()
+    94	            if self.index >= len(self.source) or self.source[self.index] != ":":
+    95	                raise ValueError("missing object colon")
+    96	            self.index += 1
+    97	            result[key] = self._value()
+    98	            self._whitespace()
+    99	            if self.index >= len(self.source):
+   100	                raise ValueError("unterminated object")
+   101	            delimiter = self.source[self.index]
+   102	            self.index += 1
+   103	            if delimiter == "}":
+   104	                return result
+   105	            if delimiter != ",":
+   106	                raise ValueError("invalid object delimiter")
+   107	
+   108	    def _array(self) -> list[object]:
+   109	        result = []
+   110	        self.index += 1
+   111	        self._whitespace()
+   112	        if self.index < len(self.source) and self.source[self.index] == "]":
+   113	            self.index += 1
+   114	            return result
+   115	        while True:
+   116	            result.append(self._value())
+   117	            self._whitespace()
+   118	            if self.index >= len(self.source):
+   119	                raise ValueError("unterminated array")
+   120	            delimiter = self.source[self.index]
+   121	            self.index += 1
+   122	            if delimiter == "]":
+   123	                return result
+   124	            if delimiter != ",":
+   125	                raise ValueError("invalid array delimiter")
+   126	
+   127	    def _string(self) -> str:
+   128	        self.index += 1
+   129	        pieces = []
+   130	        segment = self.index
+   131	        while self.index < len(self.source):
+   132	            character = self.source[self.index]
+   133	            if character == '"':
+   134	                pieces.append(self.source[segment:self.index])
+   135	                self.index += 1
+   136	                return "".join(pieces)
+   137	            if ord(character) < 0x20:
+   138	                raise ValueError("unescaped control character")
+   139	            if character != "\\":
+   140	                self.index += 1
+   141	                continue
+   142	            pieces.append(self.source[segment:self.index])
+   143	            self.index += 1
+   144	            if self.index >= len(self.source):
+   145	                raise ValueError("unterminated escape")
+   146	            escape = self.source[self.index]
+   147	            self.index += 1
+   148	            if escape in JSON_ESCAPES:
+   149	                pieces.append(JSON_ESCAPES[escape])
+   150	            elif escape == "u":
+   151	                pieces.append(self._unicode_escape())
+   152	            else:
+   153	                raise ValueError("invalid string escape")
+   154	            segment = self.index
+   155	        raise ValueError("unterminated string")
+   156	
+   157	    def _unicode_escape(self) -> str:
+   158	        if self.index + 4 > len(self.source):
+   159	            raise ValueError("short unicode escape")
+   160	        try:
+   161	            codepoint = int(self.source[self.index:self.index + 4], 16)
+   162	        except ValueError as error:
+   163	            raise ValueError("invalid unicode escape") from error
+   164	        self.index += 4
+   165	        if 0xD800 <= codepoint <= 0xDBFF:
+   166	            if not self.source.startswith("\\u", self.index):
+   167	                raise ValueError("missing low surrogate")
+   168	            self.index += 2
+   169	            try:
+   170	                low = int(self.source[self.index:self.index + 4], 16)
+   171	            except ValueError as error:
+   172	                raise ValueError("invalid low surrogate") from error
+   173	            self.index += 4
+   174	            if not 0xDC00 <= low <= 0xDFFF:
+   175	                raise ValueError("invalid low surrogate")
+   176	            codepoint = 0x10000 + ((codepoint - 0xD800) << 10) + low - 0xDC00
+   177	        elif 0xDC00 <= codepoint <= 0xDFFF:
+   178	            raise ValueError("unpaired low surrogate")
+   179	        return chr(codepoint)
+   180	
+   181	    def _number(self) -> int | float:
+   182	        start = self.index
+   183	        if self.source[self.index] == "-":
+   184	            self.index += 1
+   185	        if self.index >= len(self.source):
+   186	            raise ValueError("short number")
+   187	        if self.source[self.index] == "0":
+   188	            self.index += 1
+   189	            if (self.index < len(self.source) and
+   190	                    self.source[self.index] in "0123456789"):
+   191	                raise ValueError("leading zero")
+   192	        elif "1" <= self.source[self.index] <= "9":
+   193	            while (self.index < len(self.source) and
+   194	                   self.source[self.index] in "0123456789"):
+   195	                self.index += 1
+   196	        else:
+   197	            raise ValueError("invalid number")
+   198	        integer = True
+   199	        if self.index < len(self.source) and self.source[self.index] == ".":
+   200	            integer = False
+   201	            self.index += 1
+   202	            fraction = self.index
+   203	            while (self.index < len(self.source) and
+   204	                   self.source[self.index] in "0123456789"):
+   205	                self.index += 1
+   206	            if self.index == fraction:
+   207	                raise ValueError("missing fraction")
+   208	        if self.index < len(self.source) and self.source[self.index] in "eE":
+   209	            integer = False
+   210	            self.index += 1
+   211	            if self.index < len(self.source) and self.source[self.index] in "+-":
+   212	                self.index += 1
+   213	            exponent = self.index
+   214	            while (self.index < len(self.source) and
+   215	                   self.source[self.index] in "0123456789"):
+   216	                self.index += 1
+   217	            if self.index == exponent:
+   218	                raise ValueError("missing exponent")
+   219	        token = self.source[start:self.index]
+   220	        return int(token) if integer else float(token)
+   221	
+   222	
+   223	def decode_json(source: str) -> object:
+   224	    return JsonParser(source).parse()
+   225	
+   226	
+   227	def encode_json_string(value: str) -> str:
+   228	    pieces = ['"']
+   229	    for character in value:
+   230	        if character in JSON_OUTPUT_ESCAPES:
+   231	            pieces.append(JSON_OUTPUT_ESCAPES[character])
+   232	        elif ord(character) < 0x20:
+   233	            pieces.append(f"\\u{ord(character):04x}")
+   234	        else:
+   235	            pieces.append(character)
+   236	    pieces.append('"')
+   237	    return "".join(pieces)
+   238	
+   239	
+   240	def valid_integer(value: object, minimum: int) -> bool:
+   241	    return type(value) is int and value >= minimum
+   242	
+   243	
+   244	def validate_candidate(candidate: object) -> dict[str, object]:
+   245	    if not isinstance(candidate, dict):
+   246	        raise ValueError("candidate is not an object")
+   247	    keys = set(candidate)
+   248	    if keys not in (CANDIDATE_KEYS, CANDIDATE_KEYS | {"diagnostic_cycles"}):
+   249	        raise ValueError("invalid candidate fields")
+   250	    if not isinstance(candidate["id"], str) or not candidate["id"]:
+   251	        raise ValueError("invalid candidate id")
+   252	    for key in ("semantic_kernel_id", "image_id", "alignment", "divisibility"):
+   253	        if not valid_integer(candidate[key], 1):
+   254	            raise ValueError(f"invalid candidate {key}")
+   255	    if candidate["variant"] not in (1, 2, 3):
+   256	        raise ValueError("invalid variant")
+   257	    if not valid_integer(candidate["workspace"], 0):
+   258	        raise ValueError("invalid candidate workspace")
+   259	    if "diagnostic_cycles" in candidate and not valid_integer(
+   260	            candidate["diagnostic_cycles"], 1):
+   261	        raise ValueError("invalid diagnostic cycles")
+   262	    return candidate
+   263	
+   264	
+   265	def policy(request: object) -> dict[str, str]:
+   266	    if not isinstance(request, dict) or set(request) != REQUEST_KEYS:
+   267	        raise ValueError("invalid Kernel request fields")
+   268	    if not valid_integer(request["case_id"], 0):
+   269	        raise ValueError("invalid case_id")
+   270	    if request["dtype"] not in DTYPE_CODES:
+   271	        raise ValueError("invalid dtype")
+   272	    for key in ("m", "n", "k"):
+   273	        if not valid_integer(request[key], 1) or request[key] > 256:
+   274	            raise ValueError(f"invalid {key}")
+   275	    if not valid_integer(request["alignment"], 1):
+   276	        raise ValueError("invalid alignment")
+   277	    if not valid_integer(request["workspace"], 0):
+   278	        raise ValueError("invalid workspace")
+   279	    if not isinstance(request["candidates"], list) or not request["candidates"]:
+   280	        raise ValueError("missing candidates")
+   281	
+   282	    candidates = [validate_candidate(item) for item in request["candidates"]]
+   283	    if len({item["id"] for item in candidates}) != len(candidates):
+   284	        raise ValueError("duplicate candidate id")
+   285	    legal = []
+   286	    for item in candidates:
+   287	        variant = item["variant"]
+   288	        divisibility, alignment, workspace = VARIANT_REQUIREMENTS[variant]
+   289	        required_divisibility = max(item["divisibility"], divisibility)
+   290	        if request["alignment"] < max(item["alignment"], alignment):
+   291	            continue
+   292	        if request["workspace"] < max(item["workspace"], workspace):
+   293	            continue
+   294	        if any(request[key] % required_divisibility for key in ("m", "n", "k")):
+   295	            continue
+   296	        legal.append(item)
+   297	    if not legal:
+   298	        raise ValueError("no legal candidate")
+   299	
+   300	    if all("diagnostic_cycles" in item for item in legal):
+   301	        selected = min(legal, key=lambda item: (
+   302	            item["diagnostic_cycles"], -item["variant"], item["image_id"],
+   303	            item["id"]))
+   304	    else:
+   305	        # The offline oracle certificate proves variant dominance over the
+   306	        # complete public shape domain for every dtype.
+   307	        selected = min(legal, key=lambda item: (
+   308	            -item["variant"], item["image_id"], item["id"]))
+   309	    return {"kernel_id": selected["id"]}
+   310	
+   311	
+   312	def main() -> int:
+   313	    try:
+   314	        request = decode_json(sys.stdin.read())
+   315	        action = policy(request)
+   316	    except (OSError, ValueError, TypeError, KeyError, RecursionError,
+   317	            UnicodeError):
+   318	        return 2
+   319	    sys.stdout.write(
+   320	        '{"kernel_id":' + encode_json_string(action["kernel_id"]) + '}\n')
+   321	    return 0
+   322	
+   323	
+   324	if __name__ == "__main__":
+   325	    raise SystemExit(main())

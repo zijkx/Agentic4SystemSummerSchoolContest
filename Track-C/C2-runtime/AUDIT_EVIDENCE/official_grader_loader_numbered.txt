@@ -1,0 +1,36 @@
+   145	
+   146	    def read(self, size: int | None = None) -> bytes:
+   147	        return ctypes.string_at(self.address, self.size if size is None else size)
+   148	
+   149	
+   150	class Runtime:
+   151	    def __init__(self, submission: Path):
+   152	        if submission.is_dir():
+   153	            self.submission_dir = submission.resolve()
+   154	            self.library_path = self.submission_dir / "libaec.so"
+   155	        else:
+   156	            self.library_path = submission.resolve()
+   157	            self.submission_dir = self.library_path.parent
+   158	        if not self.library_path.is_file():
+   159	            raise FileNotFoundError(f"missing library: {self.library_path}")
+   160	        configured = os.environ.get("AEC_DEVICE_LIBRARY")
+   161	        grader_path = Path(__file__).resolve()
+   162	        candidates = [
+   163	            grader_path.parents[1] / "build" / "device" / "libaec_device.so",
+   164	            grader_path.parents[1] / "lib" / "libaec_device.so",
+   165	            grader_path.parent / "libaec_device.so",
+   166	        ]
+   167	        repository_device = next((path for path in candidates if path.is_file()), candidates[0])
+   168	        device_path = Path(configured).resolve() if configured else repository_device
+   169	        if not device_path.is_file():
+   170	            raise FileNotFoundError(f"missing reference device: {device_path}")
+   171	        self.device = ctypes.CDLL(str(device_path), mode=ctypes.RTLD_GLOBAL)
+   172	        self.lib = ctypes.CDLL(str(self.library_path))
+   173	        self._bind()
+   174	
+   175	    def _bind(self) -> None:
+   176	        u64 = ctypes.c_uint64
+   177	        size = ctypes.c_size_t
+   178	        ptr = ctypes.c_void_p
+   179	        cint = ctypes.c_int
+   180	

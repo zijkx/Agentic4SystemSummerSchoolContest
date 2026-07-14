@@ -1,0 +1,2 @@
+M	Track-C/C2-runtime/starter-kit/RELEASE_MANIFEST.json
+A	Track-C/C2-runtime/starter-kit/lib/libaec_device.so

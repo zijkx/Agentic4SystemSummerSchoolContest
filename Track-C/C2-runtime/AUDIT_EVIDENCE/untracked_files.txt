@@ -1,0 +1,10 @@
+Track-C/C2-runtime/AUDIT_EVIDENCE/baselines.txt
+Track-C/C2-runtime/AUDIT_EVIDENCE/committed_diff_name_status.txt
+Track-C/C2-runtime/AUDIT_EVIDENCE/committed_diff_stat.txt
+Track-C/C2-runtime/AUDIT_EVIDENCE/committed_diff_summary.txt
+Track-C/C2-runtime/AUDIT_EVIDENCE/current_git_state.txt
+Track-C/C2-runtime/AUDIT_EVIDENCE/full_committed_diff.patch
+Track-C/C2-runtime/AUDIT_EVIDENCE/official_git_state.txt
+Track-C/C2-runtime/AUDIT_EVIDENCE/uncommitted_diff.patch
+Track-C/C2-runtime/AUDIT_EVIDENCE/uncommitted_diff_name_status.txt
+Track-C/C2-runtime/AUDIT_EVIDENCE/uncommitted_diff_stat.txt

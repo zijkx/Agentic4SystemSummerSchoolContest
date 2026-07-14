@@ -1,0 +1,10 @@
+d 755 4096 /tmp/c2-submission-audit-a4c3a47 -> 
+d 755 4096 /tmp/c2-submission-audit-a4c3a47/agents -> 
+f 755 11987 /tmp/c2-submission-audit-a4c3a47/agents/kernel_agent.py -> 
+f 755 1447768 /tmp/c2-submission-audit-a4c3a47/libaec.so -> 
+f 755 1901 /tmp/c2-submission-audit-a4c3a47/agents/dma_agent.py -> 
+regular_file_count=3
+symlink_count=0
+42e78e9a7c032f4869aba0c4f12c958f033c16f7153f7e2929fed9914295dfa9  /tmp/c2-submission-audit-a4c3a47/libaec.so
+ad313f6341d29c20db6d7d62efd69ea76f53b92e256aa634ce62f64f469c0e94  /tmp/c2-submission-audit-a4c3a47/agents/dma_agent.py
+01af660d23774897c10e56262f501f7ecbe2661c18e7def5b0601619b563bc79  /tmp/c2-submission-audit-a4c3a47/agents/kernel_agent.py

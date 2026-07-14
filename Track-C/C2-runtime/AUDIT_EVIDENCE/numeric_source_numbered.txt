@@ -1,0 +1,185 @@
+     1	#include "numeric.h"
+     2	
+     3	#include "aec_device_abi.h"
+     4	#include "aec_isa.h"
+     5	#include "allocation.h"
+     6	#include "command.h"
+     7	#include "kernel.h"
+     8	#include "serialization.h"
+     9	#include "stream.h"
+    10	
+    11	#include <limits>
+    12	#include <memory>
+    13	
+    14	namespace aec {
+    15	namespace {
+    16	
+    17	constexpr uint32_t kMaxMatrixDimension = 256;
+    18	
+    19	bool checked_multiply(uint64_t left, uint64_t right,
+    20	                      uint64_t &result) noexcept {
+    21	    if (left != 0 && right > std::numeric_limits<uint64_t>::max() / left) {
+    22	        return false;
+    23	    }
+    24	    result = left * right;
+    25	    return true;
+    26	}
+    27	
+    28	bool storage_bytes(uint64_t elements, aecDataType dtype, bool output,
+    29	                   uint64_t &bytes) noexcept {
+    30	    if (output && (dtype == AEC_DTYPE_INT4 || dtype == AEC_DTYPE_INT8 ||
+    31	                   dtype == AEC_DTYPE_INT32)) {
+    32	        return checked_multiply(elements, 4, bytes);
+    33	    }
+    34	    switch (dtype) {
+    35	    case AEC_DTYPE_FP4_E2M1:
+    36	    case AEC_DTYPE_INT4:
+    37	        bytes = elements / 2 + elements % 2;
+    38	        return true;
+    39	    case AEC_DTYPE_FP8_E4M3:
+    40	    case AEC_DTYPE_FP8_E5M2:
+    41	    case AEC_DTYPE_INT8:
+    42	        bytes = elements;
+    43	        return true;
+    44	    case AEC_DTYPE_FP16:
+    45	    case AEC_DTYPE_BF16:
+    46	        return checked_multiply(elements, 2, bytes);
+    47	    case AEC_DTYPE_FP32:
+    48	    case AEC_DTYPE_INT32:
+    49	        return checked_multiply(elements, 4, bytes);
+    50	    case AEC_DTYPE_FP64:
+    51	        return checked_multiply(elements, 8, bytes);
+    52	    default:
+    53	        return false;
+    54	    }
+    55	}
+    56	
+    57	bool spans_overlap(aecDevicePtr left, uint64_t left_bytes,
+    58	                   aecDevicePtr right, uint64_t right_bytes) noexcept {
+    59	    if (left <= right) return right - left < left_bytes;
+    60	    return left - right < right_bytes;
+    61	}
+    62	
+    63	struct PreparedMatmul {
+    64	    aecDeviceCommand command{};
+    65	    AllocationLease a_lease;
+    66	    AllocationLease b_lease;
+    67	    AllocationLease c_lease;
+    68	};
+    69	
+    70	aecError_t prepare_matmul(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+    71	                          uint32_t m, uint32_t n, uint32_t k,
+    72	                          aecDataType dtype, uint32_t semantic_kernel,
+    73	                          uint32_t variant, aecDim3 grid, aecDim3 block,
+    74	                          PreparedMatmul &prepared) {
+    75	    uint64_t a_elements = 0;
+    76	    uint64_t b_elements = 0;
+    77	    uint64_t c_elements = 0;
+    78	    if (!checked_multiply(m, k, a_elements) ||
+    79	        !checked_multiply(k, n, b_elements) ||
+    80	        !checked_multiply(m, n, c_elements)) {
+    81	        return AEC_ERROR_INVALID_ARGUMENT;
+    82	    }
+    83	    uint64_t a_bytes = 0;
+    84	    uint64_t b_bytes = 0;
+    85	    uint64_t c_bytes = 0;
+    86	    if (!storage_bytes(a_elements, dtype, false, a_bytes) ||
+    87	        !storage_bytes(b_elements, dtype, false, b_bytes) ||
+    88	        !storage_bytes(c_elements, dtype, true, c_bytes)) {
+    89	        return AEC_ERROR_INVALID_ARGUMENT;
+    90	    }
+    91	    if (spans_overlap(a, a_bytes, b, b_bytes) ||
+    92	        spans_overlap(a, a_bytes, c, c_bytes) ||
+    93	        spans_overlap(b, b_bytes, c, c_bytes)) {
+    94	        return AEC_ERROR_INVALID_ARGUMENT;
+    95	    }
+    96	    if (variant == AEC_KERNEL_VARIANT_TILED &&
+    97	        ((m | n | k) & 3u) != 0) {
+    98	        return AEC_ERROR_INVALID_ARGUMENT;
+    99	    }
+   100	    if (variant == AEC_KERNEL_VARIANT_VECTORIZED &&
+   101	        (((m | n | k) & 7u) != 0 || (a | b | c) % 16 != 0)) {
+   102	        return AEC_ERROR_INVALID_ARGUMENT;
+   103	    }
+   104	
+   105	    aecError_t status = acquire_device_span(a, a_bytes, prepared.a_lease);
+   106	    if (status != AEC_SUCCESS) return status;
+   107	    status = acquire_device_span(b, b_bytes, prepared.b_lease);
+   108	    if (status != AEC_SUCCESS) return status;
+   109	    status = acquire_device_span(c, c_bytes, prepared.c_lease);
+   110	    if (status != AEC_SUCCESS) return status;
+   111	
+   112	    ParameterBlock<AEC_DEVICE_MAX_PARAM_BYTES> parameters;
+   113	    if (!parameters.put_u64(0, a) || !parameters.put_u64(8, b) ||
+   114	        !parameters.put_u64(16, c) || !parameters.put_u32(24, m) ||
+   115	        !parameters.put_u32(28, n) || !parameters.put_u32(32, k) ||
+   116	        !parameters.put_u32(36, static_cast<uint32_t>(dtype))) {
+   117	        return AEC_ERROR_INTERNAL;
+   118	    }
+   119	    const aecError_t command_status = build_isa_command(
+   120	        semantic_kernel, static_cast<uint32_t>(dtype), variant, grid, block,
+   121	        parameters.data(), AEC_KERNEL_PARAM_GEMM_BYTES, prepared.command);
+   122	    if (command_status != AEC_SUCCESS) return command_status;
+   123	    if (variant == AEC_KERNEL_VARIANT_TILED) {
+   124	        prepared.command.dynamic_shared_bytes = 4096;
+   125	    } else if (variant == AEC_KERNEL_VARIANT_VECTORIZED) {
+   126	        prepared.command.dynamic_shared_bytes = 8192;
+   127	    }
+   128	    return AEC_SUCCESS;
+   129	}
+   130	
+   131	aecError_t execute_or_enqueue(const std::shared_ptr<PreparedMatmul> &prepared,
+   132	                              aecError_t status, aecStream_t stream) {
+   133	    if (stream == nullptr) {
+   134	        if (status != AEC_SUCCESS) return status;
+   135	        return submit_and_validate_completion(prepared->command);
+   136	    }
+   137	    return enqueue_stream_work(stream, [prepared, status](uint64_t stream_id) {
+   138	        if (status != AEC_SUCCESS) return status;
+   139	        prepared->command.stream_id = stream_id;
+   140	        return submit_and_validate_completion(prepared->command);
+   141	    });
+   142	}
+   143	
+   144	} // namespace
+   145	
+   146	aecError_t matmul(aecDevicePtr a, aecDevicePtr b, aecDevicePtr c,
+   147	                  uint32_t m, uint32_t n, uint32_t k, aecDataType dtype,
+   148	                  aecStream_t stream) {
+   149	    if (m == 0 || n == 0 || k == 0 || m > kMaxMatrixDimension ||
+   150	        n > kMaxMatrixDimension || k > kMaxMatrixDimension) {
+   151	        return AEC_ERROR_INVALID_ARGUMENT;
+   152	    }
+   153	
+   154	    auto prepared = std::make_shared<PreparedMatmul>();
+   155	    const aecError_t status = prepare_matmul(
+   156	        a, b, c, m, n, k, dtype, AEC_KERNEL_GEMM_NAIVE,
+   157	        AEC_KERNEL_VARIANT_NAIVE, {1, 1, 1}, {1, 1, 1}, *prepared);
+   158	    return execute_or_enqueue(prepared, status, stream);
+   159	}
+   160	
+   161	aecError_t launch_matmul(aecKernelId kernel, aecDim3 grid, aecDim3 block,
+   162	                         const aecGemmArgs &args, aecStream_t stream) {
+   163	    if (args.reserved != 0 || args.m == 0 || args.n == 0 || args.k == 0 ||
+   164	        args.m > kMaxMatrixDimension || args.n > kMaxMatrixDimension ||
+   165	        args.k > kMaxMatrixDimension) {
+   166	        return AEC_ERROR_INVALID_ARGUMENT;
+   167	    }
+   168	    uint32_t variant = 0;
+   169	    switch (kernel) {
+   170	    case AEC_KERNEL_GEMM_NAIVE: variant = AEC_KERNEL_VARIANT_NAIVE; break;
+   171	    case AEC_KERNEL_GEMM_TILED: variant = AEC_KERNEL_VARIANT_TILED; break;
+   172	    case AEC_KERNEL_GEMM_VECTORIZED:
+   173	        variant = AEC_KERNEL_VARIANT_VECTORIZED;
+   174	        break;
+   175	    default: return AEC_ERROR_INVALID_ARGUMENT;
+   176	    }
+   177	    auto prepared = std::make_shared<PreparedMatmul>();
+   178	    const aecError_t status = prepare_matmul(
+   179	        args.a, args.b, args.c, args.m, args.n, args.k,
+   180	        static_cast<aecDataType>(args.dtype), static_cast<uint32_t>(kernel),
+   181	        variant, grid, block, *prepared);
+   182	    return execute_or_enqueue(prepared, status, stream);
+   183	}
+   184	
+   185	} // namespace aec

@@ -1,0 +1,25 @@
+LD_PRELOAD=/usr/lib/gcc/x86_64-linux-gnu/13/libasan.so
+COMMAND: tests/test_r101_extra.py
+PASS custom R101: TLS, success-preserves-error, Peek/Get, unknown name
+EXIT: 0
+COMMAND: tests/test_r102_extra.py
+PASS custom R102: zero/OOM/alignment/reuse/interior/stale/double-free
+EXIT: 0
+COMMAND: tests/test_r105_extra.py
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+EXIT: 0
+COMMAND: tests/test_r106_extra.py
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+EXIT: 0
+COMMAND: tests/test_launch_extra.py
+PASS custom aecLaunch: all public Kernel IDs and native args
+EXIT: 0
+COMMAND: tests/test_r302_extra.py
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+EXIT: 0
+COMMAND: tests/test_r303_extra.py
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+EXIT: 0
+COMMAND: tests/test_r304_extra.py
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+EXIT: 0

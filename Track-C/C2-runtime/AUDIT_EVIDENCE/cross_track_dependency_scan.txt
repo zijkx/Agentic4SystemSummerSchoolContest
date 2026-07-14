@@ -1,0 +1,2 @@
+Track-C/C2-runtime/starter-kit/include/aec_isa.h:10:/* Version 2 uses the canonical Track-B/B3 encoding from simple-gpgpu main. */
+Track-C/C2-runtime/starter-kit/include/aec_isa.h:190: * Original Track-B bit positions, serialized as four little-endian u32 words:

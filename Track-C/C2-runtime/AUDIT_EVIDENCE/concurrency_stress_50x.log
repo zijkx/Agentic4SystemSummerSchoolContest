@@ -1,0 +1,301 @@
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=1 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=2 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=3 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=4 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=5 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=6 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=7 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=8 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=9 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=10 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=11 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=12 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=13 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=14 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=15 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=16 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=17 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=18 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=19 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=20 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=21 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=22 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=23 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=24 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=25 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=26 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=27 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=28 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=29 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=30 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=31 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=32 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=33 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=34 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=35 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=36 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=37 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=38 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=39 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=40 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=41 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=42 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=43 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=44 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=45 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=46 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=47 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=48 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=49 complete
+PASS custom R105: FIFO/deep-copy/recovery/free-waits and 20 destroy races
+PASS custom R106: latest generation/cycles/stale handles and 20 destroy races
+PASS custom R302: 4 Streams/both channels/concurrent FIFO/recovery
+PASS custom R303: intervals/subspan/partial flags/pending unregister
+PASS custom R304: one-shot DMA/kernel/command faults and recovery
+iteration=50 complete
+exit=0

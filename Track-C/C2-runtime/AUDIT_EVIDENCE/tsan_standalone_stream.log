@@ -1,0 +1,100 @@
+compile_exit=0
+FATAL: ThreadSanitizer: unexpected memory mapping 0x633a8820e000-0x633a8820f000
+iteration=1 exit=66
+FATAL: ThreadSanitizer: unexpected memory mapping 0x6084058f4000-0x6084058f5000
+iteration=2 exit=66
+FATAL: ThreadSanitizer: unexpected memory mapping 0x61f5e4b6e000-0x61f5e4b6f000
+iteration=3 exit=66
+FATAL: ThreadSanitizer: unexpected memory mapping 0x780cb7472000-0x780cb7900000
+iteration=4 exit=66
+FATAL: ThreadSanitizer: unexpected memory mapping 0x64731da6b000-0x64731da6c000
+iteration=5 exit=66
+FATAL: ThreadSanitizer: unexpected memory mapping 0x5cb3c5656000-0x5cb3c5657000
+iteration=6 exit=66
+FATAL: ThreadSanitizer: unexpected memory mapping 0x5ae99e30e000-0x5ae99e30f000
+iteration=7 exit=66
+FATAL: ThreadSanitizer: unexpected memory mapping 0x5a755b262000-0x5a755b263000
+iteration=8 exit=66
+==================
+WARNING: ThreadSanitizer: data race (pid=49930)
+  Read of size 1 at 0x7238000000d5 by thread T1 (mutexes: write M0):
+    #0 operator() src/stream.cpp:72 (libaec.so+0x13244) (BuildId: 27ce97fce1e0cd3a4c42d5577b6805f3bd3d4bd9)
+    #1 wait<aec::(anonymous namespace)::StreamState::worker_loop()::<lambda()> > /usr/include/c++/13/condition_variable:104 (libaec.so+0x13244)
+    #2 worker_loop src/stream.cpp:72 (libaec.so+0x13244)
+    #3 operator() src/stream.cpp:25 (libaec.so+0x13244)
+    #4 __invoke_impl<void, aec::(anonymous namespace)::StreamState::StreamState(uint64_t)::<lambda()> > /usr/include/c++/13/bits/invoke.h:61 (libaec.so+0x13244)
+    #5 __invoke<aec::(anonymous namespace)::StreamState::StreamState(uint64_t)::<lambda()> > /usr/include/c++/13/bits/invoke.h:96 (libaec.so+0x13244)
+    #6 _M_invoke<0> /usr/include/c++/13/bits/std_thread.h:292 (libaec.so+0x13244)
+    #7 operator() /usr/include/c++/13/bits/std_thread.h:299 (libaec.so+0x13244)
+    #8 _M_run /usr/include/c++/13/bits/std_thread.h:244 (libaec.so+0x13244)
+    #9 <null> <null> (libstdc++.so.6+0xecdb3) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+
+  Previous write of size 1 at 0x7238000000d5 by main thread (mutexes: write M1):
+    #0 StreamState src/stream.cpp:25 (libaec.so+0x147ac) (BuildId: 27ce97fce1e0cd3a4c42d5577b6805f3bd3d4bd9)
+    #1 _Construct<aec::(anonymous namespace)::StreamState, long unsigned int const&> /usr/include/c++/13/bits/stl_construct.h:119 (libaec.so+0x147ac)
+    #2 construct<aec::(anonymous namespace)::StreamState, long unsigned int const&> /usr/include/c++/13/bits/alloc_traits.h:661 (libaec.so+0x147ac)
+    #3 _Sp_counted_ptr_inplace<long unsigned int const&> /usr/include/c++/13/bits/shared_ptr_base.h:604 (libaec.so+0x147ac)
+    #4 __shared_count<aec::(anonymous namespace)::StreamState, std::allocator<void>, long unsigned int const&> /usr/include/c++/13/bits/shared_ptr_base.h:971 (libaec.so+0x147ac)
+    #5 __shared_ptr<std::allocator<void>, long unsigned int const&> /usr/include/c++/13/bits/shared_ptr_base.h:1712 (libaec.so+0x147ac)
+    #6 shared_ptr<std::allocator<void>, long unsigned int const&> /usr/include/c++/13/bits/shared_ptr.h:464 (libaec.so+0x147ac)
+    #7 make_shared<aec::(anonymous namespace)::StreamState, long unsigned int const&> /usr/include/c++/13/bits/shared_ptr.h:1010 (libaec.so+0x147ac)
+    #8 aec::stream_create(aecStreamOpaque**) src/stream.cpp:162 (libaec.so+0x147ac)
+    #9 operator() src/aec_runtime.cpp:89 (libaec.so+0x3f15) (BuildId: 27ce97fce1e0cd3a4c42d5577b6805f3bd3d4bd9)
+    #10 api_boundary<aecStreamCreate(aecStreamOpaque**)::<lambda()> > src/error.h:21 (libaec.so+0x3f15)
+    #11 aecStreamCreate src/aec_runtime.cpp:89 (libaec.so+0x3f15)
+    #12 main examples/04_stream_event.c:11 (c2_audit_tsan_stream+0x1433) (BuildId: 5e91f3f2bd98a776bb2de6cee39cc43655bd4bd6)
+
+  Location is heap block of size 216 at 0x723800000000 allocated by main thread:
+    #0 operator new(unsigned long) ../../../../src/libsanitizer/tsan/tsan_new_delete.cpp:64 (libtsan.so.2+0xa6fae) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)
+    #1 allocate /usr/include/c++/13/bits/new_allocator.h:151 (libaec.so+0x144f5) (BuildId: 27ce97fce1e0cd3a4c42d5577b6805f3bd3d4bd9)
+    #2 allocate /usr/include/c++/13/bits/alloc_traits.h:482 (libaec.so+0x144f5)
+    #3 __allocate_guarded<std::allocator<std::_Sp_counted_ptr_inplace<aec::(anonymous namespace)::StreamState, std::allocator<void>, (__gnu_cxx::_Lock_policy)2> > > /usr/include/c++/13/bits/allocated_ptr.h:98 (libaec.so+0x144f5)
+    #4 __shared_count<aec::(anonymous namespace)::StreamState, std::allocator<void>, long unsigned int const&> /usr/include/c++/13/bits/shared_ptr_base.h:969 (libaec.so+0x144f5)
+    #5 __shared_ptr<std::allocator<void>, long unsigned int const&> /usr/include/c++/13/bits/shared_ptr_base.h:1712 (libaec.so+0x144f5)
+    #6 shared_ptr<std::allocator<void>, long unsigned int const&> /usr/include/c++/13/bits/shared_ptr.h:464 (libaec.so+0x144f5)
+    #7 make_shared<aec::(anonymous namespace)::StreamState, long unsigned int const&> /usr/include/c++/13/bits/shared_ptr.h:1010 (libaec.so+0x144f5)
+    #8 aec::stream_create(aecStreamOpaque**) src/stream.cpp:162 (libaec.so+0x144f5)
+    #9 operator() src/aec_runtime.cpp:89 (libaec.so+0x3f15) (BuildId: 27ce97fce1e0cd3a4c42d5577b6805f3bd3d4bd9)
+    #10 api_boundary<aecStreamCreate(aecStreamOpaque**)::<lambda()> > src/error.h:21 (libaec.so+0x3f15)
+    #11 aecStreamCreate src/aec_runtime.cpp:89 (libaec.so+0x3f15)
+    #12 main examples/04_stream_event.c:11 (c2_audit_tsan_stream+0x1433) (BuildId: 5e91f3f2bd98a776bb2de6cee39cc43655bd4bd6)
+
+  Mutex M0 (0x723800000018) created at:
+    #0 pthread_mutex_lock ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1341 (libtsan.so.2+0x59a13) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)
+    #1 __gthread_mutex_lock /usr/include/x86_64-linux-gnu/c++/13/bits/gthr-default.h:749 (libaec.so+0x1321a) (BuildId: 27ce97fce1e0cd3a4c42d5577b6805f3bd3d4bd9)
+    #2 std::mutex::lock() /usr/include/c++/13/bits/std_mutex.h:113 (libaec.so+0x1321a)
+    #3 std::unique_lock<std::mutex>::lock() /usr/include/c++/13/bits/unique_lock.h:141 (libaec.so+0x1321a)
+    #4 std::unique_lock<std::mutex>::unique_lock(std::mutex&) /usr/include/c++/13/bits/unique_lock.h:71 (libaec.so+0x1321a)
+    #5 worker_loop src/stream.cpp:71 (libaec.so+0x1321a)
+    #6 operator() src/stream.cpp:25 (libaec.so+0x1321a)
+    #7 __invoke_impl<void, aec::(anonymous namespace)::StreamState::StreamState(uint64_t)::<lambda()> > /usr/include/c++/13/bits/invoke.h:61 (libaec.so+0x1321a)
+    #8 __invoke<aec::(anonymous namespace)::StreamState::StreamState(uint64_t)::<lambda()> > /usr/include/c++/13/bits/invoke.h:96 (libaec.so+0x1321a)
+    #9 _M_invoke<0> /usr/include/c++/13/bits/std_thread.h:292 (libaec.so+0x1321a)
+    #10 operator() /usr/include/c++/13/bits/std_thread.h:299 (libaec.so+0x1321a)
+    #11 _M_run /usr/include/c++/13/bits/std_thread.h:244 (libaec.so+0x1321a)
+    #12 <null> <null> (libstdc++.so.6+0xecdb3) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+
+  Mutex M1 (0x7e323fb48440) created at:
+    #0 pthread_mutex_lock ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1341 (libtsan.so.2+0x59a13) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)
+    #1 __gthread_mutex_lock /usr/include/x86_64-linux-gnu/c++/13/bits/gthr-default.h:749 (libaec.so+0x14435) (BuildId: 27ce97fce1e0cd3a4c42d5577b6805f3bd3d4bd9)
+    #2 std::mutex::lock() /usr/include/c++/13/bits/std_mutex.h:113 (libaec.so+0x14435)
+    #3 std::lock_guard<std::mutex>::lock_guard(std::mutex&) /usr/include/c++/13/bits/std_mutex.h:249 (libaec.so+0x14435)
+    #4 aec::stream_create(aecStreamOpaque**) src/stream.cpp:154 (libaec.so+0x14435)
+    #5 operator() src/aec_runtime.cpp:89 (libaec.so+0x3f15) (BuildId: 27ce97fce1e0cd3a4c42d5577b6805f3bd3d4bd9)
+    #6 api_boundary<aecStreamCreate(aecStreamOpaque**)::<lambda()> > src/error.h:21 (libaec.so+0x3f15)
+    #7 aecStreamCreate src/aec_runtime.cpp:89 (libaec.so+0x3f15)
+    #8 main examples/04_stream_event.c:11 (c2_audit_tsan_stream+0x1433) (BuildId: 5e91f3f2bd98a776bb2de6cee39cc43655bd4bd6)
+
+  Thread T1 (tid=49932, running) created by main thread at:
+    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x5ac1a) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)
+    #1 std::thread::_M_start_thread(std::unique_ptr<std::thread::_State, std::default_delete<std::thread::_State> >, void (*)()) <null> (libstdc++.so.6+0xeceb0) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)
+    #2 operator() src/aec_runtime.cpp:89 (libaec.so+0x3f15) (BuildId: 27ce97fce1e0cd3a4c42d5577b6805f3bd3d4bd9)
+    #3 api_boundary<aecStreamCreate(aecStreamOpaque**)::<lambda()> > src/error.h:21 (libaec.so+0x3f15)
+    #4 aecStreamCreate src/aec_runtime.cpp:89 (libaec.so+0x3f15)
+    #5 main examples/04_stream_event.c:11 (c2_audit_tsan_stream+0x1433) (BuildId: 5e91f3f2bd98a776bb2de6cee39cc43655bd4bd6)
+
+SUMMARY: ThreadSanitizer: data race src/stream.cpp:72 in operator()
+==================
+iteration=9 exit=66
+FATAL: ThreadSanitizer: unexpected memory mapping 0x60a218107000-0x60a218108000
+iteration=10 exit=66

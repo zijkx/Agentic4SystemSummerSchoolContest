@@ -1,0 +1,6 @@
+CANDIDATE_HEAD=a4c3a47610147e93fc1d7db731ac7c0576d01e1a
+OFFICIAL_CURRENT_SHA=b2997a228d9446ff254cb324225b731df66c7546
+DEVELOPMENT_BASE_SHA=d985a6e9f910891835530b835b850ae8282f32f7
+d985a6e Clarify performance target parameters in README
+ Track-C/README.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)

@@ -1,0 +1,34 @@
+libaec dynamic entries:
+ 0x0000000000000001 (NEEDED)             Shared library: [libaec_device.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libstdc++.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [libgcc_s.so.1]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [ld-linux-x86-64.so.2]
+ 0x000000000000001d (RUNPATH)            Library runpath: [$ORIGIN/lib]
+device SONAME entries:
+ 0x0000000000000001 (NEEDED)             Shared library: [libstdc++.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [libm.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [libgcc_s.so.1]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
+official submission guide:
+   103	python3 grader/public_grade.py --submission . --profile public --quiet
+   104	```
+   105	
+   106	确认全部 Runtime 符号已导出，提交不依赖非公开路径，且没有修改公共契约、设备或 image。
+   107	
+   108	## 8. 提交目录
+   109	
+   110	```text
+   111	submission/
+   112	├── libaec.so
+   113	└── agents/
+   114	    ├── dma_agent.py
+   115	    └── kernel_agent.py
+   116	```
+   117	
+   118	Basic/Good 不要求 Agent 性能，但 `libaec.so` 仍须导出全部 Runtime 符号。
+   119	两个 Agent 文件可以省略；省略时 R401/R402 得 0 分，不影响 Basic/Good gate。
+   120	
+   121	主办方只读取上述三个文件。提交中不得包含 symlink、device file、setup script，且不得依赖
+   122	赛事环境未声明的第三方动态库、绝对路径或网络服务。压缩包格式、大小上限、提交次数和
+   123	截止时间以赛事平台公告为准。

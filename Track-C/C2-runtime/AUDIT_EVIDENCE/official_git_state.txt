@@ -1,0 +1,9 @@
+/tmp/a4s-official-c2-audit-20260714-a4c3a47
+origin	https://github.com/ephonic/Agentic4SystemSummerSchoolContest.git (fetch)
+origin	https://github.com/ephonic/Agentic4SystemSummerSchoolContest.git (push)
+b2997a228d9446ff254cb324225b731df66c7546
+b2997a2 添加 Track-B ppa-flow 目录
+c30b3f9 更新 C2-runtime starter-kit 虚拟设备库及发布清单
+dce818b 更新 C3-scheduler spec.md 并增加 C35_WORKER_PROTOCOL.md
+f3b8b3e 添加 C1-compiler aec-cmodel 评测工具
+5f5e8ad 添加 C2-runtime starter-kit 受控虚拟设备库 libaec_device.so

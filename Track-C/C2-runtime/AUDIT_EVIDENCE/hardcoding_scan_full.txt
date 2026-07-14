@@ -1,0 +1,808 @@
+Track-C/C2-runtime/spec.md:90:{"case_id":1,"direction":"h2d","bytes":4096,"alignment":64,"registered":true,"concurrency":2}
+Track-C/C2-runtime/spec.md:104:{"case_id":1,"dtype":"f16","m":128,"n":128,"k":128,"alignment":16,"workspace":8192,"candidates":[{"id":"candidate-1","semantic_kernel_id":2,"image_id":721154,"variant":3,"workspace":4096,"alignment":16,"divisibility":8}]}
+Track-C/C2-runtime/spec.md:133:| 公开测试 | `cases/test_r101.py` ~ `test_r402.py` |
+Track-C/C2-runtime/spec.md:134:| 评分脚本 | `grader/public_grade.py` |
+Track-C/C2-runtime/starter-kit/tools/kernel_policy_generate.py:27:def sha256(path: Path) -> str:
+Track-C/C2-runtime/starter-kit/tools/kernel_policy_generate.py:28:    digest = hashlib.sha256()
+Track-C/C2-runtime/starter-kit/tools/kernel_policy_generate.py:37:    tree = ast.parse(source, filename=str(path))
+Track-C/C2-runtime/starter-kit/tools/kernel_policy_generate.py:50:        "libaec_device", "aecDeviceEvaluateKernel", "grader/", "cases/",
+Track-C/C2-runtime/starter-kit/tools/kernel_policy_generate.py:84:        "device_sha256": summary.get("device_sha256") == EXPECTED_DEVICE_SHA256,
+Track-C/C2-runtime/starter-kit/tools/kernel_policy_generate.py:112:    model_sha256 = hashlib.sha256(
+Track-C/C2-runtime/starter-kit/tools/kernel_policy_generate.py:117:        "device_sha256": EXPECTED_DEVICE_SHA256,
+Track-C/C2-runtime/starter-kit/tools/kernel_policy_generate.py:119:        "oracle_summary_sha256": sha256(summary_path),
+Track-C/C2-runtime/starter-kit/tools/kernel_policy_generate.py:124:        "model_sha256": model_sha256,
+Track-C/C2-runtime/starter-kit/tools/kernel_policy_generate.py:126:        "agent_sha256": sha256(agent_path),
+Track-C/C2-runtime/starter-kit/tools/kernel_policy_generate.py:132:        "public_r402_required": "run grader after generation",
+Track-C/C2-runtime/starter-kit/tools/kernel_policy_generate.py:133:        "hidden_performance_verified": False,
+Track-C/C2-runtime/starter-kit/tools/kernel_policy_generate.py:134:        "hidden_performance_note": (
+Track-C/C2-runtime/starter-kit/tools/kernel_policy_generate.py:136:            "contract domain; only the organizer full profile can award hidden points."
+Track-C/C2-runtime/starter-kit/tools/kernel_oracle_collect.py:68:def sha256(path: Path) -> str:
+Track-C/C2-runtime/starter-kit/tools/kernel_oracle_collect.py:69:    digest = hashlib.sha256()
+Track-C/C2-runtime/starter-kit/tools/kernel_oracle_collect.py:227:    digest = hashlib.sha256()
+Track-C/C2-runtime/starter-kit/tools/kernel_oracle_collect.py:342:        "record_sha256": digest.hexdigest(),
+Track-C/C2-runtime/starter-kit/tools/kernel_oracle_collect.py:364:def collect_dtype_worker(library: str, dtype: int, device_sha256: str,
+Track-C/C2-runtime/starter-kit/tools/kernel_oracle_collect.py:371:    report["device_sha256"] = device_sha256
+Track-C/C2-runtime/starter-kit/tools/kernel_oracle_collect.py:377:def validate_checkpoint(payload: dict, device_sha256: str, dtype: int) -> None:
+Track-C/C2-runtime/starter-kit/tools/kernel_oracle_collect.py:380:            payload.get("device_sha256") != device_sha256):
+Track-C/C2-runtime/starter-kit/tools/kernel_oracle_collect.py:417:    device_sha256 = sha256(library)
+Track-C/C2-runtime/starter-kit/tools/kernel_oracle_collect.py:420:                      f"aec-c2-kernel-oracle-{device_sha256[:12]}")
+Track-C/C2-runtime/starter-kit/tools/kernel_oracle_collect.py:440:                validate_checkpoint(report, device_sha256, dtype)
+Track-C/C2-runtime/starter-kit/tools/kernel_oracle_collect.py:452:                        device_sha256, str(checkpoint)): dtype
+Track-C/C2-runtime/starter-kit/tools/kernel_oracle_collect.py:470:    combined_digest = hashlib.sha256()
+Track-C/C2-runtime/starter-kit/tools/kernel_oracle_collect.py:472:        combined_digest.update(bytes.fromhex(report["record_sha256"]))
+Track-C/C2-runtime/starter-kit/tools/kernel_oracle_collect.py:484:        "device_sha256": device_sha256,
+Track-C/C2-runtime/starter-kit/tools/kernel_oracle_collect.py:496:        "combined_record_sha256": combined_digest.hexdigest(),
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION.md:360:read-only evaluator and contains no hidden cases or hidden outputs.
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION.md:364:- The released grader exposes only `public`; hidden Agent speedup and the Excellent gate cannot be verified locally.
+Track-C/C2-runtime/starter-kit/EXECPLAN.md:17:run the narrow case, regress prior passes, run the public grader, inspect the
+Track-C/C2-runtime/starter-kit/PROGRESS.md:11:- Read repository instructions and all required C2 specifications, headers, starter source, public grader/cases, manifests, examples, and Agent schemas.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:21:- Added `tests/test_r101_extra.py` for unknown error names, Peek/Get behavior, success-preserves-error, and two-thread isolation.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:22:- `make -j2`, official R101, custom R101, full public grader, `nm`, `readelf`, and `ldd` all exited 0.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:31:- Added `tests/test_r102_extra.py` for zero-byte/null output, OOM, 64-byte alignment, lowest-address reuse, interior/unknown/stale/double free, and unchanged outputs on failure.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:32:- Official R102, custom R102, official/custom R101 regression, build, and full public grader all exited 0.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:41:- Added `tests/test_r103_extra.py` for interior spans, adjacent-allocation crossing, near-`UINT64_MAX`, no-submit-on-preflight-failure, stats reset preserving allocations, round-trip bytes, and 40 concurrent submits.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:42:- Official R103, all custom/basic regressions, build, and full public grader exited 0.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:51:- Added `tests/test_serialization.cpp` and `tests/test_r104_extra.py`, including a 33-element launch, invalid kernels/dimensions/args/spans/overlap, and no-submit preflight accounting.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:52:- Official R104, custom R104, serialization test, example, all earlier official/custom regressions, build, and full public grader exited 0.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:62:- Added `tests/test_r201_extra.py` for FP32, INT32 saturation, invalid/over-limit dimensions, overlap, undersized spans, and no-submit accounting; extended the byte-layout test through offset 39 and unused zero bytes.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:63:- Official R201, custom R201, FP32 example, serialization, all Basic regressions, build, and full grader exited 0.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:73:- Added `tests/test_r105_extra.py` for null/stale/double handles, launch-args deep copy, FIFO, queued invalid-span propagation/recovery, free-waits, and 20 enqueue/destroy races.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:85:- Added `tests/test_r106_extra.py` for unrecorded behavior, latest of consecutive records, NOT_READY-or-complete query, positive/zero/reversed elapsed cycles, invalid-stream rollback, stale/double handles, and 20 record/destroy races.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:86:- Event example, official R106, custom R106, all prior official/custom regressions, build, and full grader exited 0.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:94:- Added `tests/test_r202_extra.py` for one-element FP4 low-nibble/high-zero output, invalid FP8 format, async FP16, and FP64.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:95:- Official R202, custom R202, all prior official/custom regressions, build, and full grader exited 0.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:102:- Added `tests/test_r203_extra.py` with K=3 signed INT4 low-nibble packing/zero high tail, equivalent async INT8, and an undersized INT32 output preflight rejection.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:103:- Official R203, custom R203, all prior official/custom regressions, build, and full grader exited 0.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:112:- Added `tests/test_r204_extra.py` for in-place AXPY, async DOT, NRM2, partial overlap, zero count, undersized spans, and no-submit accounting; extended standalone serialization tests.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:113:- Official R204, custom R204, serialization, all prior official/custom regressions, build, and full grader exited 0.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:122:- Added `tests/test_r303_extra.py` for null/duplicate/contained/partial overlap, adjacent intervals, interior unregister, pointer overflow, subspan flags, partial normal flags, and pending async unregister.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:129:- Added `tests/test_r301_extra.py`.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:138:- Added `tests/test_r302_extra.py`.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:148:- Added `tests/test_r304_extra.py`.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:160:- Neither policy uses `case_id`, candidate names, public input values, persistent state, network access, or non-stdlib dependencies.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:164:- Hidden average speedup and the Excellent gate cannot be executed or claimed with the released grader.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:167:## 2026-07-13 - ABI and hidden-surface hardening
+Track-C/C2-runtime/starter-kit/PROGRESS.md:172:- Added hidden-by-default compiler visibility and `src/libaec.map`; the ELF exports exactly 36 public `aec*` functions plus the `AEC_2` version node.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:175:- Release 16/16 public cases, all 16 custom scripts, serialization, Agent model sweeps, and public grader passed after hardening.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:183:- Final public grader produced `reports/final_public_report.json`: 88/100, level Good, Basic/Good true, Agent diagnostics 1.0.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:193:- Added `tests/test_r204_max_length.py`. DOT and NRM2 now pass at both historical boundaries and count 1,048,576, with maximum-count cycles 46,137,368 and 33,554,466; max+1 is rejected before submit.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:195:- Clean build, six examples, 16/16 public cases, all 18 custom scripts, serialization, immutable audit, and public grader passed.
+Track-C/C2-runtime/starter-kit/PROGRESS.md:225:  scripts, standalone serialization, immutable audit, and the public grader all
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:46:| `python3 cases/test_r101.py --submission .` | 0 | PASS R101, 4/4. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:47:| `python3 grader/public_grade.py --submission . --profile public --json-out reports/baseline_public_report.json` | 0 | Score 12/100, level Not passed. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:49:The grader command exits zero after producing a report even when requirements
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:72:| `python3 cases/test_r101.py --submission .` | 0 | PASS R101, 4/4. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:73:| `python3 tests/test_r101_extra.py --submission .` | 0 | PASS TLS isolation, success-preserves-error, Peek/Get, and unknown name. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:74:| `python3 grader/public_grade.py --submission . --profile public --json-out reports/r101_public_report.json` | 0 | Score remained 12/100; no baseline regression. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:89:| `python3 cases/test_r102.py --submission .` | 0 | PASS R102, 6/6. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:90:| `python3 tests/test_r102_extra.py --submission .` | 0 | PASS zero/OOM/alignment/reuse/interior/stale/double-free checks. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:91:| `python3 cases/test_r101.py --submission .` | 0 | PASS prior official requirement. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:92:| `python3 tests/test_r101_extra.py --submission .` | 0 | PASS prior custom coverage. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:93:| `python3 grader/public_grade.py --submission . --profile public --json-out reports/r102_public_report.json` | 0 | Score 18/100; R101/R102 pass. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:104:| `python3 cases/test_r103.py --submission .` | 0 | PASS R103, 6/6. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:105:| `python3 tests/test_r103_extra.py --submission .` | 0 | PASS spans/accounting/reset and 40 concurrent DMA submits. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:106:| `python3 cases/test_r102.py --submission .` | 0 | PASS prior official requirement. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:107:| `python3 tests/test_r102_extra.py --submission .` | 0 | PASS prior custom coverage. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:108:| `python3 cases/test_r101.py --submission .` | 0 | PASS prior official requirement. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:109:| `python3 tests/test_r101_extra.py --submission .` | 0 | PASS prior custom coverage. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:110:| `python3 grader/public_grade.py --submission . --profile public --json-out reports/r103_public_report.json` | 0 | Score 24/100; R101-R103 pass. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:127:| `python3 cases/test_r104.py --submission .` | 0 | PASS R104, 4/4. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:128:| `python3 tests/test_r104_extra.py --submission .` | 0 | PASS fixed image, 33 elements, rejection paths, no-submit preflight. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:130:| `python3 grader/public_grade.py --submission . --profile public --json-out reports/r104_public_report.json` | 0 | Score 34/100; R101-R104 and R301 pass publicly. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:145:| `python3 cases/test_r201.py --submission .` | 0 | PASS R201, 10/10. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:146:| `python3 tests/test_r201_extra.py --submission .` | 0 | PASS FP32, INT32 saturation, dimensions, overlap, and spans. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:148:| `python3 grader/public_grade.py --submission . --profile public --json-out reports/basic_gate_report.json` | 0 | Score 44/100, level Basic, Basic gate true. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:159:| `python3 cases/test_r105.py --submission .` | 0 | PASS R105, 5/5. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:160:| Initial `timeout 30s python3 tests/test_r105_extra.py --submission .` | 1 | Test bug: target created with integer size N was compared as N-1 against a source bytes buffer of N+1. Runtime operations returned success. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:161:| Corrected `timeout 30s python3 tests/test_r105_extra.py --submission .` | 0 | PASS FIFO/deep-copy/recovery/free-waits and 20 destroy races. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:163:| `python3 cases/test_r302.py --submission .` | 0 | Public dual-channel/async recovery diagnostic passed. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:164:| `python3 cases/test_r304.py --submission .` | 0 | Public DMA/kernel fault recovery diagnostic passed. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:165:| `python3 grader/public_grade.py --submission . --profile public --json-out reports/r105_public_report.json` | 0 | Score 59/100; R105/R301/R302/R304 public-pass. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:180:| `python3 cases/test_r106.py --submission .` | 0 | PASS R106, 5/5. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:181:| `timeout 30s python3 tests/test_r106_extra.py --submission .` | 0 | PASS latest generation/cycles/stale handles and 20 destroy races. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:183:| `python3 grader/public_grade.py --submission . --profile public --json-out reports/r106_public_report.json` | 0 | Score 64/100; R101-R106/R201/R301/R302/R304 public-pass. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:194:| `python3 cases/test_r202.py --submission .` | 0 | PASS R202, 10/10. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:195:| `timeout 30s python3 tests/test_r202_extra.py --submission .` | 0 | PASS FP4 odd tail, FP8 format, async FP16, and FP64. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:197:| `python3 grader/public_grade.py --submission . --profile public --json-out reports/r202_public_report.json` | 0 | Score 74/100, level Basic. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:208:| `python3 cases/test_r203.py --submission .` | 0 | PASS R203, 4/4. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:209:| `timeout 30s python3 tests/test_r203_extra.py --submission .` | 0 | PASS odd INT4 packing, async INT8, and INT32 output span. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:211:| `python3 grader/public_grade.py --submission . --profile public --json-out reports/r203_public_report.json` | 0 | Score 78/100, level Basic; Good gate false. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:223:| `python3 cases/test_r204.py --submission .` | 0 | PASS R204, 6/6. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:224:| `timeout 30s python3 tests/test_r204_extra.py --submission .` | 0 | PASS AXPY alias, async DOT, NRM2, and preflight bounds. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:226:| `python3 grader/public_grade.py --submission . --profile public --json-out reports/r204_public_report.json` | 0 | Score 84/100; only R303 non-Agent public failure remains. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:238:| `python3 cases/test_r303.py --submission .` | 0 | PASS R303, 4/4. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:239:| `timeout 30s python3 tests/test_r303_extra.py --submission .` | 0 | PASS intervals/subspan/partial flags/pending unregister. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:243:| `python3 grader/public_grade.py --submission . --profile public --json-out reports/good_gate_report.json` | 0 | Score 88/100, level Good, Basic/Good gates true. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:255:| `python3 cases/test_r301.py --submission .` | 0 | PASS R301, 6/6 (Good-gate run). |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:256:| `timeout 30s python3 tests/test_r301_extra.py --submission .` | 0 | PASS exact stats/resolve/reset and no-submit preflight. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:265:| `python3 cases/test_r302.py --submission .` | 0 | PASS R302, 6/6 (Good-gate run). |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:266:| `timeout 30s python3 tests/test_r302_extra.py --submission .` | 0 | PASS four Streams/both channels/concurrent FIFO/recovery. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:275:| `python3 cases/test_r304.py --submission .` | 0 | PASS R304, 4/4 (Good-gate run). |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:276:| `timeout 30s python3 tests/test_r304_extra.py --submission .` | 0 | PASS one-shot DMA/kernel/command faults and recovery. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:287:| `python3 cases/test_r401.py --submission .` | 0 | PASS correctness; public diagnostic 1.000000. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:288:| `python3 cases/test_r402.py --submission .` | 0 | PASS correctness; public diagnostic 1.000000. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:289:| `python3 grader/public_grade.py --submission . --profile public --json-out reports/excellent_public_report.json` | 0 | Score 88/100, Good; all requirements pass, both Agent public diagnostics 1.0. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:291:Evidence: `reports/excellent_public_report.json`. The released grader exposes no
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:292:full/hidden profile, so hidden performance points and the Excellent gate remain
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:307:| `python3 grader/public_grade.py --submission . --profile public --json-out reports/hardening_public_report.json` | 0 | Score 88/100, Good; public Agent diagnostics 1.0. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:335:python3 grader/public_grade.py --submission . --profile public --json-out reports/final_public_report.json
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:341:sha256sum lib/libaec_device.so libaec.so
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:351:| Final public grader | 0 | 88/100, level Good; Basic/Good true, Excellent false because hidden performance is absent. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:388:- Hidden Agent inputs, average speedup, and the Excellent gate are not available in the released grader and are not claimed passed.
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:399:changes: headers, docs, fixed images, grader, cases, golden data, schemas,
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:404:| Old-library `python3 tests/test_r204_max_length.py --submission .` | 1 | Reproduced defect: DOT count 90,909 returned status 9 (`AEC_ERROR_ISA_TRAP`). |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:413:| Public grader to `reports/device_update_public_report.json` | 0 | 88/100 Good; Basic/Good true; R401/R402 diagnostics 1.0. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:424:grader still cannot award hidden Agent performance, so 88/100 is the maximum
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:425:observable public score; Kernel Agent hidden full-score status remains
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:439:python3 cases/test_r402.py --submission .
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:458:| Full public grader | 0 | 88/100 Good; all correctness passed and both public diagnostics are 1.0. |
+Track-C/C2-runtime/starter-kit/TEST_REPORT.md:467:the exact hidden R402 points remain dependent on the undisclosed case mix.
+Track-C/C2-runtime/starter-kit/docs/06_提交与公开测试指南.md:14:`include/`、设备库、Kernel bundle 和 grader 是只读评分契约。
+Track-C/C2-runtime/starter-kit/docs/06_提交与公开测试指南.md:18:1. TLS last error、device query，并运行 ISA golden encoding 示例
+Track-C/C2-runtime/starter-kit/docs/06_提交与公开测试指南.md:50:python3 grader/public_grade.py \
+Track-C/C2-runtime/starter-kit/docs/06_提交与公开测试指南.md:56:公开 grader 不支持 full profile。Agent 的公开性能只用于诊断。
+Track-C/C2-runtime/starter-kit/docs/06_提交与公开测试指南.md:61:python3 cases/test_r101.py --submission .
+Track-C/C2-runtime/starter-kit/docs/06_提交与公开测试指南.md:62:python3 cases/test_r201.py --submission .
+Track-C/C2-runtime/starter-kit/docs/06_提交与公开测试指南.md:87:机器可读定义位于 `cases/manifest.json` 和 `cases/public_cases.json`。
+Track-C/C2-runtime/starter-kit/docs/06_提交与公开测试指南.md:103:python3 grader/public_grade.py --submission . --profile public --quiet
+Track-C/C2-runtime/starter-kit/docs/05_Agent与评分标准.md:7:除 R401、R402 外，每个 requirement 为 all-or-zero：该项的 mandatory public/hidden 检查
+Track-C/C2-runtime/starter-kit/docs/05_Agent与评分标准.md:34:  hidden average speedup。
+Track-C/C2-runtime/starter-kit/docs/05_Agent与评分标准.md:40:输入包含 `case_id`、direction、bytes、alignment、registered 和 concurrency。输出必须只含：
+Track-C/C2-runtime/starter-kit/docs/05_Agent与评分标准.md:79:Kernel 周期来自实际 AEC image interpretation，不使用 grader 侧估算公式。
+Track-C/C2-runtime/starter-kit/docs/05_Agent与评分标准.md:94:- 6 分：hidden performance
+Track-C/C2-runtime/starter-kit/docs/05_Agent与评分标准.md:98:points = 4 + 6 × average(hidden performance fractions)
+Track-C/C2-runtime/starter-kit/docs/05_Agent与评分标准.md:119:6. 只有平台故障、grader 缺陷或规范歧义触发复评；确认缺陷后对全部受影响提交统一重跑。
+Track-C/C2-runtime/starter-kit/docs/03_AEC_ISA规范.md:4:`golden/b_isa_public.json`。C2 不重新编号 Track B 指令。
+Track-C/C2-runtime/starter-kit/docs/03_AEC_ISA规范.md:145:更多固定向量见 `golden/b_isa_public.json`，可运行 `examples/02_isa_encoding.c` 检查本地
+Track-C/C2-runtime/starter-kit/docs/01_赛题说明.md:94:不得修改公共头文件、设备库、Kernel bundle、grader 或测试生成规则。不得提交自定义代码
+Track-C/C2-runtime/starter-kit/RELEASE_MANIFEST.json:11:    "cases/public_cases.json": "6416168dcc7dc25f1ab7724c8cf87049bdab41acee6dbeffb6264bcf8f88e7c4",
+Track-C/C2-runtime/starter-kit/RELEASE_MANIFEST.json:14:    "cases/test_r101.py": "ab8e7e108d4da49c8c313f7bbb62cc59fe76f8882a1cb9f62f6366884c10fb10",
+Track-C/C2-runtime/starter-kit/RELEASE_MANIFEST.json:15:    "cases/test_r102.py": "a7710390963339c7e54b9fd6c607aeae79ce69e17a4305bddac8c8ce851e5342",
+Track-C/C2-runtime/starter-kit/RELEASE_MANIFEST.json:16:    "cases/test_r103.py": "ef7b0b4ec35b37d5cc4287d5b7f09d7475d72be38a45320cb86f50e5a6be8e57",
+Track-C/C2-runtime/starter-kit/RELEASE_MANIFEST.json:17:    "cases/test_r104.py": "750c73bb423d41d4ad7625afb8286b7f4b9b579325542cb5e4474ee6074423c6",
+Track-C/C2-runtime/starter-kit/RELEASE_MANIFEST.json:18:    "cases/test_r105.py": "58fd1c5481efa018317162525fac9dbded7779c6478fb762e39a2de218c00783",
+Track-C/C2-runtime/starter-kit/RELEASE_MANIFEST.json:19:    "cases/test_r106.py": "0175daa79443adec0dec2451f5af1cecffe3e756a91e85ef0ce2f2d13e944310",
+Track-C/C2-runtime/starter-kit/RELEASE_MANIFEST.json:20:    "cases/test_r201.py": "190597b9902f51a87a1dd0182ea16c28d402d435e8951d8209a722c89abd91db",
+Track-C/C2-runtime/starter-kit/RELEASE_MANIFEST.json:21:    "cases/test_r202.py": "8f1c17f0937338cc11ed8165739cca92a1b2fd3d9c701742ca87413d35ddba74",
+Track-C/C2-runtime/starter-kit/RELEASE_MANIFEST.json:22:    "cases/test_r203.py": "05b029142bbbc20b4f6d55f6e74d34ad74fc46ee07efa446b30bf46cf9e04d96",
+Track-C/C2-runtime/starter-kit/RELEASE_MANIFEST.json:23:    "cases/test_r204.py": "30abe24e353dbead172ef704f5e8433ae20677d11fe4ff531522da64be577dea",
+Track-C/C2-runtime/starter-kit/RELEASE_MANIFEST.json:24:    "cases/test_r301.py": "37258729bdc0f3146269b54238c22b02a1bbb5399c836fc993b32aaee1c2b99a",
+Track-C/C2-runtime/starter-kit/RELEASE_MANIFEST.json:25:    "cases/test_r302.py": "c1f0d4e646694e14e7274048c7f132eec1d8a1858352cc0b3c604d28c9e18635",
+Track-C/C2-runtime/starter-kit/RELEASE_MANIFEST.json:26:    "cases/test_r303.py": "d1a8b33b24afd5f11c9bb6da7ac01e0828a43bee5167448be86616ae6b10a496",
+Track-C/C2-runtime/starter-kit/RELEASE_MANIFEST.json:27:    "cases/test_r304.py": "146bca7d634cefc25e742da7b7fa72d984b3b4d6c558fbea50f8575355c5d280",
+Track-C/C2-runtime/starter-kit/RELEASE_MANIFEST.json:28:    "cases/test_r401.py": "394637b56ab57555bb012bc1e5053cc30bed181758ba586ef9b48c270dc9d73c",
+Track-C/C2-runtime/starter-kit/RELEASE_MANIFEST.json:29:    "cases/test_r402.py": "08295e76c43aa27ce3b75a9c10a79ebc16a495445eac53ea65038eb1efd6b3d4",
+Track-C/C2-runtime/starter-kit/RELEASE_MANIFEST.json:42:    "golden/b_isa_public.json": "1f9c6433076bf48d96d6ef552a6f55af45163410a68e4576a85ccb54df9f0787",
+Track-C/C2-runtime/starter-kit/RELEASE_MANIFEST.json:43:    "golden/numeric_public.json": "26565898bc75c83fe39b8bda8bd47ab465f13b9670bbfc704978343fd6cc81f6",
+Track-C/C2-runtime/starter-kit/RELEASE_MANIFEST.json:44:    "grader/public_grade.py": "2d33d4a7be5761d6f3a127856289fc0b476e2a5650eb7501f9038d5dc0b57c4e",
+Track-C/C2-runtime/starter-kit/tutorial/README.md:14:`include/`、设备库、Kernel bundle 和 grader 是只读评分契约。
+Track-C/C2-runtime/starter-kit/tutorial/README.md:18:1. TLS last error、device query，并运行 ISA golden encoding 示例
+Track-C/C2-runtime/starter-kit/tutorial/README.md:50:python3 grader/public_grade.py \
+Track-C/C2-runtime/starter-kit/tutorial/README.md:56:公开 grader 不支持 full profile。Agent 的公开性能只用于诊断。
+Track-C/C2-runtime/starter-kit/tutorial/README.md:61:python3 cases/test_r101.py --submission .
+Track-C/C2-runtime/starter-kit/tutorial/README.md:62:python3 cases/test_r201.py --submission .
+Track-C/C2-runtime/starter-kit/tutorial/README.md:87:机器可读定义位于 `cases/manifest.json` 和 `cases/public_cases.json`。
+Track-C/C2-runtime/starter-kit/tutorial/README.md:103:python3 grader/public_grade.py --submission . --profile public --quiet
+Track-C/C2-runtime/starter-kit/Makefile:3:CXXFLAGS ?= -O2 -g -std=c++17 -fPIC -Wall -Wextra -Wpedantic -ffp-contract=off -fvisibility=hidden
+Track-C/C2-runtime/starter-kit/Makefile:34:	python3 grader/public_grade.py --submission . --profile public
+Track-C/C2-runtime/starter-kit/REVIEW_GUIDE.md:32:| `tests/test_r204_max_length.py` | Historical DOT/NRM2 trap boundaries, maximum count, cycles, and max+1 preflight. |
+Track-C/C2-runtime/starter-kit/REVIEW_GUIDE.md:161:violations, zero mismatches, and zero regret. Candidate ID text and `case_id`
+Track-C/C2-runtime/starter-kit/REVIEW_GUIDE.md:216:- Public score cannot exercise hidden Agent performance; model-optimal public evidence is not an Excellent result.
+Track-C/C2-runtime/starter-kit/REVIEW_GUIDE.md:218:  submitted Kernel policy. It does not prove the hidden case distribution will
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:2:"""Public diagnostic grader for the AEC-C2 competition."""
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:21:def require(condition: object, detail: object = "grader check failed") -> None:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:161:        grader_path = Path(__file__).resolve()
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:163:            grader_path.parents[1] / "build" / "device" / "libaec_device.so",
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:164:            grader_path.parents[1] / "lib" / "libaec_device.so",
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:165:            grader_path.parent / "libaec_device.so",
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:562:def test_r101(runtime: Runtime, profile: str) -> str:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:602:def test_r102(runtime: Runtime, profile: str) -> str:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:616:def test_r103(runtime: Runtime, profile: str) -> str:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:634:def test_r104(runtime: Runtime, profile: str) -> str:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:682:def test_r105(runtime: Runtime, profile: str) -> str:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:705:def test_r106(runtime: Runtime, profile: str) -> str:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:743:def test_r201(runtime: Runtime, profile: str) -> str:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:751:    hidden = additional_profile(profile).get("r201")
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:752:    if hidden:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:753:        random_case = hidden["random"]
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:761:        extreme_a = hidden["integer_extreme_a"]
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:762:        extreme_b = hidden["integer_extreme_b"]
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:763:        integer_m, integer_n, integer_k = hidden["integer_shape"]
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:769:def test_r202(runtime: Runtime, profile: str) -> str:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:783:    hidden = additional_profile(profile).get("r202")
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:784:    if hidden:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:793:        left = math.nan if hidden["left"] == "nan" else float(hidden["left"])
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:794:        for format_name in hidden["special_formats"]:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:797:                            [left], [float(hidden["right"])], fp8_format)
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:801:def test_r203(runtime: Runtime, profile: str) -> str:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:807:    hidden = additional_profile(profile).get("r203")
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:808:    if hidden:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:813:        undersized_c = runtime.alloc(hidden["undersized_output_bytes"])
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:828:def test_r204(runtime: Runtime, profile: str) -> str:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:862:        hidden = additional_profile(profile).get("r204")
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:863:        if hidden:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:864:            one_past = hidden["one_past_count"]
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:876:def test_r301(runtime: Runtime, profile: str) -> str:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:909:def test_r302(runtime: Runtime, profile: str) -> str:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:937:def test_r303(runtime: Runtime, profile: str) -> str:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:946:        hidden = additional_profile(profile).get("r303")
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:947:        if hidden:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:949:                ctypes.c_void_p(host.address + hidden["overlap_offset"]),
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:950:                hidden["overlap_bytes"]) == INVALID_ARGUMENT)
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:963:def test_r304(runtime: Runtime, profile: str) -> str:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1043:    hidden_positive: bool
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1047:def test_r401(runtime: Runtime, profile: str) -> AgentOutcome:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1048:    public_cases = [
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1049:        {"case_id": 0, "direction": "h2d", "bytes": 1024, "alignment": 64,
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1052:        {"case_id": 1, "direction": "d2h", "bytes": 65536, "alignment": 64,
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1055:        {"case_id": 2, "direction": "h2d", "bytes": 1048576, "alignment": 16,
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1059:    hidden_cases = additional_profile(profile).get("r401", [])
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1060:    cases = public_cases + (hidden_cases if profile == "full" else [])
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1061:    hidden_fractions: list[float] = []
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1076:            target = hidden_fractions if request["visibility"] == "hidden" else public_fractions
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1078:        metrics.append({"case_id": request["case_id"],
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1084:    hidden_performance = (sum(hidden_fractions) / len(hidden_fractions)
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1085:                          if hidden_fractions else 0.0)
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1086:    earned = 4.0 + (6.0 * hidden_performance if profile == "full" else 0.0)
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1090:        f"hidden performance={hidden_performance:.6f}",
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1091:        earned, profile == "full" and hidden_performance > 0.0, metrics)
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1140:def test_r402(runtime: Runtime, profile: str) -> AgentOutcome:
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1141:    public_cases = [
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1142:        {"case_id": 0, "dtype": "fp32", "m": 32, "n": 64, "k": 16,
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1145:        {"case_id": 1, "dtype": "int8", "m": 20, "n": 12, "k": 28,
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1148:        {"case_id": 2, "dtype": "fp16", "m": 7, "n": 9, "k": 5,
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1152:    hidden_cases = additional_profile(profile).get("r402", [])
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1153:    cases = public_cases + (hidden_cases if profile == "full" else [])
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1154:    hidden_fractions: list[float] = []
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1177:            target = hidden_fractions if raw["visibility"] == "hidden" else public_fractions
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1179:        metrics.append({"case_id": raw["case_id"], "visibility": raw["visibility"],
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1189:    hidden_performance = (sum(hidden_fractions) / len(hidden_fractions)
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1190:                          if hidden_fractions else 0.0)
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1191:    earned = 4.0 + (6.0 * hidden_performance if profile == "full" else 0.0)
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1195:        f"hidden performance={hidden_performance:.6f}",
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1196:        earned, profile == "full" and hidden_performance > 0.0, metrics)
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1207:    Requirement("R101", 4, test_r101),
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1208:    Requirement("R102", 6, test_r102),
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1209:    Requirement("R103", 6, test_r103),
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1210:    Requirement("R104", 4, test_r104),
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1211:    Requirement("R105", 5, test_r105),
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1212:    Requirement("R106", 5, test_r106),
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1213:    Requirement("R201", 10, test_r201),
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1214:    Requirement("R202", 10, test_r202),
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1215:    Requirement("R203", 4, test_r203),
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1216:    Requirement("R204", 6, test_r204),
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1217:    Requirement("R301", 6, test_r301),
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1218:    Requirement("R302", 6, test_r302),
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1219:    Requirement("R303", 4, test_r303),
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1220:    Requirement("R304", 4, test_r304),
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1221:    Requirement("R401", 10, test_r401),
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1222:    Requirement("R402", 10, test_r402),
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1236:            hidden_positive = False
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1240:                hidden_positive = outcome.hidden_positive
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1253:                "hidden_positive": hidden_positive,
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1267:        except Exception as exc:  # grader must report one failed requirement and continue
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1288:                "hidden_positive": False,
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1301:                           results[item]["hidden_positive"]
+Track-C/C2-runtime/starter-kit/grader/public_grade.py:1341:        print(f"grader error: {exc}", file=sys.stderr)
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:27:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:46:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:65:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:84:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:103:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:122:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:141:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:160:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:179:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:185:      "detail": "AssertionError: grader check failed",
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:198:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:217:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:236:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:242:      "detail": "AssertionError: grader check failed",
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:255:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:274:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:289:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:302:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:315:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:320:      "detail": "DMA Agent schema/correctness passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:333:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:345:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:358:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:371:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:379:      "detail": "Kernel Agent legality passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/r203_public_report.json:392:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:27:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:46:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:65:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:84:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:103:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:122:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:141:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:160:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:179:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:185:      "detail": "AssertionError: grader check failed",
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:198:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:217:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:236:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:242:      "detail": "AssertionError: grader check failed",
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:255:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:274:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:289:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:302:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:315:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:320:      "detail": "DMA Agent schema/correctness passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:333:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:345:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:358:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:371:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:379:      "detail": "Kernel Agent legality passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/r202_public_report.json:392:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:27:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:46:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:65:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:84:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:103:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:122:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:141:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:160:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:179:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:198:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:217:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:236:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:255:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:274:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:289:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:302:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:315:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:320:      "detail": "DMA Agent schema/correctness passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:333:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:345:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:358:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:371:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:379:      "detail": "Kernel Agent legality passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/r101_public_report.json:392:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:27:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:46:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:65:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:84:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:103:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:122:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:141:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:160:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:179:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:185:      "detail": "AssertionError: grader check failed",
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:198:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:217:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:236:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:242:      "detail": "AssertionError: grader check failed",
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:255:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:274:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:289:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:302:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:315:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:320:      "detail": "DMA Agent schema/correctness passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:333:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:345:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:358:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:371:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:379:      "detail": "Kernel Agent legality passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/basic_gate_report.json:392:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:27:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:46:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:65:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:84:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:103:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:122:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:141:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:160:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:179:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:198:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:217:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:236:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:255:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:274:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:289:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:302:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:315:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:320:      "detail": "DMA Agent schema/correctness passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:333:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:345:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:358:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:371:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:379:      "detail": "Kernel Agent legality passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/baseline_public_report.json:392:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:27:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:46:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:52:      "detail": "AssertionError: grader check failed",
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:65:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:84:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:103:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:122:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:141:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:160:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:179:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:198:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:217:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:236:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:242:      "detail": "AssertionError: grader check failed",
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:255:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:274:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:289:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:302:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:315:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:320:      "detail": "DMA Agent schema/correctness passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:333:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:345:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:358:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:371:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:379:      "detail": "Kernel Agent legality passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/r102_public_report.json:392:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:27:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:46:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:65:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:84:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:103:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:122:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:141:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:160:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:179:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:198:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:217:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:236:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:242:      "detail": "AssertionError: grader check failed",
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:255:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:274:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:289:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:302:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:315:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:320:      "detail": "DMA Agent schema/correctness passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:333:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:345:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:358:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:371:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:379:      "detail": "Kernel Agent legality passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/r204_public_report.json:392:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:27:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:46:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:65:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:84:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:103:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:122:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:141:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:160:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:179:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:185:      "detail": "AssertionError: grader check failed",
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:198:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:217:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:236:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:242:      "detail": "AssertionError: grader check failed",
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:255:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:274:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:289:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:302:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:315:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:320:      "detail": "DMA Agent schema/correctness passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:333:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:345:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:358:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:371:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:379:      "detail": "Kernel Agent legality passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/r106_public_report.json:392:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:27:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:46:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:65:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:84:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:103:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:122:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:141:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:160:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:179:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:198:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:217:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:236:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:255:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:274:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:289:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:302:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:315:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:320:      "detail": "DMA Agent schema/correctness passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:333:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:345:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:358:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:371:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:379:      "detail": "Kernel Agent legality passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/good_gate_report.json:392:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:27:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:46:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:65:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:84:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:103:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:122:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:141:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:160:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:179:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:198:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:217:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:236:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:255:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:274:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:289:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:302:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:315:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:320:      "detail": "DMA Agent schema/correctness passed; public diagnostic=1.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:333:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:345:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:358:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:371:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:379:      "detail": "Kernel Agent legality passed; public diagnostic=1.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/hardening_public_report.json:392:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:27:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:46:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:65:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:84:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:103:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:122:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:141:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:160:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:179:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:185:      "detail": "AssertionError: grader check failed",
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:198:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:217:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:236:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:242:      "detail": "AssertionError: grader check failed",
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:255:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:274:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:289:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:302:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:315:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:320:      "detail": "DMA Agent schema/correctness passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:333:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:345:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:358:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:371:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:379:      "detail": "Kernel Agent legality passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/r104_public_report.json:392:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/kernel_oracle_summary.json:65:  "combined_record_sha256": "73426caf1c45fa6ed64d4943c5fec6ad967314b46504892abfec31c920b8f67c",
+Track-C/C2-runtime/starter-kit/reports/kernel_oracle_summary.json:67:  "device_sha256": "b96b09e88ae160b659cf72bd079da8bc647d2bc55d377297a649d77c30ddcb0a",
+Track-C/C2-runtime/starter-kit/reports/kernel_oracle_summary.json:89:      "device_sha256": "b96b09e88ae160b659cf72bd079da8bc647d2bc55d377297a649d77c30ddcb0a",
+Track-C/C2-runtime/starter-kit/reports/kernel_oracle_summary.json:113:      "record_sha256": "f8c7c4ccc2ed2b39f4d36ae9e69a587265edb547290a81fad0d8dab9c0441e20",
+Track-C/C2-runtime/starter-kit/reports/kernel_oracle_summary.json:140:      "device_sha256": "b96b09e88ae160b659cf72bd079da8bc647d2bc55d377297a649d77c30ddcb0a",
+Track-C/C2-runtime/starter-kit/reports/kernel_oracle_summary.json:164:      "record_sha256": "64cc11ead93e1a1e644774c847ef59b14b9e9c7f8d42c1cf519f37b4a6fae836",
+Track-C/C2-runtime/starter-kit/reports/kernel_oracle_summary.json:191:      "device_sha256": "b96b09e88ae160b659cf72bd079da8bc647d2bc55d377297a649d77c30ddcb0a",
+Track-C/C2-runtime/starter-kit/reports/kernel_oracle_summary.json:215:      "record_sha256": "9dd677458996617929d7db3e460c12c894e398c519e8038f571b8748c4ca86e6",
+Track-C/C2-runtime/starter-kit/reports/kernel_oracle_summary.json:242:      "device_sha256": "b96b09e88ae160b659cf72bd079da8bc647d2bc55d377297a649d77c30ddcb0a",
+Track-C/C2-runtime/starter-kit/reports/kernel_oracle_summary.json:266:      "record_sha256": "b83198159a96472ead841c97ebf94974f674645c2fa44f2b3d62ab76ad3191ba",
+Track-C/C2-runtime/starter-kit/reports/kernel_oracle_summary.json:293:      "device_sha256": "b96b09e88ae160b659cf72bd079da8bc647d2bc55d377297a649d77c30ddcb0a",
+Track-C/C2-runtime/starter-kit/reports/kernel_oracle_summary.json:317:      "record_sha256": "922a83f307c590ca948073e7133f695ac09d16b63ebf9d59743a9037dc8aaff0",
+Track-C/C2-runtime/starter-kit/reports/kernel_oracle_summary.json:344:      "device_sha256": "b96b09e88ae160b659cf72bd079da8bc647d2bc55d377297a649d77c30ddcb0a",
+Track-C/C2-runtime/starter-kit/reports/kernel_oracle_summary.json:368:      "record_sha256": "f87e60b0e9784ca1bd1c30aac75e9cf3df4a5ee609a0d0cbe80776c91ddcb454",
+Track-C/C2-runtime/starter-kit/reports/kernel_oracle_summary.json:395:      "device_sha256": "b96b09e88ae160b659cf72bd079da8bc647d2bc55d377297a649d77c30ddcb0a",
+Track-C/C2-runtime/starter-kit/reports/kernel_oracle_summary.json:419:      "record_sha256": "4a58b5e7519532486c2767cd102d170b4dccaefbbdb4a00dbf93319c80542746",
+Track-C/C2-runtime/starter-kit/reports/kernel_oracle_summary.json:446:      "device_sha256": "b96b09e88ae160b659cf72bd079da8bc647d2bc55d377297a649d77c30ddcb0a",
+Track-C/C2-runtime/starter-kit/reports/kernel_oracle_summary.json:470:      "record_sha256": "9ff4201cae374ce429279a46b234ef09640be6136a82e37ad54616bd7d4f8ebf",
+Track-C/C2-runtime/starter-kit/reports/kernel_oracle_summary.json:497:      "device_sha256": "b96b09e88ae160b659cf72bd079da8bc647d2bc55d377297a649d77c30ddcb0a",
+Track-C/C2-runtime/starter-kit/reports/kernel_oracle_summary.json:521:      "record_sha256": "65faf222555e97123c22b7a3907546b80af813cf5aaf2d75531dbfe6936dcdf4",
+Track-C/C2-runtime/starter-kit/reports/kernel_oracle_summary.json:548:      "device_sha256": "b96b09e88ae160b659cf72bd079da8bc647d2bc55d377297a649d77c30ddcb0a",
+Track-C/C2-runtime/starter-kit/reports/kernel_oracle_summary.json:572:      "record_sha256": "b1722699c7508b70fd18a50882f7221715d51c8019c1a26fffde4ecd058470dc",
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:27:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:46:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:65:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:84:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:103:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:122:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:141:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:160:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:179:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:198:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:217:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:236:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:255:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:274:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:289:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:302:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:315:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:320:      "detail": "DMA Agent schema/correctness passed; public diagnostic=1.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:333:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:345:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:358:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:371:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:379:      "detail": "Kernel Agent legality passed; public diagnostic=1.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/excellent_public_report.json:392:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:27:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:46:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:65:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:71:      "detail": "AssertionError: grader check failed",
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:84:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:103:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:122:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:141:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:160:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:179:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:185:      "detail": "AssertionError: grader check failed",
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:198:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:204:      "detail": "AssertionError: grader check failed",
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:217:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:236:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:242:      "detail": "AssertionError: grader check failed",
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:255:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:274:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:289:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:302:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:315:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:320:      "detail": "DMA Agent schema/correctness passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:333:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:345:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:358:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:371:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:379:      "detail": "Kernel Agent legality passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/r103_public_report.json:392:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:27:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:46:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:65:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:84:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:103:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:122:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:141:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:160:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:179:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:185:      "detail": "AssertionError: grader check failed",
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:198:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:217:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:236:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:242:      "detail": "AssertionError: grader check failed",
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:255:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:274:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:289:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:302:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:315:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:320:      "detail": "DMA Agent schema/correctness passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:333:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:345:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:358:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:371:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:379:      "detail": "Kernel Agent legality passed; public diagnostic=0.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/r105_public_report.json:392:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/kernel_policy_report.json:3:  "agent_sha256": "01af660d23774897c10e56262f501f7ecbe2661c18e7def5b0601619b563bc79",
+Track-C/C2-runtime/starter-kit/reports/kernel_policy_report.json:9:    "device_sha256": true,
+Track-C/C2-runtime/starter-kit/reports/kernel_policy_report.json:20:  "device_sha256": "b96b09e88ae160b659cf72bd079da8bc647d2bc55d377297a649d77c30ddcb0a",
+Track-C/C2-runtime/starter-kit/reports/kernel_policy_report.json:21:  "hidden_performance_note": "The certificate proves oracle-optimal choices over the public contract domain; only the organizer full profile can award hidden points.",
+Track-C/C2-runtime/starter-kit/reports/kernel_policy_report.json:22:  "hidden_performance_verified": false,
+Track-C/C2-runtime/starter-kit/reports/kernel_policy_report.json:54:  "model_sha256": "4c4f02d26b0497296a34d07bdc1faf438f0facfd9c4d790c3d0a9337580a18dd",
+Track-C/C2-runtime/starter-kit/reports/kernel_policy_report.json:57:  "oracle_summary_sha256": "5be004b2ae5b21859d1b0c7d0f74eea8a80c90b2bd1f3fbb3d3e53211d558ae6",
+Track-C/C2-runtime/starter-kit/reports/kernel_policy_report.json:58:  "public_r402_required": "run grader after generation",
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:27:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:46:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:65:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:84:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:103:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:122:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:141:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:160:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:179:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:198:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:217:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:236:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:255:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:274:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:289:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:302:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:315:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:320:      "detail": "DMA Agent schema/correctness passed; public diagnostic=1.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:333:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:345:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:358:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:371:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:379:      "detail": "Kernel Agent legality passed; public diagnostic=1.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/device_update_public_report.json:392:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:27:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:46:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:65:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:84:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:103:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:122:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:141:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:160:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:179:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:198:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:217:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:236:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:255:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:274:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:289:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:302:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:315:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:320:      "detail": "DMA Agent schema/correctness passed; public diagnostic=1.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:333:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:345:          "case_id": 0,
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:358:          "case_id": 1,
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:371:          "case_id": 2,
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:379:      "detail": "Kernel Agent legality passed; public diagnostic=1.000000; hidden performance=0.000000",
+Track-C/C2-runtime/starter-kit/reports/final_public_report.json:392:      "hidden_positive": false,
+Track-C/C2-runtime/starter-kit/reports/device_update_audit.json:14:    "sha256": "295c47c51354a2e58b76cff18633b15daeea9f2e0e4115dccda338a9e66b01d5",
+Track-C/C2-runtime/starter-kit/reports/device_update_audit.json:19:    "sha256": "b96b09e88ae160b659cf72bd079da8bc647d2bc55d377297a649d77c30ddcb0a",
+Track-C/C2-runtime/starter-kit/reports/device_update_audit.json:20:    "manifest_sha256": "99f9867828f530605f1599fc7770da18f205aaf3ab831ff32899bc630915ba7f",
+Track-C/C2-runtime/starter-kit/reports/device_update_audit.json:28:  "runtime_sha256": "2784fd96377c8ac4d1969e34c16dd216561195f7000fb497d345a1a0b7308fe4",
+Track-C/C2-runtime/starter-kit/reports/device_update_audit.json:34:  "public_cases_passed": 16,
+Track-C/C2-runtime/starter-kit/reports/device_update_audit.json:35:  "public_cases_total": 16,
+Track-C/C2-runtime/starter-kit/reports/device_update_audit.json:42:  "kernel_agent_hidden_performance_verified": false
+Track-C/C2-runtime/starter-kit/README.md:20:image 或 grader 来改变评分契约。
+Track-C/C2-runtime/starter-kit/README.md:29:python3 grader/public_grade.py --submission . --profile public
+Track-C/C2-runtime/starter-kit/README.md:35:python3 cases/test_r101.py --submission .
+Track-C/C2-runtime/starter-kit/README.md:36:python3 cases/test_r201.py --submission .
+Track-C/C2-runtime/starter-kit/agents/kernel_agent.py:10:    "case_id", "dtype", "m", "n", "k", "alignment", "workspace", "candidates"
+Track-C/C2-runtime/starter-kit/agents/kernel_agent.py:268:    if not valid_integer(request["case_id"], 0):
+Track-C/C2-runtime/starter-kit/agents/kernel_agent.py:269:        raise ValueError("invalid case_id")
+Track-C/C2-runtime/starter-kit/agents/dma_agent.py:9:    "case_id", "direction", "bytes", "alignment", "registered", "concurrency"
+Track-C/C2-runtime/starter-kit/agents/dma_agent.py:21:    if not valid_integer(request["case_id"], 0):
+Track-C/C2-runtime/starter-kit/agents/dma_agent.py:22:        raise ValueError("invalid case_id")
+Track-C/C2-runtime/starter-kit/cases/manifest.json:3:    "public": "public_cases.json"
+Track-C/C2-runtime/starter-kit/cases/manifest.json:6:    "case_id",
+Track-C/C2-runtime/starter-kit/cases/public_cases.json:4:      "case_id": "pub-r101-abi-tls",
+Track-C/C2-runtime/starter-kit/cases/public_cases.json:17:      "case_id": "pub-r102-allocator",
+Track-C/C2-runtime/starter-kit/cases/public_cases.json:30:      "case_id": "pub-r103-copy",
+Track-C/C2-runtime/starter-kit/cases/public_cases.json:45:      "case_id": "pub-r104-vector-image",
+Track-C/C2-runtime/starter-kit/cases/public_cases.json:63:      "case_id": "pub-r105-stream-fifo",
+Track-C/C2-runtime/starter-kit/cases/public_cases.json:78:      "case_id": "pub-r106-events",
+Track-C/C2-runtime/starter-kit/cases/public_cases.json:93:      "case_id": "pub-r201-core-gemm",
+Track-C/C2-runtime/starter-kit/cases/public_cases.json:111:      "case_id": "pub-r202-low-precision",
+Track-C/C2-runtime/starter-kit/cases/public_cases.json:126:      "case_id": "pub-r203-packed-integer",
+Track-C/C2-runtime/starter-kit/cases/public_cases.json:141:      "case_id": "pub-r204-vector-reduction",
+Track-C/C2-runtime/starter-kit/cases/public_cases.json:158:      "case_id": "pub-r301-command-accounting",
+Track-C/C2-runtime/starter-kit/cases/public_cases.json:177:      "case_id": "pub-r302-two-channel",
+Track-C/C2-runtime/starter-kit/cases/public_cases.json:192:      "case_id": "pub-r303-registration",
+Track-C/C2-runtime/starter-kit/cases/public_cases.json:208:      "case_id": "pub-r304-fault-recovery",
+Track-C/C2-runtime/starter-kit/cases/public_cases.json:223:      "case_id": "pub-r401-dma-policy",
+Track-C/C2-runtime/starter-kit/cases/public_cases.json:236:      "case_id": "pub-r402-image-policy",
+Track-C/C2-runtime/starter-kit/cases/README.md:5:单项：`python3 test_r101.py --submission <目录>`
+Track-C/C2-runtime/starter-kit/cases/run_case.py:21:        command = [sys.executable, str(ROOT / "grader" / "public_grade.py"),
+Track-C/C2-runtime/starter-kit/cases/run_case.py:26:            print(f"FAIL {requirement}: grader exit={result.returncode}")
+Track-C/C2-runtime/starter-kit/schemas/dma_agent_input.schema.json:13:    "case_id": {
+Track-C/C2-runtime/starter-kit/schemas/dma_agent_input.schema.json:33:    "case_id",
+Track-C/C2-runtime/starter-kit/schemas/kernel_agent_input.schema.json:62:    "case_id": {
+Track-C/C2-runtime/starter-kit/schemas/kernel_agent_input.schema.json:87:    "case_id",
+Track-C/C2-runtime/starter-kit/MORNING_BRIEF.md:20:performance is diagnostic only; hidden Excellent evidence is unavailable.
+Track-C/C2-runtime/starter-kit/MORNING_BRIEF.md:39:5. `reports/device_update_public_report.json` for the current machine-readable grader result.
+Track-C/C2-runtime/starter-kit/MORNING_BRIEF.md:54:  hidden R402 performance points still depend on the organizer's case mix.
+Track-C/C2-runtime/starter-kit/tests/test_agents.py:81:        "case_id": 17, "direction": "d2h", "bytes": 65536,
+Track-C/C2-runtime/starter-kit/tests/test_agents.py:98:    for case_id, values in enumerate(itertools.product(
+Track-C/C2-runtime/starter-kit/tests/test_agents.py:103:            "case_id": case_id, "direction": direction, "bytes": byte_count,
+Track-C/C2-runtime/starter-kit/tests/test_agents.py:120:        "case_id": 3, "dtype": "fp16", "m": 32, "n": 64, "k": 16,
+Track-C/C2-runtime/starter-kit/tests/test_agents.py:161:        for case_id, (m, n, k) in enumerate(shapes):
+Track-C/C2-runtime/starter-kit/tests/test_agents.py:173:                "case_id": case_id, "dtype": dtype_name, "m": m, "n": n,
+Track-C/C2-runtime/starter-kit/tests/test_r101_extra.py:2:"""Additional R101 checks that do not inspect or modify the official grader."""
+Track-C/C2-runtime/starter-kit/tests/test_immutable.py:24:    "grader",
+Track-C/C2-runtime/starter-kit/tests/test_immutable.py:26:    "golden",
+Track-C/C2-runtime/starter-kit/tests/test_immutable.py:38:def sha256(path: Path) -> str:
+Track-C/C2-runtime/starter-kit/tests/test_immutable.py:39:    digest = hashlib.sha256()
+Track-C/C2-runtime/starter-kit/tests/test_immutable.py:54:    assert sha256(manifest_path) == EXPECTED_MANIFEST_SHA256, (
+Track-C/C2-runtime/starter-kit/tests/test_immutable.py:92:        if sha256(root / name) != digest
+Track-C/C2-runtime/starter-kit/tests/test_kernel_agent_optimality.py:70:            candidates: list[dict], *, case_id: int = 1,
+Track-C/C2-runtime/starter-kit/tests/test_kernel_agent_optimality.py:74:        "case_id": case_id, "dtype": dtype_name, "m": m, "n": n, "k": k,
+Track-C/C2-runtime/starter-kit/tests/test_kernel_agent_optimality.py:91:    for forbidden in ("aecDeviceEvaluateKernel", "libaec_device", "grader/",
+Track-C/C2-runtime/starter-kit/tests/test_kernel_agent_optimality.py:112:    assert policy_report["agent_sha256"] == hashlib.sha256(
+Track-C/C2-runtime/starter-kit/tests/test_kernel_agent_optimality.py:114:    assert policy_report["oracle_summary_sha256"] == hashlib.sha256(
+Track-C/C2-runtime/starter-kit/tests/test_kernel_agent_optimality.py:151:    for case_id in (0, 7, 999999):
+Track-C/C2-runtime/starter-kit/tests/test_kernel_agent_optimality.py:152:        assert run_agent(agent, dict(base, case_id=case_id)) == baseline
+Track-C/C2-runtime/starter-kit/golden/b_isa_public.json:37:  "golden_vectors": [
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION_PLAN.md:48:- `grader/`, `cases/`, `golden/`, `schemas/`
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION_PLAN.md:80:| R101 | Query, error names, TLS error | 4 | PASS verified | `src/aec_runtime.cpp`, `src/error.*` | `cases/test_r101.py` | `tests/test_r101_extra.py` | ABI exception/error consistency |
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION_PLAN.md:81:| R102 | Allocation/free/lifetime | 6 | PASS verified | `src/allocation.*` | `cases/test_r102.py` | `tests/test_r102_extra.py` | pending async free and external device reset |
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION_PLAN.md:82:| R103 | Synchronous H2D/D2H | 6 | PASS verified | `src/command.*`, `src/copy.*`, allocation leases | `cases/test_r103.py` | `tests/test_r103_extra.py` | fault completion validation deferred to R304 |
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION_PLAN.md:83:| R104 | Vector Add fixed image | 4 | PASS verified | `src/kernel.*`, `src/serialization.h` | `cases/test_r104.py` | `tests/test_r104_extra.py`, `test_serialization.cpp` | async integration deferred to R105 |
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION_PLAN.md:84:| R105 | Stream FIFO/async | 5 | PASS verified | `src/stream.*`, queued work in copy/kernel/numeric | `cases/test_r105.py` | `tests/test_r105_extra.py` (20 destroy races) | host buffer lifetime remains caller-owned by contract |
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION_PLAN.md:85:| R106 | Event generations/cycles | 5 | PASS verified | `src/event.*`, Stream markers | `cases/test_r106.py` | `tests/test_r106_extra.py` (20 destroy races) | cross-Stream rerecord ordering |
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION_PLAN.md:86:| R201 | FP32/INT32 GEMM | 10 | PASS verified | `src/numeric.*`, shared kernel path | `cases/test_r201.py` | `tests/test_r201_extra.py`, serialization test | async integration deferred to R105 |
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION_PLAN.md:87:| R202 | FP4/FP8/FP16/BF16/FP64 GEMM | 10 | PASS verified | generic `src/numeric.cpp` path | `cases/test_r202.py` | `tests/test_r202_extra.py` | hidden special-float/rounding breadth |
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION_PLAN.md:88:| R203 | INT4/INT8/INT32 GEMM | 4 | PASS verified | generic `src/numeric.cpp` path | `cases/test_r203.py` | `tests/test_r203_extra.py` | hidden maximum-shape saturation breadth |
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION_PLAN.md:89:| R204 | AXPY/DOT/NRM2 | 6 | PASS verified | `src/library_ops.*` | `cases/test_r204.py` | `tests/test_r204_extra.py`, `tests/test_r204_max_length.py`, serialization | maximum 1,048,576 covered on updated device |
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION_PLAN.md:90:| R301 | ABI sequence/completion/stats | 6 | PASS verified | `src/command.*`, stats API | `cases/test_r301.py` | `tests/test_r301_extra.py` | sequence exhaustion is theoretical only |
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION_PLAN.md:91:| R302 | Dual DMA/async recovery | 6 | PASS verified | stream-id channel policy | `cases/test_r302.py` | `tests/test_r302_extra.py` | submits serialize for sequence correctness |
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION_PLAN.md:92:| R303 | Host registration/zero-copy | 4 | PASS verified | `src/registration.*`, copy flags | `cases/test_r303.py` | `tests/test_r303_extra.py` | concurrent new normal copy after unregister linearization |
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION_PLAN.md:93:| R304 | Fault propagation/recovery | 4 | PASS verified | command + async error path | `cases/test_r304.py` | `tests/test_r304_extra.py` | hidden ISA-trap PC variants |
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION_PLAN.md:94:| R401 | DMA Agent | 10 | correctness PASS; public diagnostic 1.0 | `agents/dma_agent.py` | `cases/test_r401.py` | `tests/test_agents.py`: 120 brute-force optima | hidden speedup profile unavailable |
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION_PLAN.md:95:| R402 | Kernel Agent | 10 | correctness PASS; public diagnostic 1.0 | `agents/kernel_agent.py` | `cases/test_r402.py` | 5,570,560 full-domain oracle records plus subset/permutation/protocol tests | full-profile score unavailable |
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION_PLAN.md:119:- [x] Agent public/model virtual-cycle optimization after all correctness requirements passed; hidden performance remains unverifiable.
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION_PLAN.md:149:The only unavailable gate is hidden Agent performance. The released public
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION_PLAN.md:150:grader cannot establish the Excellent gate, so it remains explicitly unclaimed.
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION_PLAN.md:176:in the published domain. It cannot make the public grader award hidden points,
+Track-C/C2-runtime/starter-kit/IMPLEMENTATION_PLAN.md:178:necessarily yields exactly 6/6 hidden performance points.
+Track-C/C2-runtime/scoring.md:86:python3 grader/public_grade.py --submission . --profile public

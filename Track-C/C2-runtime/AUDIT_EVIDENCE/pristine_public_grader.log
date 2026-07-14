@@ -1,0 +1,18 @@
+AEC score: 88.000000/100 — Good
+PASS R101: 4/4 — device metadata and TLS error isolation verified
+PASS R102: 6/6 — allocation reuse, OOM, and double-free behavior verified
+PASS R103: 6/6 — synchronous copies and allocation-relative bounds verified
+PASS R104: 4/4 — registered vector-add launch and launch validation verified
+PASS R105: 5/5 — stream FIFO and asynchronous copy verified
+PASS R106: 5/5 — event generations, cycle capture, and async error propagation verified
+PASS R201: 10/10 — FP32 and INT32 GEMM match an independent scalar oracle
+PASS R202: 10/10 — all low-precision formats and FP64 match independent encoding/oracles
+PASS R203: 4/4 — packed INT4 and INT8 GEMM match exact INT32 results
+PASS R204: 6/6 — AXPY, DOT, and NRM2 match ordered FP32 oracles
+PASS R301: 6/6 — command types and deterministic completion accounting verified
+PASS R302: 6/6 — both DMA channels, asynchronous bounds, and recovery verified
+PASS R303: 4/4 — registration lifecycle and modeled zero-copy benefit verified
+PASS R304: 4/4 — DMA/kernel fault injection and post-fault recovery verified
+PASS R401: 4.0/10 — DMA Agent schema/correctness passed; public diagnostic=1.000000; hidden performance=0.000000
+PASS R402: 4.0/10 — Kernel Agent legality passed; public diagnostic=1.000000; hidden performance=0.000000
+exit=0

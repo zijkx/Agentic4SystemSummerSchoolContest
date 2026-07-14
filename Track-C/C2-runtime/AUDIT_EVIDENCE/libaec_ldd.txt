@@ -1,0 +1,7 @@
+	linux-vdso.so.1 (0x00007ffc546f2000)
+	libaec_device.so => /tmp/c2-candidate-clean-a4c3a47/Track-C/C2-runtime/starter-kit/./lib/libaec_device.so (0x0000782947df8000)
+	libstdc++.so.6 => /usr/lib/x86_64-linux-gnu/libstdc++.so.6 (0x0000782947b75000)
+	libgcc_s.so.1 => /usr/lib/x86_64-linux-gnu/libgcc_s.so.1 (0x0000782947b47000)
+	libc.so.6 => /usr/lib/x86_64-linux-gnu/libc.so.6 (0x0000782947935000)
+	/lib64/ld-linux-x86-64.so.2 (0x0000782947e1f000)
+	libm.so.6 => /usr/lib/x86_64-linux-gnu/libm.so.6 (0x000078294784c000)

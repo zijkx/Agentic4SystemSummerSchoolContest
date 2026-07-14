@@ -1,0 +1,37 @@
+/home/mig19/c2/Agentic4SystemSummerSchoolContest
+origin	git@github.com:zijkx/Agentic4SystemSummerSchoolContest.git (fetch)
+origin	git@github.com:zijkx/Agentic4SystemSummerSchoolContest.git (push)
+codex/c2-device-library-update
+a4c3a47610147e93fc1d7db731ac7c0576d01e1a
+* a4c3a47 (HEAD -> codex/c2-device-library-update, origin/codex/c2-device-library-update) c2: certify full-domain kernel agent policy
+* a7cfa42 c2: update official device library and max reductions
+* 2e65745 (origin/main, origin/codex/c2-runtime-implementation, origin/HEAD, main, codex/c2-runtime-implementation) c2: finalize review and test documentation
+* d7c2a93 c2: harden public launch and C ABI boundaries
+* f4b638d c2: implement and tune valid DMA and kernel agents
+* 92946d7 c2: complete R304 fault recovery audit
+* bccda1c c2: complete R302 dual-DMA error handling audit
+* d613819 c2: complete R301 command accounting audit
+* 4f639b4 c2: complete R303 registered host memory
+* e96eb23 c2: implement R204 vector library operations
+* f2a8209 c2: implement R203 integer GEMM variants
+* bede93a c2: implement R202 floating-point GEMM variants
+* 548e4b9 c2: implement R106 event generation and cycle markers
+* 2ae404a c2: implement R105 asynchronous stream FIFO
+* 94d8169 c2: complete Basic gate with R201 GEMM
+* 5411e0c c2: implement R104 fixed-image vector launch
+* 1c3da23 c2: implement R103 synchronous DMA submission
+* 72893fb c2: implement R102 allocation lifetime and span registry
+* 7347437 c2: implement and validate R101 query and TLS errors
+* af32050 c2: audit starter kit and document contracts
+*   abcaa94 Merge branch 'ephonic:main' into main
+|\  
+| * d985a6e Clarify performance target parameters in README
+| * a26ed90 在 Track-C README 中增加 hint.md 链接
+| * a4274d3 添加 Track-C 性能参考目标平台参数 hint.md
+* | e9cedbc add docs
+|/  
+* 87a99a5 Update Track-C/C1-compiler/spec.md from public source
+* 4c9b39d Add compressed resnet_v1 input.npy.gz (41M) and decompress script
+* e28d965 Add input.npy (30M)
+* 2b7ee4c Add logits.npy (9.6M)
+* af0f7bc Add labels.npy (1.4M)

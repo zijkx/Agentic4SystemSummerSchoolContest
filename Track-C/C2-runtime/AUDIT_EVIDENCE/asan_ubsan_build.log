@@ -1,0 +1,4 @@
+rm -rf bin libaec.so
+g++ -Iinclude -O1 -g -std=c++17 -fPIC -Wall -Wextra -Wpedantic -ffp-contract=off -fvisibility=hidden -fsanitize=address,undefined -fno-omit-frame-pointer -shared src/aec_runtime.cpp src/allocation.cpp src/command.cpp src/copy.cpp src/error.cpp src/event.cpp src/kernel.cpp src/library_ops.cpp src/numeric.cpp src/registration.cpp src/stream.cpp -o libaec.so -Llib -laec_device -pthread \
+	-Wl,-rpath,'$ORIGIN/lib' -Wl,--version-script=src/libaec.map
+exit=0

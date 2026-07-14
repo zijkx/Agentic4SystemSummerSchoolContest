@@ -1,0 +1,40 @@
+     1	CXX ?= g++
+     2	CC ?= cc
+     3	CXXFLAGS ?= -O2 -g -std=c++17 -fPIC -Wall -Wextra -Wpedantic -ffp-contract=off -fvisibility=hidden
+     4	CPPFLAGS ?= -Iinclude
+     5	
+     6	RUNTIME := libaec.so
+     7	RUNTIME_SOURCES := $(wildcard src/*.cpp)
+     8	RUNTIME_HEADERS := $(wildcard src/*.h) include/aec_runtime.h include/aec_device_abi.h include/aec_isa.h
+     9	RUNTIME_MAP := src/libaec.map
+    10	EXAMPLES := \
+    11		bin/01_device_query \
+    12		bin/02_isa_encoding \
+    13		bin/03_vector_add \
+    14		bin/04_stream_event \
+    15		bin/05_fp32_gemm \
+    16		bin/06_registered_copy
+    17	
+    18	.PHONY: all examples public-test public-cases clean
+    19	
+    20	all: $(RUNTIME)
+    21	
+    22	$(RUNTIME): $(RUNTIME_SOURCES) $(RUNTIME_HEADERS) $(RUNTIME_MAP) lib/libaec_device.so
+    23		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -shared $(RUNTIME_SOURCES) -o $@ -Llib -laec_device -pthread \
+    24			-Wl,-rpath,'$$ORIGIN/lib' -Wl,--version-script=$(RUNTIME_MAP)
+    25	
+    26	bin/%: examples/%.c $(RUNTIME)
+    27		mkdir -p $(@D)
+    28		$(CC) $(CPPFLAGS) -O2 -g -std=c11 -Wall -Wextra -Wpedantic $< -o $@ \
+    29			-L. -laec -Wl,-rpath,'$$ORIGIN/..'
+    30	
+    31	examples: $(EXAMPLES)
+    32	
+    33	public-test: all
+    34		python3 grader/public_grade.py --submission . --profile public
+    35	
+    36	public-cases: all
+    37		python3 cases/run_all.py --submission .
+    38	
+    39	clean:
+    40		rm -rf bin $(RUNTIME)
