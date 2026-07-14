@@ -1,6 +1,6 @@
 {
   "agent_path": "agents/kernel_agent.py",
-  "agent_sha256": "ca7f936ca17d4889dc0068237e143a2cc14004e18881a054f038f94639939052",
+  "agent_sha256": "610378d3d770374b3d2106b7499e967f4bd4724b9a4b75aa0d7f5b3135e8e7ed",
   "argmin_accuracy": 1.0,
   "certified_multi_candidate_shapes": 2621440,
   "certified_shape_count": 167772160,
@@ -62,6 +62,7 @@
     "forbidden_imports": [],
     "forbidden_text": [],
     "imports": [
+      "_json",
       "sys"
     ],
     "offline_static_audit_passed": true

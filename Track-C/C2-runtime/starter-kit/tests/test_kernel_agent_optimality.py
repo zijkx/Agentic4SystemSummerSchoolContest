@@ -75,7 +75,8 @@ def run_raw_agent(path: Path, payload: str,
     assert not result.stderr, result.stderr
     assert len(result.stdout) + len(result.stderr) < 65536
     if expected is None:
-        assert result.returncode != 0 and result.stdout == ""
+        assert result.returncode != 0 and result.stdout == "", (
+            payload, result.returncode, result.stdout, result.stderr)
     else:
         assert result.returncode == 0
         assert json.loads(result.stdout) == expected

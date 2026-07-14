@@ -1,15 +1,9 @@
 #!/usr/bin/env python3
-"""Choose the oracle-optimal legal frozen image from request metadata."""
-
 import sys
+from _json import encode_basestring, scanstring
 
 
 WS = " \t\r\n"
-HEX = "0123456789abcdefABCDEF"
-ESC = {'"': '"', "\\": "\\", "/": "/", "b": "\b", "f": "\f",
-       "n": "\n", "r": "\r", "t": "\t"}
-OUT = {'"': '\\"', "\\": "\\\\", "\b": "\\b", "\f": "\\f",
-       "\n": "\\n", "\r": "\\r", "\t": "\\t"}
 REQUEST_KEYS = {
     "case_id", "dtype", "m", "n", "k", "alignment", "workspace", "candidates"
 }
@@ -36,69 +30,19 @@ def decode(source):
 
     def string():
         nonlocal index
-        index += 1
-        start = index
-        pieces = []
-        while index < size:
-            character = source[index]
-            if character == '"':
-                pieces.append(source[start:index])
-                index += 1
-                return "".join(pieces)
-            if ord(character) < 0x20:
-                raise ValueError
-            if character != "\\":
-                index += 1
-                continue
-            pieces.append(source[start:index])
-            index += 1
-            if index >= size:
-                raise ValueError
-            escape = source[index]
-            index += 1
-            if escape in ESC:
-                pieces.append(ESC[escape])
-            elif escape == "u":
-                digits = source[index:index + 4]
-                if len(digits) != 4 or any(c not in HEX for c in digits):
-                    raise ValueError
-                codepoint = int(digits, 16)
-                index += 4
-                if 0xD800 <= codepoint <= 0xDBFF:
-                    if source[index:index + 2] != "\\u":
-                        raise ValueError
-                    digits = source[index + 2:index + 6]
-                    if len(digits) != 4 or any(c not in HEX for c in digits):
-                        raise ValueError
-                    low = int(digits, 16)
-                    if not 0xDC00 <= low <= 0xDFFF:
-                        raise ValueError
-                    codepoint = (0x10000 + ((codepoint - 0xD800) << 10) +
-                                 low - 0xDC00)
-                    index += 6
-                elif 0xDC00 <= codepoint <= 0xDFFF:
-                    raise ValueError
-                pieces.append(chr(codepoint))
-            else:
-                raise ValueError
-            start = index
-        raise ValueError
+        value, index = scanstring(source, index + 1, True)
+        return value
 
     def number():
         nonlocal index
         start = index
         if source[index] == "-":
             index += 1
-        if index >= size:
-            raise ValueError
-        if source[index] == "0":
+        digits = index
+        while index < size and "0" <= source[index] <= "9":
             index += 1
-            if index < size and "0" <= source[index] <= "9":
-                raise ValueError
-        elif "1" <= source[index] <= "9":
-            while index < size and "0" <= source[index] <= "9":
-                index += 1
-        else:
+        if (index == digits or
+                source[digits] == "0" and index - digits != 1):
             raise ValueError
         return int(source[start:index])
 
@@ -116,9 +60,6 @@ def decode(source):
             result = {}
             index += 1
             whitespace()
-            if index < size and source[index] == "}":
-                index += 1
-                return result
             while True:
                 whitespace()
                 if index >= size or source[index] != '"':
@@ -144,9 +85,6 @@ def decode(source):
             result = []
             index += 1
             whitespace()
-            if index < size and source[index] == "]":
-                index += 1
-                return result
             while True:
                 result.append(value())
                 whitespace()
@@ -172,7 +110,7 @@ def integer(value, minimum):
 
 
 def select(request):
-    if type(request) is not dict or set(request) != REQUEST_KEYS:
+    if type(request) is not dict or request.keys() != REQUEST_KEYS:
         raise ValueError
     if not integer(request["case_id"], 0) or request["dtype"] not in DTYPES:
         raise ValueError
@@ -188,11 +126,13 @@ def select(request):
     legal = []
     identifiers = set()
     for candidate in candidates:
-        if type(candidate) is not dict or set(candidate) not in (
+        if type(candidate) is not dict or candidate.keys() not in (
                 CANDIDATE_KEYS, CANDIDATE_DIAGNOSTIC_KEYS):
             raise ValueError
         identifier = candidate["id"]
-        if type(identifier) is not str or identifier in identifiers:
+        if (type(identifier) is not str or identifier in identifiers or
+                any(0xD800 <= ord(character) <= 0xDFFF
+                    for character in identifier)):
             raise ValueError
         identifiers.add(identifier)
         for key in ("semantic_kernel_id", "image_id", "alignment", "divisibility"):
@@ -227,26 +167,12 @@ def select(request):
     return chosen["id"]
 
 
-def quote(value):
-    pieces = ['"']
-    for character in value:
-        escaped = OUT.get(character)
-        if escaped is not None:
-            pieces.append(escaped)
-        elif ord(character) < 0x20:
-            pieces.append("\\u%04x" % ord(character))
-        else:
-            pieces.append(character)
-    pieces.append('"')
-    return "".join(pieces)
-
-
 def main():
     try:
         identifier = select(decode(sys.stdin.read()))
-        sys.stdout.write('{"kernel_id":' + quote(identifier) + '}\n')
+        sys.stdout.write('{"kernel_id":' + encode_basestring(identifier) + '}\n')
         return 0
-    except (OSError, ValueError, TypeError, KeyError, RecursionError, UnicodeError):
+    except Exception:
         return 2
 
 
