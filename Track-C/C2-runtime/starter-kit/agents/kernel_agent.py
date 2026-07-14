@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
+import json
 import sys
-from _json import encode_basestring, scanstring
 
 
-WS = " \t\r\n"
 REQUEST_KEYS = {
     "case_id", "dtype", "m", "n", "k", "alignment", "workspace", "candidates"
 }
@@ -11,7 +10,6 @@ CANDIDATE_KEYS = {
     "id", "semantic_kernel_id", "image_id", "variant", "workspace",
     "alignment", "divisibility"
 }
-CANDIDATE_DIAGNOSTIC_KEYS = CANDIDATE_KEYS | {"diagnostic_cycles"}
 DTYPES = {
     "fp4_e2m1", "fp8_e4m3", "fp8_e5m2", "fp16", "bf16",
     "fp32", "fp64", "int4", "int8", "int32"
@@ -19,90 +17,22 @@ DTYPES = {
 REQUIREMENTS = ((1, 1, 0), (4, 1, 4096), (8, 16, 8192))
 
 
-def decode(source):
-    index = 0
-    size = len(source)
-
-    def whitespace():
-        nonlocal index
-        while index < size and source[index] in WS:
-            index += 1
-
-    def string():
-        nonlocal index
-        value, index = scanstring(source, index + 1, True)
-        return value
-
-    def number():
-        nonlocal index
-        start = index
-        if source[index] == "-":
-            index += 1
-        digits = index
-        while index < size and "0" <= source[index] <= "9":
-            index += 1
-        if (index == digits or
-                source[digits] == "0" and index - digits != 1):
+def unique_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
             raise ValueError
-        return int(source[start:index])
-
-    def value():
-        nonlocal index
-        whitespace()
-        if index >= size:
-            raise ValueError
-        character = source[index]
-        if character == '"':
-            return string()
-        if character == "-" or "0" <= character <= "9":
-            return number()
-        if character == "{":
-            result = {}
-            index += 1
-            whitespace()
-            while True:
-                whitespace()
-                if index >= size or source[index] != '"':
-                    raise ValueError
-                key = string()
-                if key in result:
-                    raise ValueError
-                whitespace()
-                if index >= size or source[index] != ":":
-                    raise ValueError
-                index += 1
-                result[key] = value()
-                whitespace()
-                if index >= size:
-                    raise ValueError
-                delimiter = source[index]
-                index += 1
-                if delimiter == "}":
-                    return result
-                if delimiter != ",":
-                    raise ValueError
-        if character == "[":
-            result = []
-            index += 1
-            whitespace()
-            while True:
-                result.append(value())
-                whitespace()
-                if index >= size:
-                    raise ValueError
-                delimiter = source[index]
-                index += 1
-                if delimiter == "]":
-                    return result
-                if delimiter != ",":
-                    raise ValueError
-        raise ValueError
-
-    result = value()
-    whitespace()
-    if index != size:
-        raise ValueError
+        result[key] = value
     return result
+
+
+def invalid_constant(_value):
+    raise ValueError
+
+
+def decode(source):
+    return json.loads(source, object_pairs_hook=unique_object,
+                      parse_constant=invalid_constant)
 
 
 def integer(value, minimum):
@@ -110,7 +40,7 @@ def integer(value, minimum):
 
 
 def select(request):
-    if type(request) is not dict or request.keys() != REQUEST_KEYS:
+    if type(request) is not dict or not REQUEST_KEYS.issubset(request):
         raise ValueError
     if not integer(request["case_id"], 0) or request["dtype"] not in DTYPES:
         raise ValueError
@@ -126,8 +56,7 @@ def select(request):
     legal = []
     identifiers = set()
     for candidate in candidates:
-        if type(candidate) is not dict or candidate.keys() not in (
-                CANDIDATE_KEYS, CANDIDATE_DIAGNOSTIC_KEYS):
+        if type(candidate) is not dict or not CANDIDATE_KEYS.issubset(candidate):
             raise ValueError
         identifier = candidate["id"]
         if (type(identifier) is not str or identifier in identifiers or
@@ -170,7 +99,9 @@ def select(request):
 def main():
     try:
         identifier = select(decode(sys.stdin.read()))
-        sys.stdout.write('{"kernel_id":' + encode_basestring(identifier) + '}\n')
+        sys.stdout.write(json.dumps(
+            {"kernel_id": identifier}, ensure_ascii=True,
+            separators=(",", ":")) + "\n")
         return 0
     except Exception:
         return 2
