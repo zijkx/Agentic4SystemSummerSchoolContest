@@ -424,3 +424,49 @@ changing observed public-case or GEMM evaluator performance. The released
 grader still cannot award hidden Agent performance, so 88/100 is the maximum
 observable public score; Kernel Agent hidden full-score status remains
 unverified.
+
+## Kernel Agent full-domain oracle verification (2026-07-14)
+
+The submitted Agent never calls the oracle. These commands run only during
+pre-submission analysis on the remote Linux host:
+
+```bash
+python3 tools/kernel_oracle_collect.py --submission . --jobs 10 \
+  --output reports/kernel_oracle_summary.json
+python3 tools/kernel_policy_generate.py --submission .
+python3 tests/test_kernel_agent_optimality.py --submission .
+python3 tests/test_agents.py --submission .
+python3 cases/test_r402.py --submission .
+```
+
+| Verification | Exit | Result |
+|---|---:|---|
+| Oracle determinism | 0 | 100 repeated calls produced byte-identical completions. |
+| Invalid oracle probes | 0 | All failed status; failed completion payloads were discarded and never labeled. |
+| Device stats immutability | 0 | Full `aecDeviceStats` remained byte-identical before/after evaluator use in every worker. |
+| Alignment/workspace audit | 0 | 3,240 calls across thresholds and representative shapes proved successful cycles are constant within each legal class. |
+| Full domain collection | 0 | 10 dtypes, 5,570,560 calls, 167,772,160 represented shapes, streaming record SHA `73426caf...f67c`. |
+| Independent FP32 replay | 0 | A fresh 557,056-call shard reproduced record SHA `b8319815...3191ba` and every aggregate exactly. |
+| Dominance/argmin | 0 | 0 violations, 0 mismatches, 100% argmin accuracy, max regret 0, no ties. |
+| Candidate metamorphic tests | 0 | 550 subset/permutation cases across all dtypes plus arbitrary IDs and threshold changes passed. |
+| Protocol negatives | 0 | Unknown dtype, bounds, duplicates, extra fields, no-legal candidate, and Unicode escaping passed. |
+| Determinism/latency | 0 | 1,000 independent runs; median 15.411 ms, p99 18.934 ms, no stderr. |
+| Existing Agent suite | 0 | 120 DMA brute-force optima and 80 Kernel evaluator probes passed. |
+| Public R402 | 0 | Correctness PASS, public diagnostic 1.0. |
+| Full custom Python suite | 0 | 19/19 scripts passed on the final clean build. |
+| Standalone serialization | 0 | All canonical parameter layouts passed without warnings. |
+| Full public grader | 0 | 88/100 Good; all correctness passed and both public diagnostics are 1.0. |
+
+The full-domain result selects path A from the implementation plan: the highest
+legal variant is always the oracle argmin, so a fitted performance model and an
+exception table would add complexity without improving a single legal choice.
+Per dtype, 261,192 of 262,144 multi-candidate shapes reach full performance
+fraction and 952 have a partial fraction. Vectorized speedup is at least about
+1.653x; tiled speedup ranges from about 1.421x to 1.666x. The policy is therefore
+the maximum achievable implementation under the published candidates, while
+the exact hidden R402 points remain dependent on the undisclosed case mix.
+
+Machine-readable evidence:
+
+- `reports/kernel_oracle_summary.json`
+- `reports/kernel_policy_report.json`

@@ -70,6 +70,8 @@ The audit passes for all 73 immutable manifest entries.
 14. Stats reset does not reset allocations, registrations, sequence, handles, or images.
 15. Runtime preflight failures submit no command, retire no instruction, and modify no device bytes.
 16. Injected faults are reported once; subsequent legal commands remain usable.
+17. The submitted Kernel Agent is fully offline; the device policy oracle is
+    used only by pre-submission tools and never by `kernel_agent.py`.
 
 ## Requirement matrix
 
@@ -90,7 +92,7 @@ The audit passes for all 73 immutable manifest entries.
 | R303 | Host registration/zero-copy | 4 | PASS verified | `src/registration.*`, copy flags | `cases/test_r303.py` | `tests/test_r303_extra.py` | concurrent new normal copy after unregister linearization |
 | R304 | Fault propagation/recovery | 4 | PASS verified | command + async error path | `cases/test_r304.py` | `tests/test_r304_extra.py` | hidden ISA-trap PC variants |
 | R401 | DMA Agent | 10 | correctness PASS; public diagnostic 1.0 | `agents/dma_agent.py` | `cases/test_r401.py` | `tests/test_agents.py`: 120 brute-force optima | hidden speedup profile unavailable |
-| R402 | Kernel Agent | 10 | correctness PASS; public diagnostic 1.0 | `agents/kernel_agent.py` | `cases/test_r402.py` | 80 official-evaluator optima | hidden candidate distribution unavailable |
+| R402 | Kernel Agent | 10 | correctness PASS; public diagnostic 1.0 | `agents/kernel_agent.py` | `cases/test_r402.py` | 5,570,560 full-domain oracle records plus subset/permutation/protocol tests | full-profile score unavailable |
 
 ## Milestones
 
@@ -117,6 +119,14 @@ The audit passes for all 73 immutable manifest entries.
 - [x] Agent public/model virtual-cycle optimization after all correctness requirements passed; hidden performance remains unverifiable.
 - [x] Final clean build, all examples, all public cases, symbols, ELF/dependencies, immutable audit, documentation, and review audit.
 - [x] Adopt official `c30b3f9` device update; reproduce the old reduction trap and verify DOT/NRM2 through 1,048,576 on the replacement.
+- [x] Audit alignment/workspace equivalence classes and enumerate all
+  multi-candidate GEMM shapes for all 10 dtypes with the official read-only
+  evaluator.
+- [x] Prove highest-legal-variant selection has 100% argmin accuracy, zero
+  mismatches, and zero regret across the complete `[1,256]^3` contract domain.
+- [x] Verify arbitrary candidate IDs, every candidate subset/permutation,
+  strict invalid-input handling, 1,000-run determinism, offline static
+  compliance, and process-level p99 below 20 ms.
 
 ## Baseline
 
@@ -130,8 +140,8 @@ Evidence: `reports/baseline_public_report.json` and `TEST_REPORT.md`.
 ## Completion status
 
 There is no active implementation blocker. Final remote Linux verification at
-implementation commit `d7c2a93` plus the official device update passed the
-clean build, six examples, 16/16 public cases, 18 custom Python scripts,
+the current implementation plus the official device update passed the clean
+build, six examples, 16/16 public cases, the custom Python suite,
 standalone serialization, immutable audit, exported-symbol audit, ELF
 inspection, and dependency resolution. The
 public score is 88/100, level Good; Basic and Good gates are true.
@@ -140,3 +150,29 @@ The only unavailable gate is hidden Agent performance. The released public
 grader cannot establish the Excellent gate, so it remains explicitly unclaimed.
 The missing `file` utility is an inspection-tool limitation only; `readelf`,
 `objdump`, and `ldd` provide the required Linux artifact evidence.
+
+## Kernel Agent full-domain certificate
+
+`tools/kernel_oracle_collect.py` uses only the official read-only
+`aecDeviceEvaluateKernel` before submission. It first proves completion
+determinism and unchanged device stats, then checks alignment/workspace
+thresholds. Ten isolated dtype workers enumerate every point where two or
+three variants are legal:
+
+```text
+per dtype = 2 * 64^3 + 32^3 = 557,056 calls
+all dtypes = 5,570,560 calls
+represented shape domain = 10 * 256^3 = 167,772,160 shapes
+```
+
+The resulting certificate records zero variant-dominance violations, zero
+policy mismatches, 100% argmin accuracy, and zero maximum regret. The compact
+submitted policy therefore requires no fitted model or exception table. Raw
+oracle records are represented by per-dtype streaming SHA-256 digests rather
+than committed as a large dataset. Evidence is in
+`reports/kernel_oracle_summary.json` and `reports/kernel_policy_report.json`.
+
+The certificate proves the best achievable candidate choice for every input
+in the published domain. It cannot make the public grader award hidden points,
+and it does not claim that the organizer's undisclosed performance-case mix
+necessarily yields exactly 6/6 hidden performance points.

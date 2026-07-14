@@ -195,3 +195,32 @@
 - Clean build, six examples, 16/16 public cases, all 18 custom scripts, serialization, immutable audit, and public grader passed.
 - The new and pre-update public reports are structurally identical for every requirement, including device evidence and Agent case cycles; score remains 88/100 public, with both diagnostics 1.0.
 - A separate old/new comparison found byte-identical caps, all 34 resolve records, and 30,210 GEMM evaluator completions across 10 dtypes and boundary/seeded shapes.
+
+## 2026-07-14 - Kernel Agent full-domain oracle certificate
+
+- Added an offline oracle collector with device-hash pinning, 100-call
+  determinism, failed-status label rejection, stats immutability, threshold
+  equivalence checks, isolated dtype workers, checkpoints, and streaming record
+  hashes.
+- Enumerated 5,570,560 legal candidate evaluations covering all 10 dtypes and
+  every multi-candidate point in `M/N/K=[1,256]`; the legality partition
+  represents 167,772,160 dtype/shape combinations.
+- Found zero variant-dominance violations, zero policy mismatches, 100% argmin
+  accuracy, zero maximum regret, and no ties. The compact highest-legal-variant
+  policy is therefore the full-domain optimum; no fitted model is needed.
+- Replayed the complete 557,056-call FP32 shard in a fresh checkpoint directory;
+  record SHA `b8319815...3191ba` and all aggregate fields matched the initial
+  parallel collection exactly.
+- Strengthened Kernel Agent dtype/bounds/intrinsic-variant validation and stable
+  tie-breaking. A strict self-contained JSON codec reduced process-level
+  latency from p99 26.127 ms to 18.934 ms.
+- Added `tests/test_kernel_agent_optimality.py`: 550 candidate
+  subset/permutation cases across all dtypes, arbitrary IDs, threshold and
+  invalid-input cases, Unicode escaping, offline static checks, and 1,000-run
+  determinism all passed.
+- Existing Agent tests and public R402 continue to pass with diagnostic 1.0.
+  Hidden performance remains unavailable; the implementation is oracle-optimal
+  but does not claim an undisclosed full-profile score.
+- Final clean build, six examples, 16/16 public cases, 19/19 custom Python
+  scripts, standalone serialization, immutable audit, and the public grader all
+  passed after integration.

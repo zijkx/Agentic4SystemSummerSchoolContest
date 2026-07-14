@@ -155,9 +155,25 @@ by direction.
 
 Kernel candidates are filtered before ranking. Public diagnostic cycles, when
 present on every legal candidate, are authoritative. Hidden-style inputs use
-variant rank; official evaluation over 80 dtype/shape combinations found the
-highest legal variant always minimum-cycle. Candidate ID text and `case_id` are
-never used for policy decisions.
+variant rank. The full-domain oracle certificate covers 5,570,560 candidate
+evaluations, 2,621,440 multi-candidate shapes, all 10 dtypes, and the complete
+`[1,256]^3` shape domain by legality partition. It found zero dominance
+violations, zero mismatches, and zero regret. Candidate ID text and `case_id`
+are never used for policy decisions.
+
+Review the evidence chain in this order:
+
+1. `tools/kernel_oracle_collect.py`: successful status gating, record hashing,
+   isolated dtype workers, stats immutability, and complete loop bounds.
+2. `reports/kernel_oracle_summary.json`: exact device hash, ten dtype reports,
+   call counts, record digests, dominance, mismatch, and regret.
+3. `tools/kernel_policy_generate.py`: certificate validation and static offline
+   audit of the submitted Agent.
+4. `agents/kernel_agent.py`: legality filtering, diagnostic-cycle path,
+   highest-variant path, and stable tie-break.
+5. `tests/test_kernel_agent_optimality.py`: candidate subsets/permutations,
+   arbitrary IDs, thresholds, invalid inputs, Unicode JSON, determinism, and
+   process-level latency.
 
 ## Milestone commits
 
@@ -198,6 +214,9 @@ never used for policy decisions.
 ## Remaining interpretation uncertainties
 
 - Public score cannot exercise hidden Agent performance; model-optimal public evidence is not an Excellent result.
+- Full-domain oracle optimality proves no legal candidate can improve the
+  submitted Kernel policy. It does not prove the hidden case distribution will
+  award a 1.0 average performance fraction.
 - The spec requires process-global strict sequence but does not require parallel host submits; this implementation serializes them for correctness.
 - Destroy is specified to drain Stream work; only `aecStreamSync` reports queued errors. Stream destroy therefore returns success after drain rather than replaying an unreported worker error.
 - Partial overlap with a registered host interval is treated as legal normal DMA because only complete subspans qualify for flags.

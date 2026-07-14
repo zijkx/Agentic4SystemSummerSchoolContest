@@ -333,16 +333,39 @@ This matched the minimum over every legal action for 120 input combinations.
 The Kernel Agent validates candidates, filters by alignment, workspace, and
 M/N/K divisibility, and never constructs an ID. If all legal candidates include
 public diagnostic cycles it selects the minimum. Otherwise it selects the
-highest legal variant; an 80-case official evaluator sweep across all dtypes
-confirmed vectorized < tiled < naive whenever each is legal.
+highest legal variant. The offline oracle collector evaluated 5,570,560 legal
+candidate records over all 10 dtypes and every multi-candidate shape in
+`M/N/K=[1,256]`; it found zero dominance violations, zero mismatches, and zero
+regret. Alignment/workspace probes established that values above each legal
+threshold do not change successful completion cycles.
 
 Both Agents use only Python standard library, emit exactly one compact JSON to
 stdout on valid input, emit no logs, keep no state, and reject invalid/no-legal
-input with a nonzero exit.
+input with a nonzero exit. The Kernel Agent contains a small self-contained JSON
+codec so process-level p99 remains below 20 ms without relaxing strict parsing,
+Unicode escaping, or output purity. It does not import `ctypes`, load the device
+library, read external files, invoke subprocesses, or access the network.
+
+Oracle collection and policy generation are pre-submission tools only. They are
+not copied into the three-file scoring artifact.
+
+## Development provenance and dependencies
+
+Codex/large-language-model assistance was used for implementation, test design,
+review, and documentation. The submitted code remains reviewable source under
+team responsibility; no third-party implementation was copied. Runtime code
+depends only on the C++17 standard library, pthreads, and the organizer-supplied
+`libaec_device.so`. Agent code depends only on the Python standard library and
+operates offline. The oracle certificate uses only the organizer's published,
+read-only evaluator and contains no hidden cases or hidden outputs.
 
 ## Known limitations and residual risk
 
 - The released grader exposes only `public`; hidden Agent speedup and the Excellent gate cannot be verified locally.
+- Tiled speedup is oracle-optimal but ranges from about 1.421x to 1.666x;
+  therefore some legal small tiled shapes have a performance fraction below
+  1 even though no alternative candidate is faster. Hidden 6/6 depends on the
+  organizer's undisclosed performance-case selection.
 - Stream device submits are globally serialized to preserve strict sequence. This affects host wall-clock concurrency, not scored virtual cycles.
 - Handle tombstones consume a small amount of memory until process exit by design; they prevent stale-pointer aliasing.
 - Runtime registries assume callers do not invoke the private Device reset API behind the Runtime. That function is not part of the public Runtime ABI.

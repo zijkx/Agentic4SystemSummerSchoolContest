@@ -1,0 +1,70 @@
+{
+  "agent_path": "agents/kernel_agent.py",
+  "agent_sha256": "01af660d23774897c10e56262f501f7ecbe2661c18e7def5b0601619b563bc79",
+  "argmin_accuracy": 1.0,
+  "certified_multi_candidate_shapes": 2621440,
+  "certified_shape_count": 167772160,
+  "checks": {
+    "accuracy": true,
+    "device_sha256": true,
+    "dominance": true,
+    "dtype_domain": true,
+    "mismatch": true,
+    "oracle_calls": true,
+    "policy": true,
+    "regret": true,
+    "schema_version": true,
+    "shape_count": true,
+    "stats": true
+  },
+  "device_sha256": "b96b09e88ae160b659cf72bd079da8bc647d2bc55d377297a649d77c30ddcb0a",
+  "hidden_performance_note": "The certificate proves oracle-optimal choices over the public contract domain; only the organizer full profile can award hidden points.",
+  "hidden_performance_verified": false,
+  "max_regret_cycles": 0,
+  "mismatch_count": 0,
+  "model": {
+    "kind": "integer_dominance_rule",
+    "legality_features": [
+      "dtype",
+      "m",
+      "n",
+      "k",
+      "alignment",
+      "workspace",
+      "candidate semantic_kernel_id",
+      "candidate image_id",
+      "candidate variant",
+      "candidate divisibility",
+      "candidate alignment",
+      "candidate workspace"
+    ],
+    "selection": "highest legal variant",
+    "tie_break": [
+      "predicted_cycles",
+      "higher_variant",
+      "smaller_image_id",
+      "candidate_id"
+    ],
+    "variant_order": [
+      3,
+      2,
+      1
+    ]
+  },
+  "model_sha256": "4c4f02d26b0497296a34d07bdc1faf438f0facfd9c4d790c3d0a9337580a18dd",
+  "oracle_call_count": 5570560,
+  "oracle_summary": "reports/kernel_oracle_summary.json",
+  "oracle_summary_sha256": "5be004b2ae5b21859d1b0c7d0f74eea8a80c90b2bd1f3fbb3d3e53211d558ae6",
+  "public_r402_required": "run grader after generation",
+  "schema_version": 1,
+  "static_agent_audit": {
+    "forbidden_calls": [],
+    "forbidden_imports": [],
+    "forbidden_text": [],
+    "imports": [
+      "__future__",
+      "sys"
+    ],
+    "offline_static_audit_passed": true
+  }
+}
