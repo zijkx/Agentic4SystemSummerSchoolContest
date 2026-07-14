@@ -1,0 +1,10 @@
+0000000000005130 T aecDeviceAlloc
+0000000000005980 T aecDeviceEvaluateKernel
+0000000000005620 T aecDeviceFree
+0000000000004f20 T aecDeviceGetCaps
+00000000000061c0 T aecDeviceGetStats
+00000000000062b0 T aecDeviceInjectFault
+0000000000004f70 T aecDeviceReset
+0000000000006260 T aecDeviceResetStats
+0000000000005910 T aecDeviceResolveKernel
+0000000000005cc0 T aecDeviceSubmit

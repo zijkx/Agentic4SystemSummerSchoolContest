@@ -1,6 +1,6 @@
 # C2 Runtime Implementation Plan
 
-Last updated: 2026-07-13 (Asia/Shanghai)
+Last updated: 2026-07-14 (Asia/Shanghai)
 
 ## Environment and repository
 
@@ -9,8 +9,9 @@ Last updated: 2026-07-13 (Asia/Shanghai)
 - Starter kit: `/home/mig19/c2/Agentic4SystemSummerSchoolContest/Track-C/C2-runtime/starter-kit`
 - Path resolution: the preferred path from the task exists; the concatenated fallback path does not.
 - Initial commit: `abcaa940b107c153514d3cb162108090631cfdf6`
-- Working branch: `codex/c2-runtime-implementation`
+- Working branch: `codex/c2-device-library-update`
 - Verified implementation commit: `d7c2a93` (documentation/evidence finalization follows this commit).
+- Prior merged delivery commit: `2e65745`.
 - Initial tracked worktree: clean. Baseline build later created untracked `bin/` and `reports/`; `lib/` and `libaec.so` are ignored by the repository.
 - Host: Linux `x86_64`, 64-bit, little-endian; kernel `6.8.0-110-generic`.
 - Toolchain: Python 3.12.3, GCC/G++ 13.3.0, GNU Make 4.3, glibc/ldd 2.39.
@@ -18,17 +19,24 @@ Last updated: 2026-07-13 (Asia/Shanghai)
 
 ## Official device library
 
-The checkout initially lacked `lib/libaec_device.so`. An existing artifact at
-`/home/mig19/c2/test/libaec_device.so` was inspected before use. Its SHA-256 is
-exactly the value frozen in `RELEASE_MANIFEST.json`:
+The checkout initially lacked `lib/libaec_device.so`; development first used the
+then-current manifest artifact with SHA-256:
 
 ```text
 295c47c51354a2e58b76cff18633b15daeea9f2e0e4115dccda338a9e66b01d5
 ```
 
-It is ELF64, little-endian, x86-64, and all dependencies resolve. The exact
-artifact was restored to `starter-kit/lib/libaec_device.so`; it remains ignored
-and must be present in the formal build environment.
+Official upstream commit `c30b3f9eed11183fee8e33735e82cdf72a50cbe8`
+updated only the C2 device library and its release-manifest hash. The current
+official artifact is 51,632-byte ELF64 little-endian x86-64, all dependencies
+resolve, and its SHA-256 is:
+
+```text
+b96b09e88ae160b659cf72bd079da8bc647d2bc55d377297a649d77c30ddcb0a
+```
+
+The updated artifact is force-tracked despite the repository-wide `*.so`
+ignore rule, matching the official upstream tree.
 
 ## Immutable contracts
 
@@ -39,10 +47,10 @@ Do not modify:
 - `kernels/images/`, `kernels/manifest.json`
 - `grader/`, `cases/`, `golden/`, `schemas/`
 
-`tests/test_immutable.py` verifies the manifest hashes, rejects missing or extra
-contract files, checks all 34 fixed images, checks the device library, and
-compares every tracked immutable path with the initial commit. The final audit
-passed for all 73 immutable manifest entries.
+`tests/test_immutable.py` verifies the exact updated manifest SHA-256, every
+manifest file hash, all 34 fixed images, and the updated device library. It also
+requires every static immutable path to remain identical to the initial release.
+The audit passes for all 73 immutable manifest entries.
 
 ## Non-negotiable invariants
 
@@ -76,7 +84,7 @@ passed for all 73 immutable manifest entries.
 | R201 | FP32/INT32 GEMM | 10 | PASS verified | `src/numeric.*`, shared kernel path | `cases/test_r201.py` | `tests/test_r201_extra.py`, serialization test | async integration deferred to R105 |
 | R202 | FP4/FP8/FP16/BF16/FP64 GEMM | 10 | PASS verified | generic `src/numeric.cpp` path | `cases/test_r202.py` | `tests/test_r202_extra.py` | hidden special-float/rounding breadth |
 | R203 | INT4/INT8/INT32 GEMM | 4 | PASS verified | generic `src/numeric.cpp` path | `cases/test_r203.py` | `tests/test_r203_extra.py` | hidden maximum-shape saturation breadth |
-| R204 | AXPY/DOT/NRM2 | 6 | PASS verified | `src/library_ops.*` | `cases/test_r204.py` | `tests/test_r204_extra.py`, serialization test | hidden maximum-count reduction breadth |
+| R204 | AXPY/DOT/NRM2 | 6 | PASS verified | `src/library_ops.*` | `cases/test_r204.py` | `tests/test_r204_extra.py`, `tests/test_r204_max_length.py`, serialization | maximum 1,048,576 covered on updated device |
 | R301 | ABI sequence/completion/stats | 6 | PASS verified | `src/command.*`, stats API | `cases/test_r301.py` | `tests/test_r301_extra.py` | sequence exhaustion is theoretical only |
 | R302 | Dual DMA/async recovery | 6 | PASS verified | stream-id channel policy | `cases/test_r302.py` | `tests/test_r302_extra.py` | submits serialize for sequence correctness |
 | R303 | Host registration/zero-copy | 4 | PASS verified | `src/registration.*`, copy flags | `cases/test_r303.py` | `tests/test_r303_extra.py` | concurrent new normal copy after unregister linearization |
@@ -108,6 +116,7 @@ passed for all 73 immutable manifest entries.
 - [x] R401/R402 valid generalized policies, invalid-input handling, purity, determinism, and policy tests.
 - [x] Agent public/model virtual-cycle optimization after all correctness requirements passed; hidden performance remains unverifiable.
 - [x] Final clean build, all examples, all public cases, symbols, ELF/dependencies, immutable audit, documentation, and review audit.
+- [x] Adopt official `c30b3f9` device update; reproduce the old reduction trap and verify DOT/NRM2 through 1,048,576 on the replacement.
 
 ## Baseline
 
@@ -121,9 +130,10 @@ Evidence: `reports/baseline_public_report.json` and `TEST_REPORT.md`.
 ## Completion status
 
 There is no active implementation blocker. Final remote Linux verification at
-implementation commit `d7c2a93` passed the clean build, six examples, 16/16
-public cases, 17 custom Python scripts, standalone serialization, immutable
-audit, exported-symbol audit, ELF inspection, and dependency resolution. The
+implementation commit `d7c2a93` plus the official device update passed the
+clean build, six examples, 16/16 public cases, 18 custom Python scripts,
+standalone serialization, immutable audit, exported-symbol audit, ELF
+inspection, and dependency resolution. The
 public score is 88/100, level Good; Basic and Good gates are true.
 
 The only unavailable gate is hidden Agent performance. The released public

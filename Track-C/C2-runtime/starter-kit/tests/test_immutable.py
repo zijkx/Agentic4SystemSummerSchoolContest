@@ -11,6 +11,12 @@ from pathlib import Path, PurePosixPath
 
 
 INITIAL_COMMIT = "abcaa940b107c153514d3cb162108090631cfdf6"
+EXPECTED_MANIFEST_SHA256 = (
+    "99f9867828f530605f1599fc7770da18f205aaf3ab831ff32899bc630915ba7f"
+)
+EXPECTED_DEVICE_SHA256 = (
+    "b96b09e88ae160b659cf72bd079da8bc647d2bc55d377297a649d77c30ddcb0a"
+)
 IMMUTABLE_DIRECTORIES = (
     "include",
     "docs",
@@ -21,7 +27,7 @@ IMMUTABLE_DIRECTORIES = (
     "schemas",
 )
 IMMUTABLE_FILES = ("lib/libaec_device.so",)
-TRACKED_CONTRACTS = (*IMMUTABLE_DIRECTORIES, "RELEASE_MANIFEST.json")
+TRACKED_CONTRACTS = IMMUTABLE_DIRECTORIES
 EXPECTED_IMAGE_COUNT = 34
 
 
@@ -45,6 +51,9 @@ def main() -> int:
     root = args.submission.resolve()
 
     manifest_path = root / "RELEASE_MANIFEST.json"
+    assert sha256(manifest_path) == EXPECTED_MANIFEST_SHA256, (
+        "release manifest does not match the official updated C2 bundle"
+    )
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     files = manifest.get("files")
     assert isinstance(files, dict) and files, "manifest has no file hash map"
@@ -57,6 +66,7 @@ def main() -> int:
         or name in IMMUTABLE_FILES
     }
     assert set(IMMUTABLE_FILES) <= expected.keys(), "device library absent from manifest"
+    assert expected[IMMUTABLE_FILES[0]] == EXPECTED_DEVICE_SHA256
 
     actual: set[str] = set()
     for directory in IMMUTABLE_DIRECTORIES:
@@ -113,7 +123,7 @@ def main() -> int:
 
     print(
         f"PASS immutable audit: {len(expected)} manifest files, "
-        f"{len(actual_images)} fixed images, tracked diff clean"
+        f"{len(actual_images)} fixed images, official release/static diff clean"
     )
     return 0
 

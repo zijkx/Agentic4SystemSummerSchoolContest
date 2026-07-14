@@ -1,6 +1,6 @@
 # C2 Runtime Test Report
 
-Report date: 2026-07-13 (Asia/Shanghai)
+Report date: 2026-07-14 (Asia/Shanghai)
 
 ## Environment
 
@@ -15,18 +15,20 @@ Report date: 2026-07-13 (Asia/Shanghai)
 | Make | GNU Make 4.3 |
 | glibc/ldd | 2.39 |
 | Initial commit | `abcaa940b107c153514d3cb162108090631cfdf6` |
-| Branch | `codex/c2-runtime-implementation` |
+| Branch | `codex/c2-device-library-update` |
 | Verified implementation commit | `d7c2a93` |
+| Prior merged delivery commit | `2e65745` |
 
 The initial tracked worktree was clean. Baseline commands generated untracked
 `bin/` and `reports/`; `lib/` and `libaec.so` are ignored by the root rules.
 
 ## Device library
 
-- Checkout state: initially missing because `*.so` is ignored.
-- Restored source: `/home/mig19/c2/test/libaec_device.so`.
-- Installed path: `starter-kit/lib/libaec_device.so`.
-- SHA-256: `295c47c51354a2e58b76cff18633b15daeea9f2e0e4115dccda338a9e66b01d5` (matches `RELEASE_MANIFEST.json`).
+- Initial development artifact SHA-256: `295c47c51354a2e58b76cff18633b15daeea9f2e0e4115dccda338a9e66b01d5`.
+- Official update commit: `c30b3f9eed11183fee8e33735e82cdf72a50cbe8`.
+- Current installed path: `starter-kit/lib/libaec_device.so`.
+- Current SHA-256: `b96b09e88ae160b659cf72bd079da8bc647d2bc55d377297a649d77c30ddcb0a` (matches the updated `RELEASE_MANIFEST.json`).
+- Updated manifest SHA-256: `99f9867828f530605f1599fc7770da18f205aaf3ab831ff32899bc630915ba7f`.
 - ELF: ELF64, two's complement little-endian, System V, x86-64 shared object.
 - Dependencies: `libstdc++.so.6`, `libm.so.6`, `libgcc_s.so.1`, `libc.so.6`, and the x86-64 loader; all resolved by `ldd`.
 - The host lacks `file`; `readelf -h/-d` and `ldd` were used instead.
@@ -308,7 +310,7 @@ official evaluator sweep.
 Evidence: `reports/hardening_public_report.json` and
 `reports/exported_symbols.txt`.
 
-## Final release verification
+## Pre-update final release verification (2026-07-13)
 
 Run from `Track-C/C2-runtime/starter-kit` on the remote Linux host at verified
 implementation commit `d7c2a93`. The documentation and generated evidence are
@@ -371,7 +373,7 @@ Final requirement evidence:
 | R401 | PASS correctness | 4/10 | Schema/purity/determinism and 120 brute-force optima. |
 | R402 | PASS correctness | 4/10 | Candidate legality and 80 official-evaluator optima. |
 
-Final artifacts:
+Pre-update artifacts:
 
 - `reports/final_public_report.json`: machine-readable 88/100 result.
 - `reports/exported_symbols.txt`: exact versioned public export surface.
@@ -384,6 +386,41 @@ Final artifacts:
 ## Residual risk
 
 - Hidden Agent inputs, average speedup, and the Excellent gate are not available in the released grader and are not claimed passed.
-- Hidden maximum-size, special-floating-point, and unusual cross-Stream Event schedules remain possible coverage gaps despite public, custom, and sanitizer evidence.
+- Hidden maximum-shape GEMM, special-floating-point, and unusual cross-Stream
+  Event schedules remain possible coverage gaps despite public, custom, and
+  sanitizer evidence.
 - The host lacks `file`; `readelf`, `objdump`, and `ldd` were used and all passed.
-- `lib/libaec_device.so` is ignored by Git and must accompany the submission/build environment with the exact manifest hash above.
+- `lib/libaec_device.so` is force-tracked to match official upstream despite the global `*.so` ignore rule.
+
+## Official device update verification
+
+Official source: `ephonic/Agentic4SystemSummerSchoolContest@b2997a2`, with the
+C2 update introduced by `c30b3f9`. Tree comparison found no other C2 contract
+changes: headers, docs, fixed images, grader, cases, golden data, schemas,
+`spec.md`, and `scoring.md` are byte-identical to the prior release.
+
+| Command/check | Exit | Result |
+|---|---:|---|
+| Old-library `python3 tests/test_r204_max_length.py --submission .` | 1 | Reproduced defect: DOT count 90,909 returned status 9 (`AEC_ERROR_ISA_TRAP`). |
+| New-library maximum-length test | 0 | DOT/NRM2 passed historical boundaries and 1,048,576; max+1 rejected without submit. |
+| Maximum reduction virtual cycles | 0 | DOT 46,137,368; NRM2 33,554,466. |
+| `make clean`, `make -j2`, `make examples` | 0 | Warning-free release build and all examples built. |
+| Six example binaries | 0 | All produced expected results. |
+| `make public-cases` | 0 | 16/16 requirements passed. |
+| All `tests/test_*.py` | 0 | 18/18 custom scripts passed. |
+| Standalone serialization test | 0 | All canonical parameter layouts passed. |
+| Updated immutable audit | 0 | Exact official manifest/device hashes, 73 entries, 34 images, and all static contracts passed. |
+| Public grader to `reports/device_update_public_report.json` | 0 | 88/100 Good; Basic/Good true; R401/R402 diagnostics 1.0. |
+| Structured old/new public report comparison | 0 | Every requirement pass, score, detail, device evidence, and Agent case metric is identical. |
+| Old/new ABI and evaluator comparison | 0 | Caps, 34 resolve records, and 30,210 GEMM evaluator completions are byte-identical. |
+
+The Device ABI export set is unchanged (10 `aecDevice*` functions), and all
+new-library dependencies resolve. No Runtime or Agent source change was needed;
+the existing R204 path already performs one fixed-image launch with canonical
+parameters and no Host computation or reduction chunking.
+
+The updated library fixes correctness beyond the old reduction limits without
+changing observed public-case or GEMM evaluator performance. The released
+grader still cannot award hidden Agent performance, so 88/100 is the maximum
+observable public score; Kernel Agent hidden full-score status remains
+unverified.

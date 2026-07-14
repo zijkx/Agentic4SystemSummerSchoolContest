@@ -2,9 +2,9 @@
 
 ## Current state
 
-Implementation and final review are complete on the formal remote Linux host at
-verified code commit `d7c2a93`. The final clean build is warning-free; all six
-examples, 16/16 public cases, 17/17 custom Python scripts, and standalone
+Implementation and updated-device review are complete on the formal remote
+Linux host. The final clean build is warning-free; all six examples, 16/16
+public cases, 18/18 custom Python scripts, and standalone
 serialization passed.
 
 Public score is 88/100, level Good, with Basic and Good gates true. Every
@@ -21,9 +21,11 @@ invalid C enum handling; the repeated sanitizer suite is clean. The final ELF
 is little-endian x86-64 with 36 public C functions plus `AEC_2`, and every
 dependency resolves.
 
-The immutable audit passed 73 manifest files and all 34 images with no tracked
-contract diff. The official device library hash is
-`295c47c51354a2e58b76cff18633b15daeea9f2e0e4115dccda338a9e66b01d5`.
+Official upstream commit `c30b3f9` updated only the device library and release
+manifest. The old DOT 90,909 trap was reproduced; the new library passes DOT and
+NRM2 at count 1,048,576 without traps. The immutable audit passes 73 manifest
+files and all 34 images. The current device library hash is
+`b96b09e88ae160b659cf72bd079da8bc647d2bc55d377297a649d77c30ddcb0a`.
 
 ## Where to review
 
@@ -31,18 +33,16 @@ contract diff. The official device library hash is
 2. `IMPLEMENTATION.md` for architecture, flows, layouts, locks, and lifetimes.
 3. `REVIEW_GUIDE.md` for the requirement/function/commit map and review questions.
 4. `TEST_REPORT.md` for exact commands, artifacts, and residual risks.
-5. `reports/final_public_report.json` for the machine-readable final grader result.
+5. `reports/device_update_public_report.json` for the current machine-readable grader result.
 
 ## Handoff
 
-Review the final documentation/evidence commit on branch
-`codex/c2-runtime-implementation`. No push was performed.
+Review the official-device update on branch `codex/c2-device-library-update`.
 
 ## Risks
 
-- Hidden maximum-size, special-float, and cross-Stream Event cases may exceed
-  the released public/custom coverage.
-- `lib/libaec_device.so` is ignored and must be supplied alongside the workspace
-  for every clean formal build.
+- Hidden maximum-shape GEMM, special-float, and cross-Stream Event cases may
+  exceed the released public/custom coverage.
+- The official device library is force-tracked despite the global `*.so` ignore.
 - Hidden Agent speedup and the Excellent gate are unavailable and unclaimed.
 - The host does not provide `file`; `readelf`, `objdump`, and `ldd` evidence passed.

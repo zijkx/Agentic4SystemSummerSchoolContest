@@ -27,5 +27,7 @@ and the exact commands/results are recorded.
 ## Status
 
 All six delivery stages and released completion gates are complete. Final
-evidence is in `TEST_REPORT.md` and `reports/final_public_report.json`. Hidden
-Agent performance is outside the released profile and remains unclaimed.
+evidence is in `TEST_REPORT.md` and `reports/device_update_public_report.json`.
+The official `c30b3f9` device update is included and maximum-length DOT/NRM2
+passes without traps. Hidden Agent performance is outside the released profile
+and remains unclaimed.

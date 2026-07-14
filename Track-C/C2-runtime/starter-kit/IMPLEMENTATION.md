@@ -347,4 +347,4 @@ input with a nonzero exit.
 - Handle tombstones consume a small amount of memory until process exit by design; they prevent stale-pointer aliasing.
 - Runtime registries assume callers do not invoke the private Device reset API behind the Runtime. That function is not part of the public Runtime ABI.
 - Host registration models flags and lifetime; it does not pin physical pages because the platform is a virtual device.
-- Hidden maximum-size, unusual cross-Stream Event, and special floating-point cases remain residual risk despite focused public/custom coverage.
+- Hidden maximum-shape GEMM, unusual cross-Stream Event, and special floating-point cases remain residual risk despite focused public/custom coverage. DOT/NRM2 maximum count is covered on the updated official device.

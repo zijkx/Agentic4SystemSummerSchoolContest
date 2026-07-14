@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "audit_date": "2026-07-14",
+  "official_repository": "https://github.com/ephonic/Agentic4SystemSummerSchoolContest",
+  "official_head": "b2997a228d9446ff254cb324225b731df66c7546",
+  "c2_update_commit": "c30b3f9eed11183fee8e33735e82cdf72a50cbe8",
+  "changed_c2_paths": [
+    "Track-C/C2-runtime/starter-kit/RELEASE_MANIFEST.json",
+    "Track-C/C2-runtime/starter-kit/lib/libaec_device.so"
+  ],
+  "other_c2_contract_changes": [],
+  "old_device": {
+    "bytes": 47440,
+    "sha256": "295c47c51354a2e58b76cff18633b15daeea9f2e0e4115dccda338a9e66b01d5",
+    "dot_90909_status": 9
+  },
+  "new_device": {
+    "bytes": 51632,
+    "sha256": "b96b09e88ae160b659cf72bd079da8bc647d2bc55d377297a649d77c30ddcb0a",
+    "manifest_sha256": "99f9867828f530605f1599fc7770da18f205aaf3ab831ff32899bc630915ba7f",
+    "device_abi_exports": 10,
+    "dot_max_count": 1048576,
+    "dot_max_virtual_cycles": 46137368,
+    "nrm2_max_count": 1048576,
+    "nrm2_max_virtual_cycles": 33554466,
+    "isa_traps": 0
+  },
+  "runtime_sha256": "2784fd96377c8ac4d1969e34c16dd216561195f7000fb497d345a1a0b7308fe4",
+  "runtime_source_changed": false,
+  "old_new_caps_byte_identical": true,
+  "old_new_kernel_resolves_byte_identical": 34,
+  "old_new_evaluator_completions_byte_identical": 30210,
+  "public_report_equivalent_to_pre_update": true,
+  "public_cases_passed": 16,
+  "public_cases_total": 16,
+  "custom_scripts_passed": 18,
+  "custom_scripts_total": 18,
+  "public_score": 88.0,
+  "public_level": "Good",
+  "r401_public_diagnostic": 1.0,
+  "r402_public_diagnostic": 1.0,
+  "kernel_agent_hidden_performance_verified": false
+}

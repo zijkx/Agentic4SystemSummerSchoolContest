@@ -184,3 +184,14 @@
 - Final ELF audit found ELF64 little-endian x86-64, 36 public `aec*` functions plus `AEC_2`, `$ORIGIN/lib`, and fully resolved dependencies.
 - Completed `IMPLEMENTATION.md` with five Mermaid diagrams and `REVIEW_GUIDE.md` with requirement/function mapping, commits, risks, and ten review questions.
 - Runtime and Agent work is complete against all released contracts. Hidden Agent performance remains unavailable and is not claimed.
+
+## 2026-07-14 - Official device-library update
+
+- Audited official upstream `ephonic/Agentic4SystemSummerSchoolContest@b2997a2`; C2 changed only in commit `c30b3f9`: `lib/libaec_device.so` and the matching `RELEASE_MANIFEST.json` hash.
+- Reproduced the old library defect exactly: DOT count 90,908 succeeded and 90,909 returned `AEC_ERROR_ISA_TRAP`.
+- Replaced old device hash `295c47c...` with official hash `b96b09e...`; exported Device ABI symbols and dynamic dependencies are unchanged.
+- Added `tests/test_r204_max_length.py`. DOT and NRM2 now pass at both historical boundaries and count 1,048,576, with maximum-count cycles 46,137,368 and 33,554,466; max+1 is rejected before submit.
+- No Runtime numeric source change was required: the existing fixed-image, single-launch implementation already matched the specification.
+- Clean build, six examples, 16/16 public cases, all 18 custom scripts, serialization, immutable audit, and public grader passed.
+- The new and pre-update public reports are structurally identical for every requirement, including device evidence and Agent case cycles; score remains 88/100 public, with both diagnostics 1.0.
+- A separate old/new comparison found byte-identical caps, all 34 resolve records, and 30,210 GEMM evaluator completions across 10 dtypes and boundary/seeded shapes.

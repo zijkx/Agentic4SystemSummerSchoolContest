@@ -9,7 +9,7 @@
 5. `src/kernel.cpp`, `src/numeric.cpp`, `src/library_ops.cpp`: fixed-image numeric execution.
 6. `src/stream.cpp`, `src/event.cpp`: concurrency and opaque handle lifetimes.
 7. `agents/*.py`: policy validation and cost models.
-8. `TEST_REPORT.md` and `reports/final_public_report.json`: reproducible final evidence.
+8. `TEST_REPORT.md` and `reports/device_update_public_report.json`: reproducible current evidence.
 
 ## File map
 
@@ -29,6 +29,7 @@
 | `agents/dma_agent.py` | Normative formula optimum and strict JSON protocol. |
 | `agents/kernel_agent.py` | Candidate-only legality filter and general variant model. |
 | `tests/test_immutable.py` | Manifest hashes, fixed-image count, extra/missing files, and initial-commit contract diff. |
+| `tests/test_r204_max_length.py` | Historical DOT/NRM2 trap boundaries, maximum count, cycles, and max+1 preflight. |
 
 ## Requirement-to-function map
 
@@ -179,6 +180,7 @@ never used for policy decisions.
 | `92946d7` | R304 fault audit |
 | `f4b638d` | R401/R402 optimized Agents |
 | `d7c2a93` | Full `aecLaunch`, enum UB fix, visibility hardening |
+| `c30b3f9` (official upstream) | Updated device library and release manifest |
 
 ## Ten questions for manual review
 
